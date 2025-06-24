@@ -1,0 +1,81 @@
+-- Database initialization script for Memsheets
+-- This script creates the database, user, and basic tables
+
+SET app.db_user = :'db_user';
+SET app.db_password = :'db_password';
+SET app.db_name = :'db_name';
+
+DO $$
+DECLARE
+    db_user text = current_setting('app.db_user');
+    db_password text = current_setting('app.db_password');
+    db_name text = current_setting('app.db_name');
+BEGIN
+    -- Create user with database creation permissions if user doesn't exist
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename=db_user) THEN
+        EXECUTE format('CREATE USER %I WITH PASSWORD %L', db_user, db_password);
+        EXECUTE format('ALTER USER %I WITH CREATEDB', db_user);
+        RAISE NOTICE 'User % created', db_user;
+    ELSE 
+        RAISE NOTICE 'User % already exists', db_user;
+    END IF;
+    -- Stop script if database already exists
+    IF EXISTS (SELECT FROM pg_catalog.pg_database WHERE datname=db_name) THEN
+        RAISE NOTICE 'Database % already exists', db_name;
+        RAISE EXCEPTION 'If attempting to reinitialize database % owned by %, drop the database first.', db_name, db_user;
+    END IF;
+END $$;
+
+CREATE DATABASE :db_name;
+\c :db_name;
+
+-- Grant privileges to the user
+GRANT ALL PRIVILEGES ON DATABASE :db_name TO :db_user;
+GRANT ALL ON SCHEMA public TO :db_user;
+
+-- Create tables for Memsheets application
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS groups (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sheets (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    title VARCHAR(200) NOT NULL,
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS sheet_groups (
+    sheet_id INTEGER REFERENCES sheets(id) ON DELETE CASCADE,
+    group_id INTEGER REFERENCES groups(id) ON DELETE CASCADE,
+    PRIMARY KEY (sheet_id, group_id)
+);
+
+-- Create indexes for better performance
+CREATE INDEX IF NOT EXISTS idx_sheets_user_id ON sheets(user_id);
+CREATE INDEX IF NOT EXISTS idx_sheets_created_at ON sheets(created_at);
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+
+-- Insert some sample data
+-- INSERT INTO groups (name, description) VALUES 
+--     ('Personal', 'Personal memory sheets'),
+--     ('Work', 'Work-related memory sheets'),
+--     ('Study', 'Study and learning materials')
+-- ON CONFLICT DO NOTHING;
+
+-- COMMIT;
