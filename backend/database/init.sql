@@ -26,19 +26,15 @@ BEGIN
     END IF;
 END $$;
 
-CREATE DATABASE :db_name;
+CREATE DATABASE :db_name WITH OWNER :db_user;
 \c :db_name;
-
--- Grant privileges to the user
-GRANT ALL PRIVILEGES ON DATABASE :db_name TO :db_user;
-GRANT ALL ON SCHEMA public TO :db_user;
 
 -- Create tables for Memsheets application
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -71,11 +67,7 @@ CREATE INDEX IF NOT EXISTS idx_sheets_created_at ON sheets(created_at);
 CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
--- Insert some sample data
--- INSERT INTO groups (name, description) VALUES 
---     ('Personal', 'Personal memory sheets'),
---     ('Work', 'Work-related memory sheets'),
---     ('Study', 'Study and learning materials')
--- ON CONFLICT DO NOTHING;
-
--- COMMIT;
+-- Grant privileges to the user
+GRANT ALL PRIVILEGES ON DATABASE :db_name TO :db_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO memsheets_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO memsheets_user;

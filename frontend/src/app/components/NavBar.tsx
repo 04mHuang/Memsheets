@@ -63,7 +63,7 @@ const NavBar = () => {
       {/* TODO: add non-arbitrary conditional */}
       {1===1 ?
         <div>
-          {/* <Link href="/signup">Sign up</Link> */}
+          <Link href="/signup">Sign up</Link>
           <Link href="/login">Login</Link>
         </div>
         :
