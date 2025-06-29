@@ -38,8 +38,7 @@ def create_user():
       print(f'Error creating user: {e}')
       # UNIQUE constraint violation handling for email
       if 'duplicate key value violates unique constraint' in str(e):
-        if 'email' in str(e):
-          return {'error': 'Email in use'}, 400
+        return {'error': 'Email in use'}, 400
       return {'error': 'Registration failed'}, 500
 
 if __name__ == '__main__':
