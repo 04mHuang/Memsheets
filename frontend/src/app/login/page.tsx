@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import axios from "axios";
 
 const Login = () => {
@@ -9,6 +10,7 @@ const Login = () => {
     password: ""
   })
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -17,8 +19,11 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post("/api/login", formData);
-      console.log("Successful login: ", res.data);
+      const response = await axios.post("/api/login", formData);
+      // Clear errors before redirecting in case of slow loading
+      setError(null);
+      localStorage.setItem("token", response.data.token);
+      router.push("/sheets");
     }
     catch {
       setError("Invalid email or password.");

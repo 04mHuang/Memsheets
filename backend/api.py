@@ -3,11 +3,14 @@ from dotenv import load_dotenv
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask import Flask, request
+
 from database.db import db
 from database.models import User
+from jwt_util import create_token, verify_token
 
 load_dotenv()
 
+# Setting up the app and connecting to database
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app)
@@ -47,9 +50,12 @@ def login_user():
         if not data or 'email' not in data or 'password' not in data:
             return {'error': 'Invalid input'}, 400
         
+        # Search for user with the inputted email
         user = User.query.filter_by(email=data['email']).first()
         if user and bcrypt.check_password_hash(user.password, data['password']):
-            return {'message': 'Login successful'}, 200
+            # Create and return JWT to client
+            token = create_token(user.id)
+            return {'token': token}, 200
         else:
             return {'error': 'Invalid email or password'}, 401
     except Exception as e:
