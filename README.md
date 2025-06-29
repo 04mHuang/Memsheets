@@ -1,8 +1,13 @@
 # Memsheets
 
-In backend:
+## In backend:
 ```
 python -m venv venv
 source venv/bin/activate
-pip install flask python-dotenv
+flask run
+```
+To set up the database:
+```
+chmod +x database/init-wrapper.sh
+./database/init-wrapper.sh
 ```
