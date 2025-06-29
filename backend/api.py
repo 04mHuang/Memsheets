@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask import Flask, request
@@ -40,6 +39,22 @@ def create_user():
       if 'duplicate key value violates unique constraint' in str(e):
         return {'error': 'Email in use'}, 400
       return {'error': 'Registration failed'}, 500
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    try:
+        data = request.json
+        if not data or 'email' not in data or 'password' not in data:
+            return {'error': 'Invalid input'}, 400
+        
+        user = User.query.filter_by(email=data['email']).first()
+        if user and bcrypt.check_password_hash(user.password, data['password']):
+            return {'message': 'Login successful'}, 200
+        else:
+            return {'error': 'Invalid email or password'}, 401
+    except Exception as e:
+        print(f'Error logging in user: {e}')
+        return {'error': 'Login failed'}, 500
 
 if __name__ == '__main__':
     app.run(debug=True)
