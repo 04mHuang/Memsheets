@@ -14,6 +14,29 @@ const Signup = () => {
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const router = useRouter();
 
+  const validateForm = () => {
+    // Disallow form inputs of only whitespace
+    for (const key in formData) {
+      // Check key is valid for formData
+      if (formData[key as keyof typeof formData].trim() === "") {
+        setErrors(prev => ({ ...prev, [key]: "This field is required and cannot just be spaces." }));
+        return false;
+      } else {
+        setErrors(prev => ({ ...prev, [key]: "" })); // Clear error for this field
+      }
+    }
+    // Checks for password fields
+    if (formData.password.length < 8) {
+      setErrors(prev => ({ ...prev, password: "Password must be at least 8 characters long." }));
+      return false;
+    }
+    if (formData.password !== formData.confirmPassword) {
+      setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match." }));
+      return false;
+    }
+    return true;
+  }
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -22,29 +45,10 @@ const Signup = () => {
   // TODO: remove console.error and log
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Disallow form inputs of only whitespace
-    for (const key in formData) {
-      // Check key is valid for formData
-      if (formData[key as keyof typeof formData].trim() === "") {
-        setErrors(prev => ({ ...prev, [key]: "All fields are required." }));
-        return;
-      } else {
-        setErrors(prev => ({ ...prev, [key]: "" })); // Clear error for this field
-      }
-    }
-    // Checks for password fields
-    if (formData.password.length < 8) {
-      setErrors(prev => ({ ...prev, password: "Password must be at least 8 characters long." }));
-      return;
-    }
-    if (formData.password !== formData.confirmPassword) {
-      setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match." }));
-      return;
-    }
+    if (!validateForm()) return;
     try {
       const response = await axios.post("/api/signup", formData);
       console.log("Signup successful:", response.data);
-
       // Clear errors before redirecting in case of slow loading
       setErrors({});
       router.push("/login");
@@ -64,6 +68,7 @@ const Signup = () => {
           <br />
           <input type="text" onChange={handleChange} name="username" required />
         </label>
+        {errors.username && <p className="error">{errors.username}</p>}
         <label className="step-2">
           Email
           <br />
