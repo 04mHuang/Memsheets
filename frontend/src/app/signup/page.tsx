@@ -25,6 +25,21 @@ const Signup = () => {
         setErrors(prev => ({ ...prev, [key]: "" })); // Clear error for this field
       }
     }
+
+    // Checks for length of fields (limits set by database schema)
+    if (formData.username.length > 50) {
+      setErrors(prev => ({ ...prev, username: "Username must be 50 characters or less." }));
+      return false;
+    }
+    if (formData.email.length > 100) {
+      setErrors(prev => ({ ...prev, email: "Email must be 100 characters or less." }));
+      return false;
+    }
+    if (formData.password.length > 255) {
+      setErrors(prev => ({ ...prev, password: "Password must be 255 characters or less." }));
+      return false;
+    }
+
     // Checks for password fields
     if (formData.password.length < 8) {
       setErrors(prev => ({ ...prev, password: "Password must be at least 8 characters long." }));
@@ -42,7 +57,6 @@ const Signup = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  // TODO: remove console.error and log
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -53,18 +67,14 @@ const Signup = () => {
         username: formData.username.trim(),
         email: formData.email.trim()
       }
-      // setFormData(prev => ({ ...prev, username: prev.username.trim(), email: prev.email.trim() }));
-      console.log("Submitting signup form with data:", trimmedData);
-      const response = await axios.post("/api/signup", trimmedData);
-      console.log("Signup successful:", response.data);
+      await axios.post("/api/signup", trimmedData);
       // Clear errors before redirecting in case of slow loading
       setErrors({});
       router.push("/login");
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data?.error === "Email in use") {
-        setErrors(prev => ({ ...prev, email: "Email is in use. Please use a different email."}));
+        setErrors(prev => ({ ...prev, email: "Email is in use. Please use a different email." }));
       }
-      console.error("Signup error:", error);
     }
   };
 
