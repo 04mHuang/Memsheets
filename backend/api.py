@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 from flask import Flask, request
 from database.db import db
 from database.models import User
@@ -9,6 +10,7 @@ from database.models import User
 load_dotenv()
 
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 CORS(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@localhost:5432/memsheets'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -21,12 +23,14 @@ def create_user():
       data = request.json
       if not data or 'username' not in data or 'email' not in data or 'password' not in data:
         return {'error': 'Invalid input'}, 400
+      # flask_bcrypt automatically salts and hashes
+      hashed_password = bcrypt.generate_password_hash(data['password']).decode('utf-8')
+      # Create a new user using models.py
       new_user = User(
           username=data['username'],
           email=data['email'],
-          password=data['password']
+          password=hashed_password
       )
-      
       db.session.add(new_user)
       db.session.commit()
       return {'message': 'User created successfully'}, 201
