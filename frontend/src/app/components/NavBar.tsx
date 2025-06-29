@@ -54,8 +54,8 @@ const NavBar = () => {
       <Link href="/" aria-label="Home">
         <Image src="/vercel.svg" alt="Memsheets logo" width={40} height={40} />
       </Link>
-      <Link href="/sheets">
-        Sheets
+      <Link href="/groups">
+        Groups
       </Link>
       <div className="w-lg">
         <input type="text" placeholder="Search..." className="w-full" />

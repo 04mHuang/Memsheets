@@ -1,6 +1,6 @@
 import Group from '@/app/components/Group';
 
-const Sheets = () => {
+const Groups = () => {
   const arr = ["a", "b", "c"];
 
   return (
@@ -13,4 +13,4 @@ const Sheets = () => {
   );
 }
 
-export default Sheets;
+export default Groups;
