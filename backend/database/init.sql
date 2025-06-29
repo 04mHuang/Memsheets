@@ -31,7 +31,7 @@ CREATE DATABASE :db_name WITH OWNER :db_user;
 -- Create tables for Memsheets
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
+    username VARCHAR(50) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE TABLE IF NOT EXISTS groups (
     id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
+    name VARCHAR(100) UNIQUE NOT NULL,
     color TEXT DEFAULT '#F5EDE3',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS sheets (
     title VARCHAR(200) NOT NULL,
     nickname TEXT,
     pronouns TEXT,
-    birthdate DATE,
+    birthday DATE,
     likes TEXT,
     dislikes TEXT,
     allergies TEXT,
