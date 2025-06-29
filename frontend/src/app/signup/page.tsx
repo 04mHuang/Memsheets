@@ -22,15 +22,30 @@ const Signup = () => {
   // TODO: remove console.error and log
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    // Disallow form inputs of only whitespace
+    for (const key in formData) {
+      // Check key is valid for formData
+      if (formData[key as keyof typeof formData].trim() === "") {
+        setErrors(prev => ({ ...prev, [key]: "All fields are required." }));
+        return;
+      } else {
+        setErrors(prev => ({ ...prev, [key]: "" })); // Clear error for this field
+      }
+    }
+    // Checks for password fields
+    if (formData.password.length < 8) {
+      setErrors(prev => ({ ...prev, password: "Password must be at least 8 characters long." }));
+      return;
+    }
     if (formData.password !== formData.confirmPassword) {
-      console.error("Passwords do not match");
+      setErrors(prev => ({ ...prev, confirmPassword: "Passwords do not match." }));
       return;
     }
     try {
       const response = await axios.post("/api/signup", formData);
       console.log("Signup successful:", response.data);
 
-      // Clear errors before redirecting
+      // Clear errors before redirecting in case of slow loading
       setErrors({});
       router.push("/login");
     } catch (error) {
@@ -60,11 +75,13 @@ const Signup = () => {
           <br />
           <input type="password" onChange={handleChange} name="password" required />
         </label>
+        {errors.password && <p className="error">{errors.password}</p>}
         <label className="step-4">
           Confirm Password
           <br />
           <input type="password" onChange={handleChange} name="confirmPassword" required />
         </label>
+        {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
         <button type="submit" className="step-5">Sign up</button>
       </form>
     </div>
