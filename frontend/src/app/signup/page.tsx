@@ -47,7 +47,15 @@ const Signup = () => {
     e.preventDefault();
     if (!validateForm()) return;
     try {
-      const response = await axios.post("/api/signup", formData);
+      // Remove trailing whitespace from username and email fields
+      const trimmedData = {
+        ...formData,
+        username: formData.username.trim(),
+        email: formData.email.trim()
+      }
+      // setFormData(prev => ({ ...prev, username: prev.username.trim(), email: prev.email.trim() }));
+      console.log("Submitting signup form with data:", trimmedData);
+      const response = await axios.post("/api/signup", trimmedData);
       console.log("Signup successful:", response.data);
       // Clear errors before redirecting in case of slow loading
       setErrors({});
