@@ -1,14 +1,16 @@
 import os
 from dotenv import load_dotenv
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 from flask import Flask, request
+
 from database.db import db
 from database.models import User
+from jwt_util import create_token, verify_token
 
 load_dotenv()
 
+# Setting up the app and connecting to database
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app)
@@ -40,6 +42,37 @@ def create_user():
       if 'duplicate key value violates unique constraint' in str(e):
         return {'error': 'Email in use'}, 400
       return {'error': 'Registration failed'}, 500
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    try:
+        data = request.json
+        if not data or 'email' not in data or 'password' not in data:
+            return {'error': 'Invalid input'}, 400
+        
+        # Search for user with the inputted email
+        user = User.query.filter_by(email=data['email']).first()
+        if user and bcrypt.check_password_hash(user.password, data['password']):
+            # Create and return JWT to client
+            token = create_token(user.id)
+            return {'token': token}, 200
+        else:
+            return {'error': 'Invalid email or password'}, 401
+    except Exception as e:
+        print(f'Error logging in user: {e}')
+        return {'error': 'Login failed'}, 500
+
+@app.route('/groups', methods=['GET'])
+def get_groups():
+  auth = request.headers.get('Authorization')
+  if not auth:
+     return { 'error': 'token in header missing' }, 401
+  # auth is currently Bearer <TOKEN>
+  token = auth.split(' ')[1]
+  user_id = verify_token(token)
+  if not user_id:
+     return { 'error': 'Invalid token'}, 401
+  return { 'message': 'success' }, 200
 
 if __name__ == '__main__':
     app.run(debug=True)
