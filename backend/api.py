@@ -5,7 +5,7 @@ from flask_bcrypt import Bcrypt
 from flask import Flask, request
 
 from database.db import db
-from database.models import User
+from database.models import User, Group
 from jwt_util import create_token, verify_token
 
 load_dotenv()
@@ -73,6 +73,31 @@ def get_groups():
   if not user_id:
      return { 'error': 'Invalid token'}, 401
   return { 'message': 'success' }, 200
+
+@app.route('/new-group', methods=['POST'])
+def create_group():
+    try:
+      data = request.json
+      auth = request.headers.get('Authorization')
+      if not auth:
+        return { 'error': 'token in header missing' }, 401
+      # auth is currently Bearer <TOKEN>
+      token = auth.split(' ')[1]
+      user_id = verify_token(token)
+      if not user_id:
+        return { 'error': 'Invalid token'}, 401
+      new_group = Group(
+         user_id=user_id,
+         name=data['name'],
+         color=data['color']
+      )
+      db.session.add(new_group)
+      db.session.commit()
+      return {'message': 'Successful group creation'}, 201
+    except Exception as e:
+      print(f'Error creating group: {e}')
+      return {'error': 'New group creation failed'}, 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)

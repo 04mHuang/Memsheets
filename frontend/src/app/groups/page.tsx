@@ -1,15 +1,12 @@
 "use client";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
 import Group from '@/app/components/Group';
 
 const Groups = () => {
-  // useEffect(() => {
-  //   axiosInstance.get("/groups")
-  //     .then(res => console.log(res.data))
-  //     .catch(err => console.error(err));
-  // }, []);
+  const router = useRouter();
   useEffect(() => {
     (async () => {
       try {
@@ -26,6 +23,7 @@ const Groups = () => {
   return (
     <div>
       <h1 className="text-2xl">Sheets</h1>
+      <button onClick={() => {router.push("/groups/edit")}}>Create group</button>
       {arr.map((item, index) => (
         <Group key={index} group={item} />
       ))}
