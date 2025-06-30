@@ -6,7 +6,7 @@ from flask import Flask, request
 
 from database.db import db
 from database.models import User, Group
-from jwt_util import create_token, verify_token
+from jwt_util import create_token, check_auth_header
 
 load_dotenv()
 
@@ -65,11 +65,7 @@ def login_user():
 @app.route('/groups', methods=['GET'])
 def get_groups():
   auth = request.headers.get('Authorization')
-  if not auth:
-     return { 'error': 'token in header missing' }, 401
-  # auth is currently Bearer <TOKEN>
-  token = auth.split(' ')[1]
-  user_id = verify_token(token)
+  user_id = check_auth_header(auth)
   if not user_id:
      return { 'error': 'Invalid token'}, 401
   return { 'message': 'success' }, 200
@@ -79,11 +75,7 @@ def create_group():
     try:
       data = request.json
       auth = request.headers.get('Authorization')
-      if not auth:
-        return { 'error': 'token in header missing' }, 401
-      # auth is currently Bearer <TOKEN>
-      token = auth.split(' ')[1]
-      user_id = verify_token(token)
+      user_id = check_auth_header(auth)
       if not user_id:
         return { 'error': 'Invalid token'}, 401
       new_group = Group(
