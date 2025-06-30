@@ -62,5 +62,17 @@ def login_user():
         print(f'Error logging in user: {e}')
         return {'error': 'Login failed'}, 500
 
+@app.route('/groups', methods=['GET'])
+def get_groups():
+  auth = request.headers.get('Authorization')
+  if not auth:
+     return { 'error': 'token in header missing' }, 401
+  # auth is currently Bearer <TOKEN>
+  token = auth.split(' ')[1]
+  user_id = verify_token(token)
+  if not user_id:
+     return { 'error': 'Invalid token'}, 401
+  return { 'message': 'success' }, 200
+
 if __name__ == '__main__':
     app.run(debug=True)

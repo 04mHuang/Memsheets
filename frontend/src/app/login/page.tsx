@@ -23,7 +23,7 @@ const Login = () => {
       // Clear errors before redirecting in case of slow loading
       setError(null);
       localStorage.setItem("token", response.data.token);
-      router.push("/sheets");
+      router.push("/groups");
     }
     catch {
       setError("Invalid email or password.");
