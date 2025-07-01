@@ -68,7 +68,10 @@ def get_groups():
   user_id = check_auth_header(auth)
   if not user_id:
      return { 'error': 'Invalid token'}, 401
-  return { 'message': 'success' }, 200
+  
+  groups = Group.query.filter_by(user_id=user_id).all()
+  groups_data = [{'id': g.id, 'name': g.name, 'color': g.color} for g in groups]
+  return {'groups': groups_data}, 200
 
 @app.route('/new-group', methods=['POST'])
 def create_group():
