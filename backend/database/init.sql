@@ -50,6 +50,7 @@ CREATE TABLE IF NOT EXISTS sheets (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     title VARCHAR(200) NOT NULL,
+    -- color TEXT DEFAULT '#F5EDE3',
     nickname TEXT,
     pronouns TEXT,
     birthday DATE,
