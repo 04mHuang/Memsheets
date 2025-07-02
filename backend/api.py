@@ -5,8 +5,8 @@ from flask_bcrypt import Bcrypt
 from flask import Flask, request
 
 from database.db import db
-from database.models import User
-from jwt_util import create_token, verify_token
+from database.models import User, Group, Sheet
+from jwt_util import create_token, check_auth_header
 
 load_dotenv()
 
@@ -64,15 +64,52 @@ def login_user():
 
 @app.route('/groups', methods=['GET'])
 def get_groups():
-  auth = request.headers.get('Authorization')
-  if not auth:
-     return { 'error': 'token in header missing' }, 401
-  # auth is currently Bearer <TOKEN>
-  token = auth.split(' ')[1]
-  user_id = verify_token(token)
+  user_id = check_auth_header(request.headers.get('Authorization'))
   if not user_id:
      return { 'error': 'Invalid token'}, 401
-  return { 'message': 'success' }, 200
+  
+  groups = Group.query.filter_by(user_id=user_id).all()
+  groups_data = [{'id': g.id, 'name': g.name, 'color': g.color} for g in groups]
+  return {'groups': groups_data}, 200
+
+@app.route('/new-group', methods=['POST'])
+def create_group():
+    try:
+      data = request.json
+      user_id = check_auth_header(request.headers.get('Authorization'))
+      if not user_id:
+        return { 'error': 'Invalid token'}, 401
+      new_group = Group(
+         user_id=user_id,
+         name=data['name'],
+         color=data['color']
+      )
+      db.session.add(new_group)
+      db.session.commit()
+      return {'message': 'Successful group creation'}, 201
+    except Exception as e:
+      print(f'Error creating group: {e}')
+      return {'error': 'New group creation failed'}, 500
+
+@app.route('/groups/<int:group_id>', methods=['GET'])
+def get_sheets_by_group(group_id):
+  try:
+     print(f'inside /groups/{group_id}')
+     user_id = check_auth_header(request.headers.get('Authorization'))
+     if not user_id:
+        return { 'error': 'Invalid token'}, 401
+     
+     group = Group.query.filter_by(id=group_id, user_id=user_id).first()
+     if not group:
+        return { 'error': 'Group not found'}, 404
+     
+     # Get all sheets associated with this group
+    #  sheets_data = [{'id': s.id, 'title': s.title, 'color': s.color} for s in group.sheets]
+     sheets_data = [{'id': s.id, 'title': s.title} for s in group.sheets]
+     return {'sheets': sheets_data}, 200
+  except Exception as e:
+     print(f'Error fetching sheets: {e}')
+     return { 'error': 'Fetching sheets failed'}, 500
 
 if __name__ == '__main__':
     app.run(debug=True)
