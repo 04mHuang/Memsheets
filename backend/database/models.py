@@ -10,8 +10,8 @@ class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    username = db.Column(db.String(50), nullable=False, index=True)
+    email = db.Column(db.String(100), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
 
@@ -22,9 +22,9 @@ class Sheet(db.Model):
     __tablename__ = 'sheets'
     
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     title = db.Column(db.String(200), nullable=False)
-    # color = db.Column(db.String(7), nullable=False)
+    color = db.Column(db.String(7), nullable=False)
     nickname = db.Column(db.Text)
     pronouns = db.Column(db.Text)
     birthday = db.Column(db.Date)
@@ -32,7 +32,7 @@ class Sheet(db.Model):
     dislikes = db.Column(db.Text)
     allergies = db.Column(db.Text)
     notes = db.Column(db.Text)
-    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp(), index=True)
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
     # Associates sheet with groups table
@@ -56,3 +56,17 @@ class Group(db.Model):
     
     def __repr__(self):
         return f'<Group {self.name}>'
+
+class Event(db.Model):
+    __tablename__ = 'events'
+
+    id = db.Column(db.Integer, primary_key=True)
+    sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'), nullable=False)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.String(250), nullable=False)
+    reminder = db.Column(db.Enum('none','weekly', 'monthly', 'yearly', name='reminder_type'), default='none')
+    created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+
+    def __repr__(self):
+        return f'<Event {self.name}>'

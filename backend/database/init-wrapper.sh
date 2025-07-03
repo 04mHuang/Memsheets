@@ -5,9 +5,10 @@ set -a
 source .env
 set +a
 
-# Use default port and hostname
+# Some users may not have a password set for superuser postgres
 sudo -u postgres psql \
   -v db_user="$DB_USER" \
   -v db_password="$DB_PASSWORD" \
-  -v db_name="memsheets" \
   -f database/init.sql
+
+python -m database.db_init
