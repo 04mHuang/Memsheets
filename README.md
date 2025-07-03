@@ -10,9 +10,9 @@ cd backend
 
 Create a .env file such as:
 ```
-DB_USER=mem_user
-DB_PASSWORD=mem_password
-SECRET_KEY=unbelievable_secret
+DB_USER=<INSERT ANYTHING>
+DB_PASSWORD=<INSERT ANYTHING>
+SECRET_KEY=<INSERT ANYTHING>
 ```
 Set up virtual environment and run server:
 ```
