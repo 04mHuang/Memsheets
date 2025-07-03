@@ -1,18 +1,18 @@
 import { useRouter } from "next/navigation";
 
-interface GroupInterface {
+interface CardInterface {
   id: string,
   name: string,
   color: string,
 }
 
-const Group = ({ group }: { group: GroupInterface }) => {
+const Card = ({ item, type }: { item: CardInterface; type: string }) => {
   const router = useRouter();
-  const group_id = group.id;
-  const color = group.color;
+  const id = item.id;
+  const color = item.color;
 
   const handleClick = () => {
-    router.push(`/groups/${group_id}`);
+    router.push(`/${type}/${id}`);
   }
   return (
     <div
@@ -20,10 +20,10 @@ const Group = ({ group }: { group: GroupInterface }) => {
       className="container max-w-screen-xl px-4"
       style={{ backgroundColor: color }}
     >
-      <h1 className="text-xl font-bold mb-4">Group Component</h1>
-      <p>{group.name}</p>
+      <h1 className="text-xl font-bold mb-4">Card Component</h1>
+      <p>{item.name}</p>
     </div>
   );
 }
 
-export default Group;
+export default Card;
