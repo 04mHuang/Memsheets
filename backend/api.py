@@ -115,11 +115,62 @@ def get_sheets_by_group(group_id):
         return { 'error': 'Group not found'}, 404
      
      # Get all sheets associated with this group
-     sheets_data = [{'id': s.id, 'title': s.title, 'color': s.color} for s in group.sheets]
+     sheets_data = [{'id': s.id, 'name': s.name, 'color': s.color} for s in group.sheets]
      return {'sheets': sheets_data}, 200
   except Exception as e:
      print(f'Error fetching sheets: {e}')
      return { 'error': 'Fetching sheets failed'}, 500
+
+@app.route('/sheets/<int:sheet_id>', methods=['GET'])
+def get_sheets(sheet_id):
+   user_id = check_auth_header(request.headers.get('Authorization'))
+   if not user_id:
+    return { 'error': 'Invalid token'}, 401
+   sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).all()
+   if not sheet:
+        return { 'error': 'Sheet not found'}, 404
+   sheet_data = [{
+     'id': sheet.id,
+     'name': sheet.name,
+     'color': sheet.color,
+     'nickname': sheet.nickname,
+     'pronouns': sheet.pronouns,
+     'birthday': sheet.birthday,
+     'likes': sheet.likes,
+     'dislikes': sheet.dislikes,
+     'allergies': sheet.allergies,
+     'notes': sheet.notes
+   }]
+   return {'sheet': sheet_data}, 200
+
+@app.route('/new-sheet', methods=['POST'])
+def create_sheet():
+    try:
+      user_id = check_auth_header(request.headers.get('Authorization'))
+      if not user_id:
+        return { 'error': 'Invalid token'}, 401
+      data = request.json
+      if not data or 'name' not in data:
+         return {'error': 'Invalid input'}, 400
+         
+      new_sheet = Sheet(
+         user_id=user_id,
+         name=data['name'],
+         color=data.get('color'),
+         nickname=data.get('nickname'),
+         pronouns=data.get('pronouns'),
+         birthday=data.get('birthday'),
+         likes=data.get('likes'),
+         dislikes=data.get('dislikes'),
+         allergies=data.get('allergies'),
+         notes=data.get('notes')
+      )
+      db.session.add(new_sheet)
+      db.session.commit()
+      return {'message': 'Sheet created successfully'}, 201
+    except Exception as e:
+      print(f'Error creating sheet {e}')
+      return {'error': 'New sheet creation failed'}, 500
 
 if __name__ == '__main__':
     app.run(debug=True)

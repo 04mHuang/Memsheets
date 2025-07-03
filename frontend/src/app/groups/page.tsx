@@ -12,6 +12,7 @@ const Groups = () => {
     (async () => {
       try {
         const response = await axiosInstance.get("/groups");
+        console.log(response.data.groups);
         setGroups(response.data.groups);
       }
       catch (error) {
