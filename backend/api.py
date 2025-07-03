@@ -35,6 +35,16 @@ def create_user():
       )
       db.session.add(new_user)
       db.session.commit()
+      
+      # Create default 'Miscellaneous' group for new user
+      default_group = Group(
+          user_id=new_user.id,
+          name='Miscellaneous',
+          color='#F5EDE3'
+      )
+      db.session.add(default_group)
+      db.session.commit()
+      
       return {'message': 'User created successfully'}, 201
     except Exception as e:
       print(f'Error creating user: {e}')
@@ -104,8 +114,7 @@ def get_sheets_by_group(group_id):
         return { 'error': 'Group not found'}, 404
      
      # Get all sheets associated with this group
-    #  sheets_data = [{'id': s.id, 'title': s.title, 'color': s.color} for s in group.sheets]
-     sheets_data = [{'id': s.id, 'title': s.title} for s in group.sheets]
+     sheets_data = [{'id': s.id, 'title': s.title, 'color': s.color} for s in group.sheets]
      return {'sheets': sheets_data}, 200
   except Exception as e:
      print(f'Error fetching sheets: {e}')
