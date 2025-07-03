@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
-import Group from '@/app/components/Group';
+import Card from '@/app/components/Card';
 
 const Groups = () => {
   const router = useRouter();
@@ -25,7 +25,7 @@ const Groups = () => {
       <h1 className="text-2xl">Sheets</h1>
       <button onClick={() => {router.push("/groups/edit")}}>Create group</button>
       {groups.map((item) => (
-        <Group key={item["name"]} group={item} />
+        <Card key={item["name"]} item={item} type="groups" />
       ))}
     </div>
   );

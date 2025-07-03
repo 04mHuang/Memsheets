@@ -40,7 +40,7 @@ def create_user():
       default_group = Group(
           user_id=new_user.id,
           name='Miscellaneous',
-          color='#F5EDE3'
+          color='#999999'
       )
       db.session.add(default_group)
       db.session.commit()
@@ -85,10 +85,12 @@ def get_groups():
 @app.route('/new-group', methods=['POST'])
 def create_group():
     try:
-      data = request.json
       user_id = check_auth_header(request.headers.get('Authorization'))
       if not user_id:
         return { 'error': 'Invalid token'}, 401
+      data = request.json
+      if not data or 'name' not in data:
+         return {'error': 'Invalid input'}, 400
       new_group = Group(
          user_id=user_id,
          name=data['name'],
@@ -104,7 +106,6 @@ def create_group():
 @app.route('/groups/<int:group_id>', methods=['GET'])
 def get_sheets_by_group(group_id):
   try:
-     print(f'inside /groups/{group_id}')
      user_id = check_auth_header(request.headers.get('Authorization'))
      if not user_id:
         return { 'error': 'Invalid token'}, 401
