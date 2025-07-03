@@ -8,6 +8,6 @@ flask run
 ```
 To set up the database:
 ```
-chmod +x database/init-wrapper.sh
-./database/init-wrapper.sh
+chmod +x database/init_wrapper.sh
+./database/init_wrapper.sh
 ```
