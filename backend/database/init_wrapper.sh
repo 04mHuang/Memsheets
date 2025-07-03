@@ -11,4 +11,4 @@ sudo -u postgres psql \
   -v db_password="$DB_PASSWORD" \
   -f database/init.sql
 
-python -m database.db_init
+python3 -m database.db_init

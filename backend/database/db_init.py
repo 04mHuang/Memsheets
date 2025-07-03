@@ -46,7 +46,7 @@ def create_database():
 def create_tables():
   # Connect to database
   app = Flask(__name__)
-  app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@localhost:5432/memsheets'
+  app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
   app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
   db.init_app(app)

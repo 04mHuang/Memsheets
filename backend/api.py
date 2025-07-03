@@ -35,6 +35,16 @@ def create_user():
       )
       db.session.add(new_user)
       db.session.commit()
+      
+      # Create default 'Miscellaneous' group for new user
+      default_group = Group(
+          user_id=new_user.id,
+          name='Miscellaneous',
+          color='#F5EDE3'
+      )
+      db.session.add(default_group)
+      db.session.commit()
+      
       return {'message': 'User created successfully'}, 201
     except Exception as e:
       print(f'Error creating user: {e}')
