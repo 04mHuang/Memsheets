@@ -139,7 +139,7 @@ def create_sheet():
         data = request.json
         if not data or "name" not in data:
             return {"error": "Invalid input"}, 400
-
+        print(f"Data: {data}")
         new_sheet = Sheet(
             user_id=user_id,
             name=data["name"],
@@ -155,7 +155,10 @@ def create_sheet():
         db.session.add(new_sheet)
         db.session.commit()
         # TODO: add sheets_group entry for new_sheet
-
+        # sheet_id = new_sheet.id
+        group = Group.query.get(data['group_id'])
+        new_sheet.groups.append(group)
+        db.session.commit()
         return {"message": "Sheet created successfully"}, 201
     except Exception as e:
         print(f"Error creating sheet {e}")

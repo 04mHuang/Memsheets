@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
 
 const EditSheet = () => {
   const router = useRouter();
+  const params = useParams();
+  const { group_id } = params;
   const [sheetForm, setSheetForm] = useState({
     "name": "",
     "color": "",
@@ -23,7 +25,7 @@ const EditSheet = () => {
       return;
     }
     try {
-      await axiosInstance.post("/new-sheet", sheetForm);
+      await axiosInstance.post("/new-sheet", { ...sheetForm, group_id: group_id });
       setError(null);
       router.back();
     }
