@@ -139,7 +139,7 @@ def create_sheet():
         data = request.json
         if not data or "name" not in data or "group_id" not in data:
             return {"error": "Invalid input"}, 400
-        group_id = data['group_id']
+        group_id = data["group_id"]
         new_sheet = Sheet(
             user_id=user_id,
             name=data["name"],
@@ -186,6 +186,34 @@ def get_sheet(sheet_id):
         }
     ]
     return {"sheet": sheet_data}, 200
+
+
+@app.route("/sheets/<int:sheet_id>/edit", methods=["POST"])
+def update_sheet(sheet_id):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
+    if not sheet:
+        return {"error": "Sheet not found"}, 404
+    data = request.json
+    for key, value in data.items():
+        setattr(sheet, key, value)
+    db.session.commit()
+    return {
+        "message": "Sheet updated successfully",
+        "sheet": {
+            "name": sheet.name,
+            "color": sheet.color,
+            "nickname": sheet.nickname,
+            "pronouns": sheet.pronouns,
+            "birthday": sheet.birthday,
+            "likes": sheet.likes,
+            "dislikes": sheet.dislikes,
+            "allergies": sheet.allergies,
+            "notes": sheet.notes,
+        },
+    }, 200
 
 
 if __name__ == "__main__":
