@@ -1,4 +1,5 @@
 "use client";
+
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Card from "@/app/components/Card";
@@ -10,7 +11,6 @@ const GroupSheets = () => {
   const { group_id } = params;
   const [sheets, setSheets] = useState([]);
   const handleAdd = () => {
-    console.log("sheets ", sheets);
     router.push(`/groups/${group_id}/sheets/add`);
   }
 
@@ -26,12 +26,7 @@ const GroupSheets = () => {
   return (
     <div>
       <h1>Sheets for group</h1>
-      <button
-        onClick={handleAdd}
-      >
-        Add Sheet
-      </button>
-      
+      <button onClick={handleAdd}>Add Sheet</button>
       {sheets.map((item) => (
         <Card key={item["name"]} item={item} type="sheets" />
       ))}
