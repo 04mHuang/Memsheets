@@ -55,6 +55,7 @@ const Sheet = () => {
 
   return (
     <div>
+      {/* Save button acts as a submit button for the form */}
       <button onClick={handleModeToggle}>
         {editMode ?
           "Save"
@@ -64,7 +65,7 @@ const Sheet = () => {
       </button>
       {editMode ?
         // TODO: convert form into component to be used between here and /sheets/edit
-        <form>
+        <form method="POST" onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}>
           <input
             type="text"
             name="name"
@@ -78,8 +79,6 @@ const Sheet = () => {
         :
         <h1>{sheet.name}</h1>
       }
-
-
     </div>
   );
 }
