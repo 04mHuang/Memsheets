@@ -3,29 +3,33 @@
 import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
+import SheetForm from "@/app/components/SheetForm";
 
 const EditSheet = () => {
   const router = useRouter();
   const params = useParams();
   const { group_id } = params;
-  const [sheetForm, setSheetForm] = useState({
-    "name": "",
-    "color": "",
-  });
+  const [sheet, setSheet] = useState({
+      "name": "",
+      "color": "",
+      "nickname": "",
+      "pronouns": "",
+      "birthday": "",
+      "likes": "",
+      "dislikes": "",
+      "allergies": "",
+      "notes": ""
+    });
   const [error, setError] = useState<string | null>(null);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSheetForm({ ...sheetForm, [name]: value });
-  };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (sheetForm.name.trim() === "") {
+    if (sheet.name.trim() === "") {
       setError("Sheet name cannot just be spaces.");
       return;
     }
     try {
-      await axiosInstance.post("/new-sheet", { ...sheetForm, group_id: group_id });
+      await axiosInstance.post("/new-sheet", { ...sheet, group_id: group_id });
       setError(null);
       router.back();
     }
@@ -36,24 +40,7 @@ const EditSheet = () => {
   return (
     <div>
       <form method="POST" onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="name"
-          onChange={handleChange}
-          placeholder="Sheet name"
-          aria-label="Sheet name"
-          required
-        />
-        {error && <p>{error}</p>}
-        <label>
-          Sheet Color
-          <input
-            type="color"
-            name="color"
-            onChange={handleChange}
-            defaultValue="#999999"
-          />
-        </label>
+        <SheetForm sheet={sheet} setSheet={setSheet} error={error} />
         <button type="submit">
           Create Sheet
         </button>

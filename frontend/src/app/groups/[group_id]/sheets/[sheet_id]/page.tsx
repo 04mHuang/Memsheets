@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
+import SheetForm from "@/app/components/SheetForm";
 
 const Sheet = () => {
   const params = useParams<{ sheet_id: string }>();
@@ -48,10 +49,7 @@ const Sheet = () => {
     }
     setEditMode(!editMode);
   }
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setSheet({ ...sheet, [name]: value });
-  }
+  
 
   return (
     <div>
@@ -64,20 +62,20 @@ const Sheet = () => {
         }
       </button>
       {editMode ?
-        // TODO: convert form into component to be used between here and /sheets/edit
         <form method="POST" onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}>
-          <input
-            type="text"
-            name="name"
-            onChange={handleChange}
-            value={sheet.name}
-            placeholder="Sheet name"
-            aria-label="Sheet name"
-          />
-          {error && <p>{error}</p>}
+          <SheetForm sheet={sheet} setSheet={setSheet} error={error} />
         </form>
         :
-        <h1>{sheet.name}</h1>
+        <div style={{ backgroundColor: sheet.color }}>
+          <h1>{sheet.name}</h1>
+          <p>{sheet.nickname}</p>
+          <p>{sheet.pronouns}</p>
+          <p>{sheet.birthday}</p>
+          <p>{sheet.likes}</p>
+          <p>{sheet.dislikes}</p>
+          <p>{sheet.allergies}</p>
+          <p>{sheet.notes}</p>
+        </div>
       }
     </div>
   );
