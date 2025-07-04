@@ -11,7 +11,7 @@ const GroupSheets = () => {
   const [sheets, setSheets] = useState([]);
   const handleAdd = () => {
     console.log("sheets ", sheets);
-    router.push("/sheets/edit");
+    router.push(`/groups/${group_id}/sheets/add`);
   }
 
   useEffect(() => {

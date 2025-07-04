@@ -45,7 +45,6 @@ const Sheet = () => {
       </button>
       {editMode ?
       // TODO: convert form into component to be used between here and /sheets/edit
-      // TODO: change /sheets/edit to /sheets/add
         <form>
           <input
             type="text"

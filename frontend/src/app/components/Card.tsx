@@ -1,4 +1,4 @@
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 interface CardInterface {
   id: string,
@@ -7,12 +7,18 @@ interface CardInterface {
 }
 
 const Card = ({ item, type }: { item: CardInterface; type: string }) => {
+  const pathname = usePathname();
   const router = useRouter();
   const id = item.id;
   const color = item.color;
 
   const handleClick = () => {
-    router.push(`/${type}/${id}`);
+    if (type === "groups") {
+      router.push(`/${type}/${id}`);
+    }
+    else {
+      router.push(`${pathname}/${type}/${id}`);
+    }
   }
   return (
     <div

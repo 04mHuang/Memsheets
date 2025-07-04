@@ -146,6 +146,7 @@ def create_sheet():
       db.session.add(new_sheet)
       db.session.commit()
       # TODO: add sheets_group entry for new_sheet
+      
       return {'message': 'Sheet created successfully'}, 201
     except Exception as e:
       print(f'Error creating sheet {e}')
@@ -158,7 +159,7 @@ def get_sheet(sheet_id):
     return { 'error': 'Invalid token'}, 401
    sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
    if not sheet:
-        return { 'error': 'Sheet not found'}, 404
+    return { 'error': 'Sheet not found'}, 404
    sheet_data = [{
      'name': sheet.name,
      'color': sheet.color,
