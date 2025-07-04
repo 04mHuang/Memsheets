@@ -137,9 +137,9 @@ def create_sheet():
         if not user_id:
             return {"error": "Invalid token"}, 401
         data = request.json
-        if not data or "name" not in data:
+        if not data or "name" not in data or "group_id" not in data:
             return {"error": "Invalid input"}, 400
-        print(f"Data: {data}")
+        group_id = data['group_id']
         new_sheet = Sheet(
             user_id=user_id,
             name=data["name"],
@@ -154,9 +154,8 @@ def create_sheet():
         )
         db.session.add(new_sheet)
         db.session.commit()
-        # TODO: add sheets_group entry for new_sheet
-        # sheet_id = new_sheet.id
-        group = Group.query.get(data['group_id'])
+        # Add association between new sheet and correct group
+        group = Group.query.get(group_id)
         new_sheet.groups.append(group)
         db.session.commit()
         return {"message": "Sheet created successfully"}, 201
