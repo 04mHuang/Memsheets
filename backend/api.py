@@ -121,28 +121,6 @@ def get_sheets_by_group(group_id):
      print(f'Error fetching sheets: {e}')
      return { 'error': 'Fetching sheets failed'}, 500
 
-@app.route('/sheets/<int:sheet_id>', methods=['GET'])
-def get_sheets(sheet_id):
-   user_id = check_auth_header(request.headers.get('Authorization'))
-   if not user_id:
-    return { 'error': 'Invalid token'}, 401
-   sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).all()
-   if not sheet:
-        return { 'error': 'Sheet not found'}, 404
-   sheet_data = [{
-     'id': sheet.id,
-     'name': sheet.name,
-     'color': sheet.color,
-     'nickname': sheet.nickname,
-     'pronouns': sheet.pronouns,
-     'birthday': sheet.birthday,
-     'likes': sheet.likes,
-     'dislikes': sheet.dislikes,
-     'allergies': sheet.allergies,
-     'notes': sheet.notes
-   }]
-   return {'sheet': sheet_data}, 200
-
 @app.route('/new-sheet', methods=['POST'])
 def create_sheet():
     try:
@@ -167,10 +145,32 @@ def create_sheet():
       )
       db.session.add(new_sheet)
       db.session.commit()
+      # TODO: add sheets_group entry for new_sheet
       return {'message': 'Sheet created successfully'}, 201
     except Exception as e:
       print(f'Error creating sheet {e}')
       return {'error': 'New sheet creation failed'}, 500
+
+@app.route('/sheets/<int:sheet_id>', methods=['GET'])
+def get_sheet(sheet_id):
+   user_id = check_auth_header(request.headers.get('Authorization'))
+   if not user_id:
+    return { 'error': 'Invalid token'}, 401
+   sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
+   if not sheet:
+        return { 'error': 'Sheet not found'}, 404
+   sheet_data = [{
+     'name': sheet.name,
+     'color': sheet.color,
+     'nickname': sheet.nickname,
+     'pronouns': sheet.pronouns,
+     'birthday': sheet.birthday,
+     'likes': sheet.likes,
+     'dislikes': sheet.dislikes,
+     'allergies': sheet.allergies,
+     'notes': sheet.notes
+   }]
+   return {'sheet': sheet_data}, 200
 
 if __name__ == '__main__':
     app.run(debug=True)
