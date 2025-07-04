@@ -23,8 +23,8 @@ class Sheet(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
-    title = db.Column(db.String(200), nullable=False)
-    color = db.Column(db.String(7), nullable=False)
+    name = db.Column(db.String(200), nullable=False)
+    color = db.Column(db.String(7), default='#999999')
     nickname = db.Column(db.Text)
     pronouns = db.Column(db.Text)
     birthday = db.Column(db.Date)
@@ -39,7 +39,7 @@ class Sheet(db.Model):
     groups = db.relationship('Group', secondary=sheet_groups, back_populates='sheets')
     
     def __repr__(self):
-        return f'<Sheet {self.title}>'
+        return f'<Sheet {self.name}>'
 
 class Group(db.Model):
     __tablename__ = 'groups'
@@ -47,7 +47,7 @@ class Group(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    color = db.Column(db.String(7), nullable=False)
+    color = db.Column(db.String(7), default='#999999')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
     
@@ -62,7 +62,7 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'), nullable=False)
-    title = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.String(250), nullable=False)
     reminder = db.Column(db.Enum('none','weekly', 'monthly', 'yearly', name='reminder_type'), default='none')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())

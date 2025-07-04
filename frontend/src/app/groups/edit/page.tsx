@@ -8,7 +8,7 @@ const EditGroup = () => {
   const router = useRouter();
   const [groupForm, setGroupForm] = useState({
     "name": "",
-    "color": "#F5EDE3",
+    "color": "",
   });
   const [error, setError] = useState<string | null>(null);
 
@@ -49,7 +49,7 @@ const EditGroup = () => {
           type="color"
           name="color"
           onChange={handleChange}
-          defaultValue="#F5EDE3"
+          defaultValue="#999999"
         />
         </label>
         <button type="submit">
