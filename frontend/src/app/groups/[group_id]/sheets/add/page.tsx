@@ -11,7 +11,7 @@ const EditSheet = () => {
   const { group_id } = params;
   const [sheet, setSheet] = useState({
       "name": "",
-      "color": "",
+      "color": "#999999",
       "nickname": "",
       "pronouns": "",
       "birthday": "",

@@ -13,7 +13,7 @@ const Sheet = () => {
   // Fields will never be null
   const [sheet, setSheet] = useState({
     "name": "",
-    "color": "",
+    "color": "#999999",
     "nickname": "",
     "pronouns": "",
     "birthday": "",
@@ -40,7 +40,6 @@ const Sheet = () => {
       }
       try {
         const res = await axiosInstance.post(`/sheets/${sheet_id}/edit`, sheet);
-        console.log(res);
         setSheet(res.data.sheet);
       }
       catch (error) {
