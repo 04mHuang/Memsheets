@@ -38,6 +38,7 @@ const EditSheet = () => {
         <button type="submit">
           Create Sheet
         </button>
+        <button onClick={(e) => {e.preventDefault(); router.back()}}>Cancel</button>
       </form>
     </div>
   );
