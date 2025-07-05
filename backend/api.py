@@ -100,7 +100,7 @@ def create_group():
         data = request.json
         if not data or "name" not in data:
             return {"error": "Invalid input"}, 400
-        new_group = Group(user_id=user_id, name=data["name"], color=data["color"])
+        new_group = Group(user_id=user_id, name=data["name"] if data["name"].strip() else "Untitled Group", color=data["color"])
         db.session.add(new_group)
         db.session.commit()
         return {"message": "Successful group creation"}, 201
@@ -142,15 +142,15 @@ def create_sheet():
         group_id = data["group_id"]
         new_sheet = Sheet(
             user_id=user_id,
-            name=data["name"],
+            name=data["name"] if data["name"].strip() else "Untitled Sheet",
             color=data.get("color"),
-            nickname=data.get("nickname"),
-            pronouns=data.get("pronouns"),
-            birthday=data.get("birthday"),
-            likes=data.get("likes"),
-            dislikes=data.get("dislikes"),
-            allergies=data.get("allergies"),
-            notes=data.get("notes"),
+            nickname=data.get("nickname") if data.get("nickname", "").strip() else "N/A",
+            pronouns=data.get("pronouns") if data.get("pronouns", "").strip() else "N/A",
+            birthday=data.get("birthday") if data.get("birthday", "").strip() else "",
+            likes=data.get("likes") if data.get("likes", "").strip() else "N/A",
+            dislikes=data.get("dislikes") if data.get("dislikes", "").strip() else "N/A",
+            allergies=data.get("allergies") if data.get("allergies", "").strip() else "N/A",
+            notes=data.get("notes") if data.get("notes", "").strip() else "N/A",
         )
         db.session.add(new_sheet)
         db.session.commit()
@@ -198,7 +198,14 @@ def update_sheet(sheet_id):
         return {"error": "Sheet not found"}, 404
     data = request.json
     for key, value in data.items():
-        setattr(sheet, key, value)
+        if key == "name" and not value.strip():
+            setattr(sheet, key, "Untitled Sheet")
+        elif key in ["nickname", "pronouns", "likes", "dislikes", "allergies", "notes"] and not value.strip():
+            setattr(sheet, key, "N/A")
+        elif key == "birthday" and not value.strip():
+            setattr(sheet, key, None)
+        else:
+            setattr(sheet, key, value)
     db.session.commit()
     return {
         "message": "Sheet updated successfully",
