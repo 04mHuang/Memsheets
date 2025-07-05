@@ -30,7 +30,7 @@ const Groups = () => {
           className="create-button card"
         >
           <p>Create group</p>
-          <Image src="/mdi_add-bold.svg" alt="plus icon" width={35} height={35} />
+          <Image src="/mdi_add-bold.svg" alt="plus icon" width={30} height={30} />
         </button>
         {groups.map((item, index) => (
           <Card key={index} item={item} type="groups" />

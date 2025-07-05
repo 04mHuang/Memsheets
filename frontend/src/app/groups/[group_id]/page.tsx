@@ -30,20 +30,13 @@ const GroupSheets = () => {
           className="create-button card"
         >
           <p>Create Sheet</p>
-          <Image src="/mdi_add-bold.svg" alt="plus icon" width={35} height={35} />
+          <Image src="/mdi_add-bold.svg" alt="plus icon" width={30} height={30} />
         </button>
         {sheets.map((item, index) => (
           <Card key={index} item={item} type="sheets" />
         ))}
       </section>
     </main>
-    // <div>
-    //   <h1>Sheets for group</h1>
-    //   <button onClick={handleAdd}>Add Sheet</button>
-    //   {sheets.map((item, index) => (
-    //     <Card key={index} item={item} type="sheets" />
-    //   ))}
-    // </div>
   );
 }
 export default GroupSheets;
