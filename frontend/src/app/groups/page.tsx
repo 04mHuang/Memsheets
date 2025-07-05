@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
-import Card from '@/app/components/Card';
+import Card from "@/app/components/Card";
 
 const Groups = () => {
   const router = useRouter();
@@ -21,13 +22,21 @@ const Groups = () => {
   }, []);
 
   return (
-    <div>
-      <h1 className="text-2xl">Sheets</h1>
-      <button onClick={() => {router.push("/groups/edit")}}>Create group</button>
-      {groups.map((item, index) => (
-        <Card key={index} item={item} type="groups" />
-      ))}
-    </div>
+    <main className="page-container">
+      <h1 className="page-title">Groups</h1>
+      <section className="card-grid">
+        <button
+          onClick={() => { router.push("/groups/edit") }}
+          className="create-button card"
+        >
+          <p>Create group</p>
+          <Image src="/mdi_add-bold.svg" alt="plus icon" width={35} height={35} />
+        </button>
+        {groups.map((item, index) => (
+          <Card key={index} item={item} type="groups" />
+        ))}
+      </section>
+    </main>
   );
 }
 
