@@ -10,7 +10,6 @@ const EditGroup = () => {
     "name": "",
     "color": "",
   });
-  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -18,14 +17,8 @@ const EditGroup = () => {
   };
   const createGroup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Disallow name of only whitespace
-    if (groupForm.name.trim() === "") {
-      setError("Group name cannot just be spaces.");
-      return;
-    }
     try {
       await axiosInstance.post("/new-group", groupForm);
-      setError(null);
       router.push("/groups");
     }
     catch (error) {
@@ -40,9 +33,7 @@ const EditGroup = () => {
           name="name"
           onChange={handleChange}
           placeholder="Group name"
-          required 
         />
-        {error && <p>{error}</p>}
         <label>
           Group color
         <input

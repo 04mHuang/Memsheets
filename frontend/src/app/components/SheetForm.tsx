@@ -16,10 +16,9 @@ interface SheetData {
 interface SheetFormProps {
   sheet: SheetData;
   setSheet: (sheet: SheetData) => void;
-  error: string | null;
 }
 
-const SheetForm = ({ sheet, setSheet, error }: SheetFormProps) => {
+const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
   const pronounsList = ["Unknown", "she/her", "he/him", "they/them"];
   // Set a recognized value for the select input
   const [pronouns, setPronouns] = useState(pronounsList.includes(sheet.pronouns) ? sheet.pronouns : "Custom");
@@ -46,9 +45,7 @@ const SheetForm = ({ sheet, setSheet, error }: SheetFormProps) => {
           value={sheet.name}
           placeholder="Name"
           aria-label="Name"
-          required
         />
-        {error && <p>{error}</p>}
         <input
           type="text"
           name="nickname"
@@ -70,9 +67,8 @@ const SheetForm = ({ sheet, setSheet, error }: SheetFormProps) => {
             name="pronouns"
             onChange={handleChange}
             value={sheet.pronouns}
-            placeholder="Pronouns"
-            aria-label="Pronouns"
-            required
+            placeholder="Custom pronouns"
+            aria-label="Custom pronouns"
           />
         }
         <input

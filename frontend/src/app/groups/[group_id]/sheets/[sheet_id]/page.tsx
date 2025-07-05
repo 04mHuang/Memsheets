@@ -8,7 +8,6 @@ import SheetForm from "@/app/components/SheetForm";
 const Sheet = () => {
   const params = useParams<{ sheet_id: string }>();
   const { sheet_id } = params;
-  const [error, setError] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   // Fields will never be null
   const [sheet, setSheet] = useState({
@@ -16,7 +15,7 @@ const Sheet = () => {
     "color": "#999999",
     "nickname": "",
     "pronouns": "",
-    "birthday": "",
+    "birthday": new Date().toISOString().slice(0, 10),
     "likes": "",
     "dislikes": "",
     "allergies": "",
@@ -34,10 +33,6 @@ const Sheet = () => {
 
   const handleModeToggle = async () => {
     if (editMode) {
-      if (sheet.name.trim() === "") {
-        setError("Sheet name cannot just be spaces.");
-        return;
-      }
       try {
         const res = await axiosInstance.post(`/sheets/${sheet_id}/edit`, sheet);
         setSheet(res.data.sheet);
@@ -62,7 +57,7 @@ const Sheet = () => {
       </button>
       {editMode ?
         <form method="POST" onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}>
-          <SheetForm sheet={sheet} setSheet={setSheet} error={error} />
+          <SheetForm sheet={sheet} setSheet={setSheet} />
         </form>
         :
         <div style={{ backgroundColor: sheet.color }}>
