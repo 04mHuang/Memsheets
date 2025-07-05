@@ -62,4 +62,8 @@ body {
   .nav-link {
     @apply hover:text-dark-support hover:underline transition-all duration-200 ease-in-out;
   }
+  /* Applies to individual sheet pages */
+  .sheet {
+    @apply mt-8 mx-20; 
+  }
 }

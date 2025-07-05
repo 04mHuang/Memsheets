@@ -9,7 +9,7 @@ const Sheet = () => {
   const params = useParams<{ sheet_id: string }>();
   const { sheet_id } = params;
   const [editMode, setEditMode] = useState(false);
-  // Fields will never be null
+  const [loading, setLoading] = useState(true);
   const [sheet, setSheet] = useState({
     "name": "",
     "color": "#999999",
@@ -21,21 +21,32 @@ const Sheet = () => {
     "allergies": "",
     "notes": ""
   });
+  // Save original data in case user cancels editing
+  const [originalSheet, setOriginalSheet] = useState(sheet);
 
   useEffect(() => {
     if (sheet_id) {
       axiosInstance.get(`/sheets/${sheet_id}`)
-        .then(res => setSheet(res.data.sheet[0]))
-        .catch(err => console.error(err));
+        .then(res => {
+          const sheetData = res.data.sheet[0];
+          setSheet(sheetData);
+          setOriginalSheet(sheetData);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setLoading(false);
+        });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sheet_id]);
 
   const handleModeToggle = async () => {
     if (editMode) {
       try {
         const res = await axiosInstance.post(`/sheets/${sheet_id}/edit`, sheet);
-        setSheet(res.data.sheet);
+        const updatedSheet = res.data.sheet;
+        setSheet(updatedSheet);
+        setOriginalSheet(updatedSheet);
       }
       catch (error) {
         console.error(error);
@@ -43,24 +54,29 @@ const Sheet = () => {
     }
     setEditMode(!editMode);
   }
-  
+
+  const handleCancel = () => {
+    setSheet(originalSheet);
+    setEditMode(false);
+  }
+
+  // Avoid flicker of default data
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div>
-      {/* Save button acts as a submit button for the form */}
       <button onClick={handleModeToggle}>
-        {editMode ?
-          "Save"
-          :
-          "Edit"
-        }
+        {editMode ? "Save" : "Edit"}
       </button>
       {editMode ?
         <form method="POST" onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}>
           <SheetForm sheet={sheet} setSheet={setSheet} />
+          <button onClick={(e) => {e.preventDefault(); handleCancel();}}>Cancel</button>
         </form>
         :
-        <div style={{ backgroundColor: sheet.color }}>
+        <div className="sheet" style={{ backgroundColor: sheet.color }}>
           <h1>{sheet.name}</h1>
           <p>{sheet.nickname}</p>
           <p>{sheet.pronouns}</p>
