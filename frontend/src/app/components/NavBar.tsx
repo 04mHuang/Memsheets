@@ -50,25 +50,31 @@ const NavBar = () => {
   // </div>
 
   return (
-    <nav className="flex items-center justify-between py-2 px-5 dark:bg-white/[0.2]">
-      <Link href="/" aria-label="Home">
-        <Image src="/vercel.svg" alt="Memsheets logo" width={40} height={40} />
-      </Link>
-      <Link href="/groups">
-        Groups
-      </Link>
-      <div className="w-lg">
-        <input type="text" placeholder="Search..." className="w-full" />
+    <nav
+      className="flex items-center justify-between py-2 px-5 border-b-1 bg-nav border-light-foreground"
+    >
+      <div className="flex items-center gap-10">
+        <Link href="/" aria-label="Home">
+          <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 transition-all duration-200 ease-in-out" />
+        </Link>
+        <Link href="/groups" className="nav-link">
+          Groups
+        </Link>
       </div>
+      <input
+        type="text"
+        placeholder="Search..."
+        className="w-xl border-1 py-1 px-4 rounded-xl text-dark-support bg-background border-light-foreground focus:outline-none focus:ring-1 focus:ring-foreground"
+      />
       {/* TODO: add non-arbitrary conditional */}
-      {1===1 ?
-        <div>
-          <Link href="/signup">Sign up</Link>
-          <Link href="/login">Login</Link>
+      {1 === 1 ?
+        <div className="space-x-4">
+          <Link href="/signup" className="nav-link">Sign up</Link>
+          <Link href="/login" className="nav-link">Login</Link>
         </div>
         :
-        <Link href="/">
-          Logout
+        <Link href="/" className="nav-link">
+          Profile
         </Link>
       }
     </nav>
