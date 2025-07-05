@@ -12,7 +12,6 @@ const Groups = () => {
     (async () => {
       try {
         const response = await axiosInstance.get("/groups");
-        console.log(response.data.groups);
         setGroups(response.data.groups);
       }
       catch (error) {
@@ -25,8 +24,8 @@ const Groups = () => {
     <div>
       <h1 className="text-2xl">Sheets</h1>
       <button onClick={() => {router.push("/groups/edit")}}>Create group</button>
-      {groups.map((item) => (
-        <Card key={item["name"]} item={item} type="groups" />
+      {groups.map((item, index) => (
+        <Card key={index} item={item} type="groups" />
       ))}
     </div>
   );

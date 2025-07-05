@@ -27,8 +27,8 @@ const GroupSheets = () => {
     <div>
       <h1>Sheets for group</h1>
       <button onClick={handleAdd}>Add Sheet</button>
-      {sheets.map((item) => (
-        <Card key={item["name"]} item={item} type="sheets" />
+      {sheets.map((item, index) => (
+        <Card key={index} item={item} type="sheets" />
       ))}
     </div>
   );
