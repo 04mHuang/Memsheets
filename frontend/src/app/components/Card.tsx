@@ -23,7 +23,7 @@ const Card = ({ item, type }: { item: CardInterface; type: string }) => {
   return (
     <div
       onClick={handleClick}
-      className="card"
+      className="card hover-animation"
       style={{ backgroundColor: color }}
     >
       <h1 className="card-name">{item.name}</h1>

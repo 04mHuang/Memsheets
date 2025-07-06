@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { FiFilePlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
 import Card from "@/app/components/Card";
 
@@ -30,7 +30,7 @@ const Groups = () => {
           className="create-button card"
         >
           <p>Create group</p>
-          <Image src="/mdi_add-bold.svg" alt="plus icon" width={30} height={30} />
+          <FiFilePlus className="create-icon hover-animation" />
         </button>
         {groups.map((item, index) => (
           <Card key={index} item={item} type="groups" />

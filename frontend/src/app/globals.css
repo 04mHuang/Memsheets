@@ -38,6 +38,10 @@ body {
 
 /* Custom Tailwind CSS classes */
 @layer components {
+  /* Applies to hover animations */
+  .hover-animation {
+    @apply transition-all duration-200 ease-in-out;
+  }
   /* Applies to Groups and Sheets page */
   .page-container {
     @apply mt-8 mx-40 ;
@@ -46,7 +50,7 @@ body {
     @apply text-4xl mb-4;
   }
   .card {
-    @apply container max-w-screen-xl py-7 px-5 border-2 rounded-md hover:cursor-pointer hover:border-support transition-all duration-200 ease-in-out;
+    @apply container max-w-screen-xl py-7 px-5 border-2 rounded-md hover:cursor-pointer hover:border-support;
     border-color: var(--light-foreground);
   }
   .card-grid {
@@ -58,9 +62,15 @@ body {
   .create-button {
     @apply w-full border-3 border-dotted text-2xl text-accent flex justify-around items-center hover:bg-orange-100;
   }
+  .create-button:hover .create-icon {
+    @apply -translate-y-1;
+  }
   /* Applies to navbar */
   .nav-link {
-    @apply hover:text-dark-support hover:underline transition-all duration-200 ease-in-out;
+    @apply hover:text-dark-support hover:underline;
+  }
+  .create-icon {
+    @apply h-10 w-10 hover:-translate-y-2;
   }
   /* Applies to individual sheet pages */
   .sheet {

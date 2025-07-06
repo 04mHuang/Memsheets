@@ -12,7 +12,7 @@ const NavBar = () => {
         <Link href="/" aria-label="Home">
           <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 transition-all duration-200 ease-in-out" />
         </Link>
-        <Link href="/groups" className="nav-link">
+        <Link href="/groups" className="nav-link hover-animation">
           Groups
         </Link>
       </div>
@@ -27,11 +27,11 @@ const NavBar = () => {
       {/* TODO: add non-arbitrary conditional */}
       {1 === 1 ?
         <div className="space-x-4">
-          <Link href="/signup" className="nav-link">Sign up</Link>
-          <Link href="/login" className="nav-link">Login</Link>
+          <Link href="/signup" className="nav-link hover-animation">Sign up</Link>
+          <Link href="/login" className="nav-link hover-animation">Login</Link>
         </div>
         :
-        <Link href="/" className="nav-link">
+        <Link href="/" className="nav-link hover-animation">
           Profile
         </Link>
       }

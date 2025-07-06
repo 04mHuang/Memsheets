@@ -1,8 +1,8 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
 import { useState, useEffect } from "react";
+import { FiFilePlus } from "react-icons/fi";
 import Card from "@/app/components/Card";
 import axiosInstance from "@/app/axiosInstance";
 
@@ -30,7 +30,7 @@ const GroupSheets = () => {
           className="create-button card"
         >
           <p>Create Sheet</p>
-          <Image src="/mdi_add-bold.svg" alt="plus icon" width={30} height={30} />
+          <FiFilePlus className="create-icon hover-animation" />
         </button>
         {sheets.map((item, index) => (
           <Card key={index} item={item} type="sheets" />
