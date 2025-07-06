@@ -74,7 +74,7 @@ body {
   }
   /* Applies to individual sheet pages */
   .sheet {
-    @apply my-8 mx-20 p-10 rounded-3xl; 
+    @apply mt-2 mb-8 p-10 rounded-3xl; 
   }
   .sheet-content {
     @apply flex gap-20;

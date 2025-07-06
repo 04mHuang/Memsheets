@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
+import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
 
 const Sheet = () => {
@@ -67,23 +68,17 @@ const Sheet = () => {
   }
 
   return (
-    <div>
-      <button onClick={handleModeToggle}>
-        {editMode ? "Save" : "Edit"}
-      </button>
-
+    <div className="page-container mt-4">
+      <EditButtons mode={editMode} modeToggle={handleModeToggle} cancel={handleCancel} />
       {editMode ?
-        <>
-          <button onClick={(e) => { e.preventDefault(); handleCancel(); }}>Cancel</button>
-          <form
-            method="POST"
-            onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}
-            className="sheet"
-            style={{ backgroundColor: sheet.color }}
-          >
-            <SheetForm sheet={sheet} setSheet={setSheet} />
-          </form>
-        </>
+        <form
+          method="POST"
+          onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}
+          className="sheet"
+          style={{ backgroundColor: sheet.color }}
+        >
+          <SheetForm sheet={sheet} setSheet={setSheet} />
+        </form>
         :
         <main className="sheet" style={{ backgroundColor: sheet.color }}>
           <h1 className="sheet-name">{sheet.name}</h1>
