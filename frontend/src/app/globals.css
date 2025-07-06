@@ -1,26 +1,107 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #F5EDE3;
+  --foreground: #3A2D1E;
+  --light-foreground: #967B5E;
+  --nav: #eee1d1;
+  --accent: #C98A74;
+  --support: #9CB6AD;
+  --dark-support: #508170;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-light-foreground: var(--light-foreground);
+  --color-nav: var(--nav);
+  --color-accent: var(--accent);
+  --color-support: var(--support);
+  --color-dark-support: var(--dark-support);
+  --font-sans: var(--font-inria-sans);
+  --font-mono: var(--font-inria-sans);
 }
 
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #3A2D1E;
+    --foreground: #eee1d1;
+    --nav: #967B5E;
   }
-}
+} */
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inria-sans), sans-serif;
+}
+
+/* Custom Tailwind CSS classes */
+@layer components {
+  /* Applies to hover animations */
+  .hover-animation {
+    @apply transition-all duration-200 ease-in-out;
+  }
+  /* Applies to Groups and Sheets page */
+  .page-container {
+    @apply mt-8 mx-40 ;
+  }
+  .page-title {
+    @apply text-4xl mb-4;
+  }
+  .card {
+    @apply container max-w-screen-xl py-7 px-5 border-2 rounded-md hover:cursor-pointer hover:border-support;
+    border-color: var(--light-foreground);
+  }
+  .card-grid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
+  }
+  .card-name {
+    @apply text-xl font-bold;
+  }
+  .create-button {
+    @apply w-full border-3 border-dotted text-2xl text-accent flex justify-around items-center hover:bg-orange-100;
+  }
+  .create-button:hover .create-icon {
+    @apply -translate-y-1;
+  }
+  /* Applies to navbar */
+  .nav-link {
+    @apply hover:text-dark-support hover:underline;
+  }
+  .create-icon {
+    @apply h-10 w-10 hover:-translate-y-2;
+  }
+  /* Applies to individual sheet pages and some applies to add group page */
+  .sheet {
+    @apply mt-2 mb-8 p-10 rounded-3xl; 
+  }
+  .sheet-content {
+    @apply flex gap-20;
+  }
+  .sheet-name {
+    @apply text-3xl font-bold mb-5 resize-none overflow-hidden;
+    field-sizing: content;
+  }
+  .sheet-photo {
+    @apply border-5 border-b-35 border-background w-fit;
+  }
+  .sheet-basic {
+    @apply mt-2 text-lg;
+  }
+  .sheet-input {
+    @apply bg-background/[0.75] px-2 rounded-md border-1 border-foreground;
+  }
+  .sheet-details {
+    @apply flex flex-col flex-1;
+  }
+  .sheet-detail {
+    @apply mb-2 w-full min-h-15;
+  }
+  .sheet-heading {
+    @apply text-lg font-bold;
+  }
+  .color-input {
+     @apply flex items-center gap-2 w-fit;
+  }
 }

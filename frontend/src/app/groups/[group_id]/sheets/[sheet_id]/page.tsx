@@ -2,14 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
+import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
 
 const Sheet = () => {
   const params = useParams<{ sheet_id: string }>();
   const { sheet_id } = params;
   const [editMode, setEditMode] = useState(false);
-  // Fields will never be null
+  const [loading, setLoading] = useState(true);
   const [sheet, setSheet] = useState({
     "name": "",
     "color": "#999999",
@@ -21,21 +23,32 @@ const Sheet = () => {
     "allergies": "",
     "notes": ""
   });
+  // Save original data in case user cancels editing
+  const [originalSheet, setOriginalSheet] = useState(sheet);
 
   useEffect(() => {
     if (sheet_id) {
       axiosInstance.get(`/sheets/${sheet_id}`)
-        .then(res => setSheet(res.data.sheet[0]))
-        .catch(err => console.error(err));
+        .then(res => {
+          const sheetData = res.data.sheet[0];
+          setSheet(sheetData);
+          setOriginalSheet(sheetData);
+          setLoading(false);
+        })
+        .catch(err => {
+          console.error(err);
+          setLoading(false);
+        });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [sheet_id]);
 
   const handleModeToggle = async () => {
     if (editMode) {
       try {
         const res = await axiosInstance.post(`/sheets/${sheet_id}/edit`, sheet);
-        setSheet(res.data.sheet);
+        const updatedSheet = res.data.sheet;
+        setSheet(updatedSheet);
+        setOriginalSheet(updatedSheet);
       }
       catch (error) {
         console.error(error);
@@ -43,33 +56,53 @@ const Sheet = () => {
     }
     setEditMode(!editMode);
   }
-  
+
+  const handleCancel = () => {
+    setSheet(originalSheet);
+    setEditMode(false);
+  }
+
+  // Avoid flicker of default data
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div>
-      {/* Save button acts as a submit button for the form */}
-      <button onClick={handleModeToggle}>
-        {editMode ?
-          "Save"
-          :
-          "Edit"
-        }
-      </button>
+    <div className="page-container mt-4">
+      <EditButtons editMode={editMode} submit={handleModeToggle} cancel={handleCancel} />
       {editMode ?
-        <form method="POST" onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}>
+        <form
+          method="POST"
+          onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}
+          className="sheet"
+          style={{ backgroundColor: sheet.color }}
+        >
           <SheetForm sheet={sheet} setSheet={setSheet} />
         </form>
         :
-        <div style={{ backgroundColor: sheet.color }}>
-          <h1>{sheet.name}</h1>
-          <p>{sheet.nickname}</p>
-          <p>{sheet.pronouns}</p>
-          <p>{sheet.birthday}</p>
-          <p>{sheet.likes}</p>
-          <p>{sheet.dislikes}</p>
-          <p>{sheet.allergies}</p>
-          <p>{sheet.notes}</p>
-        </div>
+        <main className="sheet" style={{ backgroundColor: sheet.color }}>
+          <h1 className="sheet-name">{sheet.name}</h1>
+          <div className="sheet-content">
+            <section>
+              <div className="sheet-photo">
+                <Image src="/sheet-pic.png" alt="Sheet picture" width={200} height={200} />
+              </div>
+              <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
+              <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>
+              <p className="sheet-basic"><strong>Birthday:</strong> {sheet.birthday}</p>
+            </section>
+            <section className="sheet-details">
+              <h2 className="sheet-heading">Likes:</h2>
+              <p className="sheet-detail">{sheet.likes}</p>
+              <h2 className="sheet-heading">Dislikes:</h2>
+              <p className="sheet-detail">{sheet.dislikes}</p>
+              <h2 className="sheet-heading">Allergies:</h2>
+              <p className="sheet-detail">{sheet.allergies}</p>
+              <h2 className="sheet-heading">Additional notes:</h2>
+              <p className="sheet-detail">{sheet.notes}</p>
+            </section>
+          </div>
+        </main>
       }
     </div>
   );

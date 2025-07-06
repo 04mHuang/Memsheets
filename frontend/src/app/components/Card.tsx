@@ -23,11 +23,10 @@ const Card = ({ item, type }: { item: CardInterface; type: string }) => {
   return (
     <div
       onClick={handleClick}
-      className="container max-w-screen-xl px-4"
+      className="card hover-animation"
       style={{ backgroundColor: color }}
     >
-      <h1 className="text-xl font-bold mb-4">Card Component</h1>
-      <p>{item.name}</p>
+      <h1 className="card-name">{item.name}</h1>
     </div>
   );
 }

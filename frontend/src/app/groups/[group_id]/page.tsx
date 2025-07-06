@@ -2,6 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
+import { FiFilePlus } from "react-icons/fi";
 import Card from "@/app/components/Card";
 import axiosInstance from "@/app/axiosInstance";
 
@@ -10,9 +11,6 @@ const GroupSheets = () => {
   const params = useParams<{ group_id: string; }>();
   const { group_id } = params;
   const [sheets, setSheets] = useState([]);
-  const handleAdd = () => {
-    router.push(`/groups/${group_id}/sheets/add`);
-  }
 
   useEffect(() => {
     if (group_id) {
@@ -24,13 +22,21 @@ const GroupSheets = () => {
   }, []);
 
   return (
-    <div>
-      <h1>Sheets for group</h1>
-      <button onClick={handleAdd}>Add Sheet</button>
-      {sheets.map((item, index) => (
-        <Card key={index} item={item} type="sheets" />
-      ))}
-    </div>
+    <main className="page-container">
+      <h1 className="page-title">Sheets for group</h1>
+      <section className="card-grid">
+        <button
+          onClick={() => { router.push(`/groups/${group_id}/sheets/add`); }}
+          className="create-button card"
+        >
+          <p>Create Sheet</p>
+          <FiFilePlus className="create-icon hover-animation" />
+        </button>
+        {sheets.map((item, index) => (
+          <Card key={index} item={item} type="sheets" />
+        ))}
+      </section>
+    </main>
   );
 }
 export default GroupSheets;
