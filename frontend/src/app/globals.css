@@ -67,7 +67,7 @@ body {
   }
   /* Applies to navbar */
   .nav-link {
-    @apply hover:text-dark-support hover:underline;
+    @apply hover:text-dark-support hover:underline hover:cursor-pointer;
   }
   .create-icon {
     @apply h-10 w-10 hover:-translate-y-2;
@@ -103,5 +103,24 @@ body {
   }
   .color-input {
      @apply flex items-center gap-2 w-fit;
+  }
+  /* Applies to login and sign up pages */
+  .account-page {
+    @apply flex bg-nav h-screen;
+  }
+  .account-sections {
+    @apply flex-1 flex items-center justify-center;
+  }
+  .account-form-section {
+    @apply bg-support/[0.2] flex flex-col;
+  }
+  .account-input {
+    @apply w-70 mt-5 text-xl text-foreground bg-nav border-1 border-light-foreground px-5 py-2 rounded-xl focus:outline-none focus:ring-1 focus:ring-dark-support;
+  }
+  .account-button {
+    @apply bg-accent/[0.6] hover:cursor-pointer hover:bg-accent;
+  }
+  .error {
+    @apply font-bold text-accent;
   }
 }

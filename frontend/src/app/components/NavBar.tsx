@@ -1,8 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { FaSearch } from "react-icons/fa";
+import { useRouter } from "next/navigation";
 
 const NavBar = () => {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    router.push("/login");
+  };
 
   return (
     <nav
@@ -10,7 +17,7 @@ const NavBar = () => {
     >
       <div className="flex items-center gap-10">
         <Link href="/" aria-label="Home">
-          <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 transition-all duration-200 ease-in-out" />
+          <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 hover-animation" />
         </Link>
         <Link href="/groups" className="nav-link hover-animation">
           Groups
@@ -24,17 +31,9 @@ const NavBar = () => {
           className="w-xl border-1 py-1 pl-10 pr-4 rounded-xl text-dark-support bg-background border-light-foreground focus:outline-none focus:ring-1 focus:ring-foreground"
         />
       </div>
-      {/* TODO: add non-arbitrary conditional */}
-      {1 === 1 ?
-        <div className="space-x-4">
-          <Link href="/signup" className="nav-link hover-animation">Sign up</Link>
-          <Link href="/login" className="nav-link hover-animation">Login</Link>
-        </div>
-        :
-        <Link href="/" className="nav-link hover-animation">
-          Profile
-        </Link>
-      }
+      <button onClick={handleLogout} className="nav-link hover-animation">
+        Logout
+      </button>
     </nav>
   );
 }
