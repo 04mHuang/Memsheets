@@ -9,7 +9,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 def create_token(user_id):
    payload = {
       'user_id': user_id,
-      'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=1)
+      'exp': datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(hours=12)
    }
    return jwt.encode(payload, SECRET_KEY, algorithm='HS256')
 
