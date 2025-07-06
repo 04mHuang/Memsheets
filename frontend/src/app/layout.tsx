@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Inria_Sans } from "next/font/google";
 import "./globals.css";
-import NavBar from "@/app/components/NavBar";
+import PageLayout from "@/app/components/PageLayout";
 
 const inriaSans = Inria_Sans({
   variable: "--font-inria-sans",
@@ -25,8 +25,9 @@ export default function RootLayout({
       <body
         className={`${inriaSans.variable} antialiased`}
       >
-        <NavBar />
-        {children}
+        <PageLayout>
+          {children}
+        </PageLayout>
       </body>
     </html>
   );
