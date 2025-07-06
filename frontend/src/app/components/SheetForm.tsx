@@ -96,7 +96,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
             className="sheet-basic sheet-input"
           />
           <br />
-          <label className="sheet-basic sheet-input flex items-center gap-2 w-fit">
+          <label className="sheet-basic sheet-input color-input">
             Sheet Color
             <input
               type="color"

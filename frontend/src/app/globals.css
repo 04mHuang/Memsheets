@@ -72,7 +72,7 @@ body {
   .create-icon {
     @apply h-10 w-10 hover:-translate-y-2;
   }
-  /* Applies to individual sheet pages */
+  /* Applies to individual sheet pages and some applies to add group page */
   .sheet {
     @apply mt-2 mb-8 p-10 rounded-3xl; 
   }
@@ -100,5 +100,8 @@ body {
   }
   .sheet-heading {
     @apply text-lg font-bold;
+  }
+  .color-input {
+     @apply flex items-center gap-2 w-fit;
   }
 }
