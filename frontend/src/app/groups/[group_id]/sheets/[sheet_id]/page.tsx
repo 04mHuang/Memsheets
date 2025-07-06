@@ -69,7 +69,7 @@ const Sheet = () => {
 
   return (
     <div className="page-container mt-4">
-      <EditButtons mode={editMode} modeToggle={handleModeToggle} cancel={handleCancel} />
+      <EditButtons editMode={editMode} submit={handleModeToggle} cancel={handleCancel} />
       {editMode ?
         <form
           method="POST"

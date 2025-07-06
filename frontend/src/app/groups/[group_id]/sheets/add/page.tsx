@@ -4,25 +4,25 @@ import { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
 import SheetForm from "@/app/components/SheetForm";
+import EditButtons from "@/app/components/EditButtons";
 
 const EditSheet = () => {
   const router = useRouter();
   const params = useParams();
   const { group_id } = params;
   const [sheet, setSheet] = useState({
-      "name": "",
-      "color": "#999999",
-      "nickname": "",
-      "pronouns": "",
-      "birthday": new Date().toISOString().slice(0, 10),
-      "likes": "",
-      "dislikes": "",
-      "allergies": "",
-      "notes": ""
-    });
+    "name": "",
+    "color": "#999999",
+    "nickname": "",
+    "pronouns": "",
+    "birthday": new Date().toISOString().slice(0, 10),
+    "likes": "",
+    "dislikes": "",
+    "allergies": "",
+    "notes": ""
+  });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     try {
       await axiosInstance.post("/new-sheet", { ...sheet, group_id: group_id });
       router.back();
@@ -32,14 +32,17 @@ const EditSheet = () => {
     }
   }
   return (
-    <div className="sheet" style={{ backgroundColor: sheet.color }}>
-      <form method="POST" onSubmit={handleSubmit}>
-        <SheetForm sheet={sheet} setSheet={setSheet} />
-        <button type="submit">
-          Create Sheet
-        </button>
-        <button onClick={(e) => {e.preventDefault(); router.back()}}>Cancel</button>
-      </form>
+    <div className="page-container mt-4">
+      <EditButtons 
+        editMode={true} 
+        submit={handleSubmit}
+        cancel={() => router.back()}
+      />
+      <div className="sheet" style={{ backgroundColor: sheet.color }}>
+        <form method="POST" onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>
+          <SheetForm sheet={sheet} setSheet={setSheet} />
+        </form>
+      </div>
     </div>
   );
 }
