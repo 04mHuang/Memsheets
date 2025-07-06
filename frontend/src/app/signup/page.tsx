@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import axios from "axios";
 
 const Signup = () => {
@@ -79,34 +81,70 @@ const Signup = () => {
   };
 
   return (
-    <div>
-      <form method="POST" onSubmit={handleSubmit} className="flex flex-col" >
-        <label className="step-1">
-          Username
-          <br />
-          <input type="text" onChange={handleChange} name="username" required />
-        </label>
-        {errors.username && <p className="error">{errors.username}</p>}
-        <label className="step-2">
-          Email
-          <br />
-          <input type="email" onChange={handleChange} name="email" required />
-        </label>
-        {errors.email && <p className="error">{errors.email}</p>}
-        <label className="step-3">
-          Password
-          <br />
-          <input type="password" onChange={handleChange} name="password" required />
-        </label>
-        {errors.password && <p className="error">{errors.password}</p>}
-        <label className="step-4">
-          Confirm Password
-          <br />
-          <input type="password" onChange={handleChange} name="confirmPassword" required />
-        </label>
-        {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
-        <button type="submit" className="step-5">Sign up</button>
-      </form>
+    <div className="account-page">
+      <section className="account-sections">
+        <div className="sheet-photo">
+          <Image src="/welcome.png" alt="" width={500} height={500} />
+        </div>
+      </section>
+      <section className="account-sections account-form-section">
+        <div className="flex items-center">
+          <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={70} height={70} className="hover:brightness-110 hover-animation" />
+          <h1 className="text-2xl">
+            <b className="text-accent">Mem</b>sheets
+          </h1>
+        </div>
+        <h2 className="my-8 text-3xl font-bold">Sign up</h2>
+        <form method="POST" onSubmit={handleSubmit} className="flex flex-col" >
+          <input
+            type="text"
+            onChange={handleChange}
+            name="username"
+            aria-label="Username"
+            placeholder="Username"
+            className="account-input"
+            required
+          />
+          {errors.username && <p className="error">{errors.username}</p>}
+          <input
+            type="email"
+            onChange={handleChange}
+            name="email"
+            aria-label="Email"
+            placeholder="Email"
+            className="account-input"
+            required
+          />
+          {errors.email && <p className="error">{errors.email}</p>}
+          <input
+            type="password"
+            onChange={handleChange}
+            name="password"
+            aria-label="Password"
+            placeholder="Password"
+            className="account-input"
+            required
+          />
+          {errors.password && <p className="error">{errors.password}</p>}
+          <input
+            type="password"
+            onChange={handleChange}
+            name="confirmPassword"
+            aria-label="Confirm Password"
+            placeholder="Confirm Password"
+            className="account-input"
+            required
+          />
+          {errors.confirmPassword && <p className="error">{errors.confirmPassword}</p>}
+          <button type="submit" className="account-input account-button hover-animation">
+            Sign up
+          </button>
+          <div className="flex justify-center mt-8 gap-1">
+            <p>Already have an account?</p>
+            <Link href="/login" className="underline text-dark-support hover:text-accent hover-animation">Login</Link>
+          </div>
+        </form>
+      </section>
     </div>
   );
 }

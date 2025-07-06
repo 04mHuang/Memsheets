@@ -17,7 +17,7 @@ const NavBar = () => {
     >
       <div className="flex items-center gap-10">
         <Link href="/" aria-label="Home">
-          <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 transition-all duration-200 ease-in-out" />
+          <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 hover-animation" />
         </Link>
         <Link href="/groups" className="nav-link hover-animation">
           Groups
