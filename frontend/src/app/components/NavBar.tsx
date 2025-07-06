@@ -1,22 +1,13 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import { useState, useEffect } from "react";
 
 const NavBar = () => {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem("token"));
-  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
-    setIsLoggedIn(false);
     router.push("/login");
   };
 
@@ -40,16 +31,9 @@ const NavBar = () => {
           className="w-xl border-1 py-1 pl-10 pr-4 rounded-xl text-dark-support bg-background border-light-foreground focus:outline-none focus:ring-1 focus:ring-foreground"
         />
       </div>
-      {!isLoggedIn ?
-        <div className="space-x-4">
-          <Link href="/signup" className="nav-link hover-animation">Sign up</Link>
-          <Link href="/login" className="nav-link hover-animation">Login</Link>
-        </div>
-        :
-        <button onClick={handleLogout} className="nav-link hover-animation">
-          Logout
-        </button>
-      }
+      <button onClick={handleLogout} className="nav-link hover-animation">
+        Logout
+      </button>
     </nav>
   );
 }
