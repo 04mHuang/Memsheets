@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
 import SheetForm from "@/app/components/SheetForm";
 
@@ -70,22 +71,43 @@ const Sheet = () => {
       <button onClick={handleModeToggle}>
         {editMode ? "Save" : "Edit"}
       </button>
+
       {editMode ?
-        <form method="POST" onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}>
-          <SheetForm sheet={sheet} setSheet={setSheet} />
-          <button onClick={(e) => {e.preventDefault(); handleCancel();}}>Cancel</button>
-        </form>
+        <>
+          <button onClick={(e) => { e.preventDefault(); handleCancel(); }}>Cancel</button>
+          <form
+            method="POST"
+            onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}
+            className="sheet"
+            style={{ backgroundColor: sheet.color }}
+          >
+            <SheetForm sheet={sheet} setSheet={setSheet} />
+          </form>
+        </>
         :
-        <div className="sheet" style={{ backgroundColor: sheet.color }}>
-          <h1>{sheet.name}</h1>
-          <p>{sheet.nickname}</p>
-          <p>{sheet.pronouns}</p>
-          <p>{sheet.birthday}</p>
-          <p>{sheet.likes}</p>
-          <p>{sheet.dislikes}</p>
-          <p>{sheet.allergies}</p>
-          <p>{sheet.notes}</p>
-        </div>
+        <main className="sheet" style={{ backgroundColor: sheet.color }}>
+          <h1 className="sheet-name">{sheet.name}</h1>
+          <div className="sheet-content">
+            <section>
+              <div className="sheet-photo">
+                <Image src="/sheet-pic.png" alt="Sheet picture" width={200} height={200} />
+              </div>
+              <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
+              <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>
+              <p className="sheet-basic"><strong>Birthday:</strong> {sheet.birthday}</p>
+            </section>
+            <section className="sheet-details">
+              <h2 className="sheet-heading">Likes:</h2>
+              <p className="sheet-detail">{sheet.likes}</p>
+              <h2 className="sheet-heading">Dislikes:</h2>
+              <p className="sheet-detail">{sheet.dislikes}</p>
+              <h2 className="sheet-heading">Allergies:</h2>
+              <p className="sheet-detail">{sheet.allergies}</p>
+              <h2 className="sheet-heading">Additional notes:</h2>
+              <p className="sheet-detail">{sheet.notes}</p>
+            </section>
+          </div>
+        </main>
       }
     </div>
   );

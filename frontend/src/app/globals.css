@@ -64,6 +64,31 @@ body {
   }
   /* Applies to individual sheet pages */
   .sheet {
-    @apply mt-8 mx-20; 
+    @apply my-8 mx-20 p-10 rounded-3xl; 
+  }
+  .sheet-content {
+    @apply flex gap-20;
+  }
+  .sheet-name {
+    @apply text-3xl font-bold mb-5 resize-none overflow-hidden;
+    field-sizing: content;
+  }
+  .sheet-photo {
+    @apply border-5 border-b-35 border-background w-fit;
+  }
+  .sheet-basic {
+    @apply mt-2 text-lg;
+  }
+  .sheet-input {
+    @apply bg-background/[0.75] px-2 rounded-md border-1 border-foreground;
+  }
+  .sheet-details {
+    @apply flex flex-col flex-1;
+  }
+  .sheet-detail {
+    @apply mb-2 w-full min-h-15;
+  }
+  .sheet-heading {
+    @apply text-lg font-bold;
   }
 }

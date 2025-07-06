@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 
 interface SheetData {
   name: string;
@@ -34,90 +35,124 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
     setPronouns(value);
     setSheet({ ...sheet, pronouns: value });
   };
-  
+
   return (
     <>
-      <div>
-        <input
-          type="text"
-          name="name"
-          onChange={handleChange}
-          value={sheet.name}
-          placeholder="Name"
-          aria-label="Name"
-        />
-        <input
-          type="text"
-          name="nickname"
-          onChange={handleChange}
-          value={sheet.nickname}
-          placeholder="Nickname"
-          aria-label="Nickname"
-        />
-        <select name="pronouns" value={pronouns} onChange={handleSelectChange}>
-          <option value="Unknown">Unknown</option>
-          <option value="she/her">she/her</option>
-          <option value="he/him">he/him</option>
-          <option value="they/them">they/them</option>
-          <option value="Custom">Custom</option>
-        </select>
-        {pronouns === "Custom" &&
+      <input
+        type="text"
+        name="name"
+        onChange={handleChange}
+        value={sheet.name}
+        placeholder="Name"
+        aria-label="Name"
+        className="sheet-name w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
+      />
+      <div className="sheet-content">
+        <section className="sheet-basic">
+          <div className="sheet-photo">
+            <Image src="/sheet-pic.png" alt="Sheet photo" width={200} height={200} />
+          </div>
           <input
             type="text"
+            name="nickname"
+            onChange={handleChange}
+            value={sheet.nickname === "N/A" ? "" : sheet.nickname}
+            placeholder="Nickname"
+            className="sheet-basic sheet-input"
+          />
+          <br />
+          <select
             name="pronouns"
-            onChange={handleChange}
-            value={sheet.pronouns}
-            placeholder="Custom pronouns"
-            aria-label="Custom pronouns"
-          />
-        }
-        <input
-          type="date"
-          name="birthday"
-          onChange={handleChange}
-          value={sheet.birthday}
-          aria-label="Birthday"
-          max={formattedDate}
-        />
-        <label>
-          Sheet Color
+            value={pronouns}
+            onChange={handleSelectChange}
+            className="sheet-basic sheet-input w-29"
+          >
+            <option value="Unknown">Unknown</option>
+            <option value="she/her">she/her</option>
+            <option value="he/him">he/him</option>
+            <option value="they/them">they/them</option>
+            <option value="Custom">Custom</option>
+          </select>
+          {pronouns === "Custom" &&
+            <input
+              type="text"
+              name="pronouns"
+              onChange={handleChange}
+              value={sheet.pronouns === "N/A" || sheet.pronouns === "Custom" ? "" : sheet.pronouns}
+              placeholder="Pronouns"
+              aria-label="Pronouns"
+              className="sheet-input ml-1"
+              size={6}
+            />
+          }
+          <br />
           <input
-            type="color"
-            name="color"
+            type="date"
+            name="birthday"
             onChange={handleChange}
-            value={sheet.color}
+            value={sheet.birthday}
+            aria-label="Birthday"
+            max={formattedDate}
+            className="sheet-basic sheet-input"
           />
-        </label>
-      </div>
-      <div>
-        <textarea
-          name="likes"
-          onChange={handleChange}
-          value={sheet.likes}
-          placeholder="Likes"
-          aria-label="Likes"
-        />
-        <textarea
-          name="dislikes"
-          onChange={handleChange}
-          value={sheet.dislikes}
-          placeholder="Dislikes"
-          aria-label="Dislikes"
-        />
-        <textarea
-          name="allergies"
-          onChange={handleChange}
-          value={sheet.allergies}
-          placeholder="Allergies"
-          aria-label="Allergies"
-        />
-        <textarea
-          name="notes"
-          onChange={handleChange}
-          value={sheet.notes}
-          placeholder="Additional Notes"
-          aria-label="Additional Notes"
-        />
+          <br />
+          <label className="sheet-basic sheet-input flex items-center gap-2 w-fit">
+            Sheet Color
+            <input
+              type="color"
+              name="color"
+              onChange={handleChange}
+              value={sheet.color}
+              className="rounded-xl"
+            />
+          </label>
+        </section>
+        <div className="sheet-details">
+          <label>
+            <h2 className="sheet-heading">Likes:</h2>
+            <textarea
+              name="likes"
+              onChange={handleChange}
+              value={sheet.likes === "N/A" ? "" : sheet.likes}
+              placeholder="Likes"
+              aria-label="Likes"
+              className="sheet-input sheet-detail"
+            />
+          </label>
+          <label>
+            <h2 className="sheet-heading">Dislikes:</h2>
+            <textarea
+              name="dislikes"
+              onChange={handleChange}
+              value={sheet.dislikes === "N/A" ? "" : sheet.dislikes}
+              placeholder="Dislikes"
+              aria-label="Dislikes"
+              className="sheet-input sheet-detail"
+            />
+          </label>
+          <label>
+            <h2 className="sheet-heading">Allergies:</h2>
+            <textarea
+              name="allergies"
+              onChange={handleChange}
+              value={sheet.allergies === "N/A" ? "" : sheet.allergies}
+              placeholder="Allergies"
+              aria-label="Allergies"
+              className="sheet-input sheet-detail"
+            />
+          </label>
+          <label>
+            <h2 className="sheet-heading">Additional notes:</h2>
+            <textarea
+              name="notes"
+              onChange={handleChange}
+              value={sheet.notes === "N/A" ? "" : sheet.notes}
+              placeholder="Additional Notes"
+              aria-label="Additional Notes"
+              className="sheet-input sheet-detail"
+            />
+          </label>
+        </div>
       </div>
     </>
   );

@@ -32,7 +32,7 @@ const EditSheet = () => {
     }
   }
   return (
-    <div>
+    <div className="sheet" style={{ backgroundColor: sheet.color }}>
       <form method="POST" onSubmit={handleSubmit}>
         <SheetForm sheet={sheet} setSheet={setSheet} />
         <button type="submit">
