@@ -4,6 +4,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FiFilePlus } from "react-icons/fi";
 import Card from "@/app/components/Card";
+import SearchBar from "@/app/components/SearchBar";
 import axiosInstance from "@/app/axiosInstance";
 
 const GroupSheets = () => {
@@ -23,7 +24,10 @@ const GroupSheets = () => {
 
   return (
     <main className="page-container">
-      <h1 className="page-title">Sheets for group</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="page-title mb-0">Sheets for groups</h1>
+        <SearchBar type="group" />
+      </div>
       <section className="card-grid">
         <button
           onClick={() => { router.push(`/groups/${group_id}/sheets/add`); }}

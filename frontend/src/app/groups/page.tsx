@@ -5,6 +5,7 @@ import { FiFilePlus } from "react-icons/fi";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
 import Card from "@/app/components/Card";
+import SearchBar from "@/app/components/SearchBar";
 
 const Groups = () => {
   const router = useRouter();
@@ -23,7 +24,10 @@ const Groups = () => {
 
   return (
     <main className="page-container">
-      <h1 className="page-title">Groups</h1>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="page-title mb-0">Groups</h1>
+        <SearchBar type="group" />
+      </div>
       <section className="card-grid">
         <button
           onClick={() => { router.push("/groups/edit") }}
