@@ -26,7 +26,7 @@ const GroupSheets = () => {
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">Sheets for groups</h1>
-        <SearchBar type="group" />
+        <SearchBar type="sheet" />
       </div>
       <section className="card-grid">
         <button
