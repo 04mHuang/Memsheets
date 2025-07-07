@@ -14,9 +14,11 @@ const Card = ({ item, type }: { item: CardInterface; type: string }) => {
 
   const handleClick = () => {
     if (type === "groups") {
+      // Route to e.g. groups/1
       router.push(`/${type}/${id}`);
     }
-    else {
+    else if (pathname.includes("groups")) {
+      // Route to e.g. groups/1/sheets/1
       router.push(`${pathname}/${type}/${id}`);
     }
   }
