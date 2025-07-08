@@ -49,7 +49,8 @@ const GroupSheets = () => {
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">{pageTitle}</h1>
-        <SearchBar<SheetType> type="sheets" setItems={setSheets} originalItems={originalSheets} />
+        {/* Search through the sheets of a specific group by passing the group_id */}
+        <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
       </div>
       <section className="card-grid">
         <button

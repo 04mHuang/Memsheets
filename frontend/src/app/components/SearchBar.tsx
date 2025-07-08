@@ -5,12 +5,12 @@ import { FaSearch } from "react-icons/fa";
 import axiosInstance from "@/app/axiosInstance";
 
 interface SearchInterface<T> {
-  type: string;
+  groupId?: string;
   setItems: React.Dispatch<React.SetStateAction<T[]>>;
   originalItems: T[];
 }
 
-const SearchBar = <T,>( { type, setItems, originalItems }: SearchInterface<T> ) => {
+const SearchBar = <T,>( { groupId, setItems, originalItems }: SearchInterface<T> ) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -20,15 +20,17 @@ const SearchBar = <T,>( { type, setItems, originalItems }: SearchInterface<T> ) 
   }
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("searching");
     // If the search input is empty, display the groups/sheets
     if (search.trim() === "") {
       setItems(originalItems);
       return;
     }
     try {
-        const res = await axiosInstance.get(`/search/${type}?q=${search}`);
-        setItems(res.data.results);
+      // 
+      const res = groupId 
+        ? await axiosInstance.get(`/search/sheets/${groupId}?q=${search}`)
+        : await axiosInstance.get(`/search/groups?q=${search}`);
+      setItems(res.data.results);
     }
     catch (error) {
       console.error(error);
@@ -45,7 +47,7 @@ const SearchBar = <T,>( { type, setItems, originalItems }: SearchInterface<T> ) 
       <input
         type="search"
         onChange={handleChange}
-        placeholder={`Search ${type}...`}
+        placeholder={groupId ? `Search sheets...` : "Search groups..."}
         className={`hover-animation border-1 py-1 pr-10 pl-4 rounded-full text-dark-support bg-background border-light-foreground focus:outline-none focus:ring-1 focus:ring-foreground 
           [&::-webkit-search-cancel-button]:filter [&::-webkit-search-cancel-button]:brightness-70 [&::-webkit-search-cancel-button]:cursor-pointer
           ${isExpanded ? 'w-72 sm:w-48 lg:w-100 opacity-100' : 'w-0 opacity-0'}`

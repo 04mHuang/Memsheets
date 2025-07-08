@@ -43,7 +43,7 @@ const Groups = () => {
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">{pageTitle}</h1>
-        <SearchBar<GroupType> type="groups" setItems={setGroups} originalItems={originalGroups} />
+        <SearchBar<GroupType> setItems={setGroups} originalItems={originalGroups} />
       </div>
       <section className="card-grid">
         <button
