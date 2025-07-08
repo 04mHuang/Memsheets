@@ -1,7 +1,7 @@
 import { useRouter, usePathname } from "next/navigation";
 
 interface CardInterface {
-  id: string,
+  id: number,
   name: string,
   color: string,
 }

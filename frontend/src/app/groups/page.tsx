@@ -7,9 +7,15 @@ import axiosInstance from "@/app/axiosInstance";
 import Card from "@/app/components/Card";
 import SearchBar from "@/app/components/SearchBar";
 
+interface GroupType {
+  id: number;
+  name: string;
+  color: string;
+}
+
 const Groups = () => {
   const router = useRouter();
-  const [groups, setGroups] = useState([]);
+  const [groups, setGroups] = useState<GroupType[]>([]);
   useEffect(() => {
     (async () => {
       try {
@@ -26,7 +32,7 @@ const Groups = () => {
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">Groups</h1>
-        <SearchBar type="groups" />
+        <SearchBar<GroupType> type="groups" setItems={setGroups} />
       </div>
       <section className="card-grid">
         <button

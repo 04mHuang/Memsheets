@@ -4,7 +4,12 @@ import React, { useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import axiosInstance from "@/app/axiosInstance";
 
-const SearchBar = ({ type }: { type: string }) => {
+interface SearchInterface<T> {
+  type: string;
+  setItems: React.Dispatch<React.SetStateAction<T[]>>;
+}
+
+const SearchBar = <T,>( { type, setItems }: SearchInterface<T> ) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -17,7 +22,7 @@ const SearchBar = ({ type }: { type: string }) => {
     console.log("searching");
     try {
         const res = await axiosInstance.get(`/search/${type}?q=${search}`);
-        console.log(res);
+        setItems(res.data.results);
     }
     catch (error) {
       console.error(error);

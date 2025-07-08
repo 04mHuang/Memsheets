@@ -7,11 +7,17 @@ import Card from "@/app/components/Card";
 import SearchBar from "@/app/components/SearchBar";
 import axiosInstance from "@/app/axiosInstance";
 
+interface SheetType {
+  id: number;
+  name: string;
+  color: string;
+}
+
 const GroupSheets = () => {
   const router = useRouter();
   const params = useParams<{ group_id: string; }>();
   const { group_id } = params;
-  const [sheets, setSheets] = useState([]);
+  const [sheets, setSheets] = useState<SheetType[]>([]);
 
   useEffect(() => {
     if (group_id) {
@@ -26,7 +32,7 @@ const GroupSheets = () => {
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">Sheets for groups</h1>
-        <SearchBar type="sheets" />
+        <SearchBar<SheetType> type="sheets" setItems={setSheets} />
       </div>
       <section className="card-grid">
         <button
