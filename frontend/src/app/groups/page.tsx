@@ -16,11 +16,17 @@ interface GroupType {
 const Groups = () => {
   const router = useRouter();
   const [groups, setGroups] = useState<GroupType[]>([]);
+  // Copy of sheets data to be displayed if a user searches with only whitespace
+  const [originalGroups, setOriginalGroups] = useState<GroupType[]>([]);
+  const [pageTitle, setPageTitle] = useState("Groups");
+
   useEffect(() => {
     (async () => {
       try {
         const response = await axiosInstance.get("/groups");
-        setGroups(response.data.groups);
+        const result = response.data.groups;
+        setGroups(result);
+        setOriginalGroups(result);
       }
       catch (error) {
         console.error(error);
@@ -28,11 +34,16 @@ const Groups = () => {
     })();
   }, []);
 
+  // If user is searching, change the page title
+  useEffect(() => {
+    setPageTitle(groups === originalGroups ? "Groups" : "Search Results");
+  }, [groups, originalGroups]);
+
   return (
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="page-title mb-0">Groups</h1>
-        <SearchBar<GroupType> type="groups" setItems={setGroups} />
+        <h1 className="page-title mb-0">{pageTitle}</h1>
+        <SearchBar<GroupType> type="groups" setItems={setGroups} originalItems={originalGroups} />
       </div>
       <section className="card-grid">
         <button

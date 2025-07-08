@@ -7,9 +7,10 @@ import axiosInstance from "@/app/axiosInstance";
 interface SearchInterface<T> {
   type: string;
   setItems: React.Dispatch<React.SetStateAction<T[]>>;
+  originalItems: T[];
 }
 
-const SearchBar = <T,>( { type, setItems }: SearchInterface<T> ) => {
+const SearchBar = <T,>( { type, setItems, originalItems }: SearchInterface<T> ) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -20,6 +21,11 @@ const SearchBar = <T,>( { type, setItems }: SearchInterface<T> ) => {
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log("searching");
+    // If the search input is empty, display the groups/sheets
+    if (search.trim() === "") {
+      setItems(originalItems);
+      return;
+    }
     try {
         const res = await axiosInstance.get(`/search/${type}?q=${search}`);
         setItems(res.data.results);
