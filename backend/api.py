@@ -7,6 +7,7 @@ from flask import Flask, request
 from database.db import db
 from database.models import User, Group, Sheet
 from jwt_util import create_token, check_auth_header
+from sqlalchemy import or_
 
 load_dotenv()
 
@@ -221,6 +222,34 @@ def update_sheet(sheet_id):
             "notes": sheet.notes,
         },
     }, 200
+
+
+@app.route("/search/groups", methods=["GET"])
+def search_group():
+  user_id = check_auth_header(request.headers.get("Authorization"))
+  if not user_id:
+      return {"error": "Invalid token"}, 401
+  query = request.args.get('q', '').strip()
+  if query:
+    results = Group.query.filter(Group.user_id == user_id ,Group.name.ilike(f"%{query}%")).all()
+    groups_data = [{"id": g.id, "name": g.name, "color": g.color} for g in results]
+    return { "results": groups_data }, 200
+  return { "results": [] }, 200
+
+
+@app.route("/search/sheets", methods=["GET"])
+def search_sheet():
+  user_id = check_auth_header(request.headers.get("Authorization"))
+  if not user_id:
+      return {"error": "Invalid token"}, 401
+  query = request.args.get('q', '').strip()
+  if query:
+      search_fields = ['name', 'nickname', 'pronouns', 'likes', 'dislikes', 'allergies', 'notes']
+      filters = [getattr(Sheet, field).ilike(f'%{query}%') for field in search_fields]
+      results = Sheet.query.filter(Sheet.user_id == user_id, or_(*filters)).all()
+      sheets_data = [{"id": s.id, "name": s.name, "color": s.color} for s in results]
+      return { "results": sheets_data }, 200
+  return { "results": [] }, 200
 
 
 if __name__ == "__main__":

@@ -26,7 +26,7 @@ const Groups = () => {
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">Groups</h1>
-        <SearchBar type="group" />
+        <SearchBar type="groups" />
       </div>
       <section className="card-grid">
         <button
