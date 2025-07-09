@@ -17,6 +17,9 @@ const SearchBar = <T,>( { groupId, setItems, originalItems }: SearchInterface<T>
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setSearch(value);
+    if (value === "") {
+      setItems(originalItems);
+    }
   }
   const handleSearch = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
