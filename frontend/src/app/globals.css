@@ -91,6 +91,9 @@ body {
   .sheet-input {
     @apply bg-background/[0.5] px-2 rounded-md border-1 border-foreground;
   }
+  .sheet-input::placeholder {
+    color: var(--placeholder-color);
+  }
   .sheet-details {
     @apply flex flex-col flex-1;
   }
