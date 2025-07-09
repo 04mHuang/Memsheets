@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FaSearch } from "react-icons/fa";
 import { useRouter } from "next/navigation";
 
 const NavBar = () => {
@@ -22,14 +21,6 @@ const NavBar = () => {
         <Link href="/groups" className="nav-link hover-animation">
           Groups
         </Link>
-      </div>
-      <div className="relative">
-        <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-light-foreground" />
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-xl border-1 py-1 pl-10 pr-4 rounded-xl text-dark-support bg-background border-light-foreground focus:outline-none focus:ring-1 focus:ring-foreground"
-        />
       </div>
       <button onClick={handleLogout} className="nav-link hover-animation">
         Logout

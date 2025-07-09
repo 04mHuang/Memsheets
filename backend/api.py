@@ -5,8 +5,9 @@ from flask_bcrypt import Bcrypt
 from flask import Flask, request
 
 from database.db import db
-from database.models import User, Group, Sheet
+from database.models import User, Group, Sheet, sheet_groups
 from jwt_util import create_token, check_auth_header
+from sqlalchemy import or_
 
 load_dotenv()
 
@@ -100,7 +101,11 @@ def create_group():
         data = request.json
         if not data or "name" not in data:
             return {"error": "Invalid input"}, 400
-        new_group = Group(user_id=user_id, name=data["name"] if data["name"].strip() else "Untitled Group", color=data["color"])
+        new_group = Group(
+            user_id=user_id,
+            name=data["name"] if data["name"].strip() else "Untitled Group",
+            color=data["color"],
+        )
         db.session.add(new_group)
         db.session.commit()
         return {"message": "Successful group creation"}, 201
@@ -144,12 +149,20 @@ def create_sheet():
             user_id=user_id,
             name=data["name"] if data["name"].strip() else "Untitled Sheet",
             color=data.get("color"),
-            nickname=data.get("nickname") if data.get("nickname", "").strip() else "N/A",
-            pronouns=data.get("pronouns") if data.get("pronouns", "").strip() else "N/A",
+            nickname=(
+                data.get("nickname") if data.get("nickname", "").strip() else "N/A"
+            ),
+            pronouns=(
+                data.get("pronouns") if data.get("pronouns", "").strip() else "N/A"
+            ),
             birthday=data.get("birthday") if data.get("birthday", "").strip() else "",
             likes=data.get("likes") if data.get("likes", "").strip() else "N/A",
-            dislikes=data.get("dislikes") if data.get("dislikes", "").strip() else "N/A",
-            allergies=data.get("allergies") if data.get("allergies", "").strip() else "N/A",
+            dislikes=(
+                data.get("dislikes") if data.get("dislikes", "").strip() else "N/A"
+            ),
+            allergies=(
+                data.get("allergies") if data.get("allergies", "").strip() else "N/A"
+            ),
             notes=data.get("notes") if data.get("notes", "").strip() else "N/A",
         )
         db.session.add(new_sheet)
@@ -200,7 +213,10 @@ def update_sheet(sheet_id):
     for key, value in data.items():
         if key == "name" and not value.strip():
             setattr(sheet, key, "Untitled Sheet")
-        elif key in ["nickname", "pronouns", "likes", "dislikes", "allergies", "notes"] and not value.strip():
+        elif (
+            key in ["nickname", "pronouns", "likes", "dislikes", "allergies", "notes"]
+            and not value.strip()
+        ):
             setattr(sheet, key, "N/A")
         elif key == "birthday" and not value.strip():
             setattr(sheet, key, None)
@@ -221,6 +237,49 @@ def update_sheet(sheet_id):
             "notes": sheet.notes,
         },
     }, 200
+
+
+@app.route("/search/groups", methods=["GET"])
+def search_group():
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    query = request.args.get("q", "").strip()
+    if query:
+        results = Group.query.filter(
+            Group.user_id == user_id, Group.name.ilike(f"%{query}%")
+        ).all()
+        groups_data = [{"id": g.id, "name": g.name, "color": g.color} for g in results]
+        return {"results": groups_data}, 200
+    return {"results": []}, 200
+
+
+@app.route("/search/sheets/<int:group_id>", methods=["GET"])
+def search_sheet(group_id):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    query = request.args.get("q", "").strip()
+    if query:
+        search_fields = [
+            "name",
+            "nickname",
+            "pronouns",
+            "likes",
+            "dislikes",
+            "allergies",
+            "notes",
+        ]
+        filters = [getattr(Sheet, field).ilike(f"%{query}%") for field in search_fields]
+        results = (
+            Sheet.query.join(sheet_groups, Sheet.id == sheet_groups.c.sheet_id)
+            .join(Group, sheet_groups.c.group_id == Group.id)
+            .filter(Group.id == group_id, Group.user_id == user_id, or_(*filters))
+            .all()
+        )
+        sheets_data = [{"id": s.id, "name": s.name, "color": s.color} for s in results]
+        return {"results": sheets_data}, 200
+    return {"results": []}, 200
 
 
 if __name__ == "__main__":
