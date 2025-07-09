@@ -29,7 +29,6 @@ const SearchBar = <T,>( { groupId, setItems, originalItems }: SearchInterface<T>
       return;
     }
     try {
-      // 
       const res = groupId 
         ? await axiosInstance.get(`/search/sheets/${groupId}?q=${search}`)
         : await axiosInstance.get(`/search/groups?q=${search}`);
@@ -45,7 +44,7 @@ const SearchBar = <T,>( { groupId, setItems, originalItems }: SearchInterface<T>
       onSubmit={handleSearch}
       className="relative"
       onMouseEnter={() => setIsExpanded(true)}
-      onMouseLeave={() => setIsExpanded(false)}
+      onMouseLeave={() => search === "" && setIsExpanded(false)}
     >
       <input
         type="search"
