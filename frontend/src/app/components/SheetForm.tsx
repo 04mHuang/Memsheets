@@ -45,7 +45,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
         value={sheet.name}
         placeholder="Name"
         aria-label="Name"
-        className="sheet-name w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
+        className="sheet-name sheet-input w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
       />
       <div className="sheet-content">
         <section className="sheet-basic">
@@ -109,7 +109,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
         </section>
         <div className="sheet-details">
           <label>
-            <h2 className="sheet-heading">Likes:</h2>
+            <h2 className="sheet-heading">Likes</h2>
             <textarea
               name="likes"
               onChange={handleChange}
@@ -120,7 +120,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
             />
           </label>
           <label>
-            <h2 className="sheet-heading">Dislikes:</h2>
+            <h2 className="sheet-heading">Dislikes</h2>
             <textarea
               name="dislikes"
               onChange={handleChange}
@@ -131,7 +131,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
             />
           </label>
           <label>
-            <h2 className="sheet-heading">Allergies:</h2>
+            <h2 className="sheet-heading">Allergies</h2>
             <textarea
               name="allergies"
               onChange={handleChange}
@@ -142,13 +142,13 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
             />
           </label>
           <label>
-            <h2 className="sheet-heading">Additional notes:</h2>
+            <h2 className="sheet-heading">Additional notes</h2>
             <textarea
               name="notes"
               onChange={handleChange}
               value={sheet.notes === "N/A" ? "" : sheet.notes}
-              placeholder="Additional Notes"
-              aria-label="Additional Notes"
+              placeholder="Additional notes"
+              aria-label="Additional notes"
               className="sheet-input sheet-detail"
             />
           </label>

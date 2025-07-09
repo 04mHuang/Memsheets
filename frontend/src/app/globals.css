@@ -50,8 +50,7 @@ body {
     @apply text-4xl mb-4;
   }
   .card {
-    @apply container max-w-screen-xl py-7 px-5 border-2 rounded-md hover:cursor-pointer hover:border-support;
-    border-color: var(--light-foreground);
+    @apply container max-w-screen-xl py-7 px-5 border-2 border-light-foreground rounded-md hover:cursor-pointer hover:border-support hover:shadow-md;
   }
   .card-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
@@ -90,7 +89,7 @@ body {
     @apply mt-2 text-lg;
   }
   .sheet-input {
-    @apply bg-background/[0.75] px-2 rounded-md border-1 border-foreground;
+    @apply bg-background/[0.5] px-2 rounded-md border-1 border-foreground;
   }
   .sheet-details {
     @apply flex flex-col flex-1;
