@@ -6,6 +6,7 @@ import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
 import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
+import { isDarkColor } from "@/app/util/colorUtil";
 
 const Sheet = () => {
   const params = useParams<{ sheet_id: string }>();
@@ -68,7 +69,7 @@ const Sheet = () => {
   }
 
   return (
-    <div className="page-container mt-4">
+    <div className={`page-container mt-4 ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
       <EditButtons editMode={editMode} submit={handleModeToggle} cancel={handleCancel} />
       {editMode ?
         <form
@@ -92,13 +93,17 @@ const Sheet = () => {
               <p className="sheet-basic"><strong>Birthday:</strong> {sheet.birthday}</p>
             </section>
             <section className="sheet-details">
-              <h2 className="sheet-heading">Likes:</h2>
+              <h2 className="sheet-heading">Likes</h2>
+              <hr className="border-dashed" />
               <p className="sheet-detail">{sheet.likes}</p>
-              <h2 className="sheet-heading">Dislikes:</h2>
+              <h2 className="sheet-heading">Dislikes</h2>
+              <hr className="border-dashed" />
               <p className="sheet-detail">{sheet.dislikes}</p>
-              <h2 className="sheet-heading">Allergies:</h2>
+              <h2 className="sheet-heading">Allergies</h2>
+              <hr className="border-dashed" />
               <p className="sheet-detail">{sheet.allergies}</p>
-              <h2 className="sheet-heading">Additional notes:</h2>
+              <h2 className="sheet-heading">Additional notes</h2>
+              <hr className="border-dashed" />
               <p className="sheet-detail">{sheet.notes}</p>
             </section>
           </div>

@@ -1,4 +1,5 @@
 import { useRouter, usePathname } from "next/navigation";
+import { isDarkColor } from "@/app/util/colorUtil";
 
 interface CardInterface {
   id: number,
@@ -10,7 +11,8 @@ const Card = ({ item, type }: { item: CardInterface; type: string }) => {
   const pathname = usePathname();
   const router = useRouter();
   const id = item.id;
-  const color = item.color;
+  const bgColor = item.color;
+  
 
   const handleClick = () => {
     if (type === "groups") {
@@ -25,8 +27,8 @@ const Card = ({ item, type }: { item: CardInterface; type: string }) => {
   return (
     <div
       onClick={handleClick}
-      className="card hover-animation"
-      style={{ backgroundColor: color }}
+      className={`card hover-animation ${isDarkColor(bgColor) ? 'text-background' : 'text-foreground'}`}
+      style={{ backgroundColor: bgColor }}
     >
       <h1 className="card-name">{item.name}</h1>
     </div>

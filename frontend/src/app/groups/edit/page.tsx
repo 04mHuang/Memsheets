@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
 import EditButtons from "@/app/components/EditButtons";
+import { isDarkColor } from "@/app/util/colorUtil";
 
 const EditGroup = () => {
   const router = useRouter();
@@ -33,7 +34,7 @@ const EditGroup = () => {
         submit={createGroup}
         cancel={() => router.back()}
       />
-      <div className="sheet" style={{ background: group.color }}>
+      <div className={`sheet ${isDarkColor(group.color) ? "text-background" : "text-foreground"}`} style={{ background: group.color, '--placeholder-color': isDarkColor(group.color) ? "var(--background)" : "var(--foreground)" } as React.CSSProperties}>
         <form method="POST" onSubmit={(e) => {e.preventDefault(); createGroup();}}>
           <input
             type="text"
@@ -42,6 +43,7 @@ const EditGroup = () => {
             placeholder="Group name"
             aria-label="Group name"
             className="sheet-input sheet-name"
+            style={{ color: 'var(--placeholder-color)' }}
           />
           <br />
           <label className="sheet-input color-input">
