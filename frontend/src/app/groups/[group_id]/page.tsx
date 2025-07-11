@@ -29,9 +29,10 @@ const GroupSheets = () => {
     (async () => {
       try {
         const response = await axiosInstance.get(`/groups/${group_id}`);
-        const result = response.data.sheets;
-        setSheets(result);
-        setOriginalSheets(result);
+        const result = response.data;
+        setPageTitle(result.group);
+        setSheets(result.sheets);
+        setOriginalSheets(result.sheets);
       }
       catch (error) {
         console.error(error);
@@ -42,7 +43,9 @@ const GroupSheets = () => {
 
   // If user is searching, change the page title
   useEffect(() => {
-    setPageTitle(sheets === originalSheets ? "Sheets" : "Search Results");
+    if (sheets !== originalSheets) {
+      setPageTitle("Search Results");
+    }
   }, [sheets, originalSheets]);
 
   return (
