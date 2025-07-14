@@ -114,6 +114,27 @@ def create_group():
         return {"error": "New group creation failed"}, 500
 
 
+# Search for sheet names matching user input for group creation
+@app.route("/search/groups/sheets", methods=["GET"])
+def search_sheets_for_select():
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        query = request.args.get("q", "").strip()
+        if query:
+            results = Sheet.query.filter(
+                Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
+            ).all()
+            print(results)
+            sheets_data = [{"id": s.id, "name": s.name} for s in results]
+            return {"results": sheets_data}, 200
+        return {"results": []}, 200
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}
+
+
 @app.route("/groups/<int:group_id>", methods=["GET"])
 def get_sheets_by_group(group_id):
     try:
@@ -145,6 +166,7 @@ def create_sheet():
         if not data or "name" not in data or "group_id" not in data:
             return {"error": "Invalid input"}, 400
         group_id = data["group_id"]
+        # Create a new sheet with default inputs if field is empty
         new_sheet = Sheet(
             user_id=user_id,
             name=data["name"] if data["name"].strip() else "Untitled Sheet",
