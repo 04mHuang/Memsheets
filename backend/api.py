@@ -132,8 +132,7 @@ def search_sheets_for_select():
             results = Sheet.query.filter(
                 Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
             ).all()
-            print(results)
-            sheets_data = [{"id": s.id, "name": s.name} for s in results]
+            sheets_data = [{"id": s.id, "name": s.name, "color": s.color} for s in results]
             return {"results": sheets_data}, 200
         return {"results": []}, 200
     except Exception as e:

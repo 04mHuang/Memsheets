@@ -8,15 +8,17 @@ import axiosInstance from "@/app/axiosInstance";
 import debounce from "lodash.debounce";
 
 import EditButtons from "@/app/components/EditButtons";
-import { isDarkColor } from "@/app/util/colorUtil";
+import { isDarkColor, adjustColor } from "@/app/util/colorUtil";
 
 interface SheetOption {
   value: string;
   label: string;
+  color: string;
 }
 interface Sheet {
   id: string;
   name: string;
+  color: string;
 }
 
 const EditGroup = () => {
@@ -36,7 +38,8 @@ const EditGroup = () => {
       // Return the data in the correct format for AsyncSelect
       return res.data.results.map((sheet: Sheet) => ({
         value: sheet.id,
-        label: sheet.name
+        label: sheet.name,
+        color: sheet.color
       }))
     }
     catch (error) {
@@ -111,7 +114,40 @@ const EditGroup = () => {
             value={group.sheets}
             isMulti
             cacheOptions
-            placeholder="+ Add sheets"
+            placeholder="+ Add existing sheets..."
+            noOptionsMessage={() => "Enter a sheet name to add it"}
+            styles ={{
+              control: (base) => ({
+                ...base,
+                backgroundColor: 'var(--background)',
+                padding: '0.25rem',
+                marginTop: '1rem',
+              }),
+              menu: (base) => ({
+                ...base,
+                backgroundColor: 'var(--background)',
+                marginTop: 0,
+              }),
+              option: (base, { data }) => ({
+                ...base,
+                marginBottom: '0.2rem',
+                backgroundColor: data.color,
+                color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
+                ':hover': {
+                  backgroundColor: adjustColor(data.color, -40),
+                  cursor: 'pointer'
+                }
+              }),
+              multiValue: (base, { data }) => ({
+                ...base,
+                backgroundColor: data.color,
+                color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
+              }),
+              multiValueLabel: (base, { data }) => ({
+                ...base,
+                color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
+              })
+            }}
           />
         </form>
       </div>
