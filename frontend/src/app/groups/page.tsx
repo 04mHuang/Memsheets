@@ -47,7 +47,7 @@ const Groups = () => {
       </div>
       <section className="card-grid">
         <button
-          onClick={() => { router.push("/groups/edit") }}
+          onClick={() => { router.push("/groups/create") }}
           className="create-button card"
         >
           <p>Create group</p>
