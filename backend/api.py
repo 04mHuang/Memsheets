@@ -108,6 +108,12 @@ def create_group():
         )
         db.session.add(new_group)
         db.session.commit()
+        # Add association between added existing sheets and new group
+        for sheet in data["sheets"]:
+          added_sheet = Sheet.query.filter_by(user_id=user_id, id=sheet["value"]).first()
+          if added_sheet:
+            new_group.sheets.append(added_sheet)
+        db.session.commit()
         return {"message": "Successful group creation"}, 201
     except Exception as e:
         print(f"Error creating group: {e}")
