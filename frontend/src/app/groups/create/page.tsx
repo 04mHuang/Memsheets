@@ -14,7 +14,7 @@ interface SheetOption {
   color: string;
 }
 
-const EditGroup = () => {
+const CreateGroup = () => {
   const router = useRouter();
   // Basic information of group
   const [group, setGroup] = useState({
@@ -24,13 +24,15 @@ const EditGroup = () => {
   });
   
 
-  const createGroup = async () => {
+  const handleCreate = async () => {
     try {
-      await axiosInstance.post("/new-group", group);
-      router.push("/groups");
+      const res = await axiosInstance.post("/new-group", group);
+      if (res.data.id) {
+        router.push(`/groups/${res.data.id}`);
+      }
     }
     catch (error) {
-      console.error(error);
+      console.error("Error creating group:", error);
     }
   }
 
@@ -38,15 +40,15 @@ const EditGroup = () => {
     <div className="page-container">
       <EditButtons
         editMode={true}
-        submit={createGroup}
+        submit={handleCreate}
         cancel={() => router.back()}
       />
       <div className={`sheet ${isDarkColor(group.color) ? "text-background" : "text-foreground"}`} style={{ background: group.color, '--placeholder-color': isDarkColor(group.color) ? "var(--background)" : "var(--foreground)" } as React.CSSProperties}>
-        <form method="POST" onSubmit={(e) => { e.preventDefault(); createGroup(); }}>
+        <form method="POST" onSubmit={(e) => { e.preventDefault(); handleCreate(); }}>
           <GroupForm group={group} setGroup={setGroup} />
         </form>
       </div>
     </div>
   );
 }
-export default EditGroup;
+export default CreateGroup;

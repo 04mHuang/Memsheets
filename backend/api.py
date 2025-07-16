@@ -114,10 +114,10 @@ def create_group():
           if added_sheet:
             new_group.sheets.append(added_sheet)
         db.session.commit()
-        return {"message": "Successful group creation"}, 201
+        return { "message": "Successful group creation", "id": new_group.id }, 201
     except Exception as e:
         print(f"Error creating group: {e}")
-        return {"error": "New group creation failed"}, 500
+        return { "error": "New group creation failed" }, 500
 
 
 # Search for sheet names matching user input for group creation
