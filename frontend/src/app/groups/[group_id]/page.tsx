@@ -3,6 +3,8 @@
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { FiFilePlus } from "react-icons/fi";
+
+import EditButtons from "@/app/components/EditButtons";
 import Card from "@/app/components/Card";
 import SearchBar from "@/app/components/SearchBar";
 import axiosInstance from "@/app/axiosInstance";
@@ -54,6 +56,11 @@ const GroupSheets = () => {
         <h1 className="page-title mb-0">{pageTitle}</h1>
         {/* Search through the sheets of a specific group by passing the group_id */}
         <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
+        <EditButtons
+          editMode={false}
+          submit={() => router.push(`/groups/${group_id}/edit`)}
+          cancel={() => router.back()}
+        />
       </div>
       <section className="card-grid">
         <button
