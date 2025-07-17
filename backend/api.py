@@ -159,7 +159,7 @@ def get_sheets_by_group(group_id):
         sheets_data = [
             {"id": s.id, "name": s.name, "color": s.color} for s in group.sheets
         ]
-        return {"sheets": sheets_data, "group": group.name}, 200
+        return { "name": group.name, "color": group.color, "sheets": sheets_data }, 200
     except Exception as e:
         print(f"Error fetching sheets: {e}")
         return {"error": "Fetching sheets failed"}, 500

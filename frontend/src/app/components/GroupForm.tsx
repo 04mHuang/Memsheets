@@ -72,6 +72,7 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
         type="text"
         name="name"
         onChange={handleChange}
+        value={group.name}
         placeholder="Group name"
         aria-label="Group name"
         className="sheet-input sheet-name"

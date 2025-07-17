@@ -32,7 +32,7 @@ const GroupSheets = () => {
       try {
         const response = await axiosInstance.get(`/groups/${group_id}`);
         const result = response.data;
-        setPageTitle(result.group);
+        setPageTitle(result.name);
         setSheets(result.sheets);
         setOriginalSheets(result.sheets);
       }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import axiosInstance from "@/app/axiosInstance";
 
@@ -8,6 +8,11 @@ import EditButtons from "@/app/components/EditButtons";
 import GroupForm from "@/app/components/GroupForm";
 import { isDarkColor } from "@/app/util/colorUtil";
 
+interface Sheet {
+  id: string;
+  name: string;
+  color: string;
+}
 interface SheetOption {
   value: string;
   label: string;
@@ -25,6 +30,32 @@ const EditGroup = () => {
     "sheets": [] as SheetOption[]
   });
   
+  // Get current group settings to display in GroupForm
+  useEffect(() => {
+    if (!group_id) {
+      return;
+    }
+    (async () => {
+      try {
+        const res = await axiosInstance.get(`/groups/${group_id}`);
+        // Format sheets to be suitable for AsyncSelect
+        const formattedSheets = res.data.sheets.map((sheet: Sheet) => ({
+          value: sheet.id,
+          label: sheet.name,
+          color: sheet.color,
+        }))
+        setGroup({
+          "name": res.data.name,
+          "color": res.data.color,
+          "sheets": formattedSheets
+        });
+      }
+      catch (error) {
+        console.error(error);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleEdit = async () => {
     try {
