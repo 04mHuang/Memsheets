@@ -55,12 +55,14 @@ const GroupSheets = () => {
       <div className="flex justify-between items-center mb-4">
         <h1 className="page-title mb-0">{pageTitle}</h1>
         {/* Search through the sheets of a specific group by passing the group_id */}
-        <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
-        <EditButtons
-          editMode={false}
-          submit={() => router.push(`/groups/${group_id}/edit`)}
-          cancel={() => router.back()}
-        />
+        <div className="flex gap-2 items-center">
+          <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
+          <EditButtons
+            editMode={false}
+            submit={() => router.push(`/groups/${group_id}/edit`)}
+            cancel={() => router.back()}
+          />
+        </div>
       </div>
       <section className="card-grid">
         <button
