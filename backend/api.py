@@ -108,10 +108,40 @@ def create_group():
         )
         db.session.add(new_group)
         db.session.commit()
-        return {"message": "Successful group creation"}, 201
+        # Add association between added existing sheets and new group
+        for sheet in data["sheets"]:
+            added_sheet = Sheet.query.filter_by(
+                user_id=user_id, id=sheet["value"]
+            ).first()
+            if added_sheet:
+                new_group.sheets.append(added_sheet)
+        db.session.commit()
+        return {"message": "Successful group creation", "id": new_group.id}, 201
     except Exception as e:
         print(f"Error creating group: {e}")
         return {"error": "New group creation failed"}, 500
+
+
+# Search for sheet names matching user input for group creation
+@app.route("/search/groups/sheets", methods=["GET"])
+def search_sheets_for_select():
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        query = request.args.get("q", "").strip()
+        if query:
+            results = Sheet.query.filter(
+                Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
+            ).all()
+            sheets_data = [
+                {"id": s.id, "name": s.name, "color": s.color} for s in results
+            ]
+            return {"results": sheets_data}, 200
+        return {"results": []}, 200
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}
 
 
 @app.route("/groups/<int:group_id>", methods=["GET"])
@@ -129,10 +159,48 @@ def get_sheets_by_group(group_id):
         sheets_data = [
             {"id": s.id, "name": s.name, "color": s.color} for s in group.sheets
         ]
-        return {"sheets": sheets_data}, 200
+        return { "name": group.name, "color": group.color, "sheets": sheets_data }, 200
     except Exception as e:
         print(f"Error fetching sheets: {e}")
         return {"error": "Fetching sheets failed"}, 500
+
+
+@app.route("/edit-group/<int:group_id>", methods=["POST"])
+def update_group(group_id):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+    if not group:
+      return { "error": "Group not found" }, 404
+    data = request.json
+    for key, value in data.items():
+      # Group names must not be whitespace
+      if key == "name" and not value.strip():
+        setattr(group, key, "Untitled Group")
+      # Add associations between added sheets and correct group
+      
+      elif key == "sheets":
+        # Clear all existing sheet associations for this group
+        group.sheets.clear()
+        
+        # Add all sheets from the updated list
+        for addedSheet in value:
+          # addedSheet has keys color, label, and value
+          sheet = Sheet.query.get(addedSheet["value"])
+          if sheet:
+            group.sheets.append(sheet)
+            
+        # Check for sheets that now belong to no group and add to default group Miscellaneous
+        misc_group = Group.query.filter_by(user_id=user_id, name="Miscellaneous").first()
+        orphaned_sheets = Sheet.query.filter_by(user_id=user_id)\
+          .filter(~Sheet.groups.any()).all()
+        for sheet in orphaned_sheets:
+          misc_group.sheets.append(sheet)
+      else:
+        setattr(group, key, value)
+    db.session.commit()
+    return { "message": "Group updated successfully" }, 200
 
 
 @app.route("/new-sheet", methods=["POST"])
@@ -145,6 +213,7 @@ def create_sheet():
         if not data or "name" not in data or "group_id" not in data:
             return {"error": "Invalid input"}, 400
         group_id = data["group_id"]
+        # Create a new sheet with default inputs if field is empty
         new_sheet = Sheet(
             user_id=user_id,
             name=data["name"] if data["name"].strip() else "Untitled Sheet",
