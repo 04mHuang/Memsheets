@@ -179,11 +179,24 @@ def update_group(group_id):
       if key == "name" and not value.strip():
         setattr(group, key, "Untitled Group")
       # Add associations between added sheets and correct group
+      
       elif key == "sheets":
+        # Clear all existing sheet associations for this group
+        group.sheets.clear()
+        
+        # Add all sheets from the updated list
         for addedSheet in value:
           # addedSheet has keys color, label, and value
           sheet = Sheet.query.get(addedSheet["value"])
-          group.sheets.append(sheet)
+          if sheet:
+            group.sheets.append(sheet)
+            
+        # Check for sheets that now belong to no group and add to default group Miscellaneous
+        misc_group = Group.query.filter_by(user_id=user_id, name="Miscellaneous").first()
+        orphaned_sheets = Sheet.query.filter_by(user_id=user_id)\
+          .filter(~Sheet.groups.any()).all()
+        for sheet in orphaned_sheets:
+          misc_group.sheets.append(sheet)
       else:
         setattr(group, key, value)
     db.session.commit()
