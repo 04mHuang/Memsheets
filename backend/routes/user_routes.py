@@ -1,7 +1,7 @@
 from flask import Blueprint, request
 from jwt_util import create_token
-from backend.database.models import User, Group
-from backend.api import bcrypt
+from database.models import User, Group
+from extensions import bcrypt
 from database.db import db
 
 

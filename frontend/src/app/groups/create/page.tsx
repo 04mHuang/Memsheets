@@ -26,7 +26,7 @@ const CreateGroup = () => {
 
   const handleCreate = async () => {
     try {
-      const res = await axiosInstance.post("/new-group", group);
+      const res = await axiosInstance.post("/groups/create", group);
       if (res.data.id) {
         router.push(`/groups/${res.data.id}`);
       }

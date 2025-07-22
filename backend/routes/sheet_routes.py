@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from sqlalchemy import or_
 
 from jwt_util import check_auth_header
-from backend.database.models import Group, Sheet, sheet_groups
+from database.models import Group, Sheet, sheet_groups
 from database.db import db
 
 sheet_bp = Blueprint("sheet_bp", __name__)
