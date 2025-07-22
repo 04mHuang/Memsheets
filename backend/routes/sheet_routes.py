@@ -5,9 +5,9 @@ from jwt_util import check_auth_header
 from database.models import Group, Sheet, sheet_groups
 from database.db import db
 
-sheet_bp = Blueprint("sheet_bp", __name__)
+sheet_bp = Blueprint("sheet_bp", __name__, url_prefix="/sheets")
 
-@sheet_bp.route("/new-sheet", methods=["POST"])
+@sheet_bp.route("/new", methods=["POST"])
 def create_sheet():
     try:
         user_id = check_auth_header(request.headers.get("Authorization"))
@@ -50,7 +50,7 @@ def create_sheet():
         return {"error": "New sheet creation failed"}, 500
 
 
-@sheet_bp.route("/sheets/<int:sheet_id>", methods=["GET"])
+@sheet_bp.route("/<int:sheet_id>", methods=["GET"])
 def get_sheet(sheet_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
@@ -74,7 +74,7 @@ def get_sheet(sheet_id):
     return {"sheet": sheet_data}, 200
 
 
-@sheet_bp.route("/sheets/<int:sheet_id>/edit", methods=["POST"])
+@sheet_bp.route("/<int:sheet_id>/edit", methods=["POST"])
 def update_sheet(sheet_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
@@ -112,7 +112,7 @@ def update_sheet(sheet_id):
     }, 200
 
 
-@sheet_bp.route("/search/sheets/<int:group_id>", methods=["GET"])
+@sheet_bp.route("/search/<int:group_id>", methods=["GET"])
 def search_sheet(group_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
