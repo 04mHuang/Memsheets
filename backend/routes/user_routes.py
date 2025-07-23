@@ -5,7 +5,7 @@ from extensions import bcrypt
 from database.db import db
 
 
-user_bp = Blueprint("user_bp", __name__)
+user_bp = Blueprint("user_bp", __name__, url_prefix="/users")
 
 @user_bp.route("/signup", methods=["POST"])
 def create_user():
