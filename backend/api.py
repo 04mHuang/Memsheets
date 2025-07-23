@@ -1,17 +1,17 @@
 import os
 from dotenv import load_dotenv
 from flask_cors import CORS
-from flask_bcrypt import Bcrypt
 from flask import Flask
 
 from database.db import db
-from routes.user_routes import user_bp
-from routes.group_routes import group_bp
-from routes.sheet_routes import sheet_bp
+from extensions import bcrypt
 
 load_dotenv()
 
-bcrypt = Bcrypt()
+# Import blueprints after extensions to avoid circular imports
+from routes.user_routes import user_bp
+from routes.group_routes import group_bp
+from routes.sheet_routes import sheet_bp
 
 def create_app():
     # Setting up the app and connecting to database

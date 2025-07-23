@@ -69,7 +69,7 @@ const Signup = () => {
         username: formData.username.trim(),
         email: formData.email.trim()
       }
-      await axios.post("/api/signup", trimmedData);
+      await axios.post("/api/users/signup", trimmedData);
       // Clear errors before redirecting in case of slow loading
       setErrors({});
       router.push("/login");

@@ -1,13 +1,13 @@
 from flask import Blueprint, request
 
 from jwt_util import check_auth_header
-from backend.database.models import Group, Sheet
+from database.models import Group, Sheet
 from database.db import db
 
-group_bp = Blueprint("group_bp", __name__)
+group_bp = Blueprint("group_bp", __name__, url_prefix="/groups")
 
 
-@group_bp.route("/groups", methods=["GET"])
+@group_bp.route("", methods=["GET"])
 def get_groups():
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
@@ -18,7 +18,7 @@ def get_groups():
     return {"groups": groups_data}, 200
 
 
-@group_bp.route("/new-group", methods=["POST"])
+@group_bp.route("/create", methods=["POST"])
 def create_group():
     try:
         user_id = check_auth_header(request.headers.get("Authorization"))
@@ -48,29 +48,7 @@ def create_group():
         return {"error": "New group creation failed"}, 500
 
 
-# Search for sheet names matching user input for group creation
-@group_bp.route("/search/groups/sheets", methods=["GET"])
-def search_sheets_for_select():
-    try:
-        user_id = check_auth_header(request.headers.get("Authorization"))
-        if not user_id:
-            return {"error": "Invalid token"}, 401
-        query = request.args.get("q", "").strip()
-        if query:
-            results = Sheet.query.filter(
-                Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
-            ).all()
-            sheets_data = [
-                {"id": s.id, "name": s.name, "color": s.color} for s in results
-            ]
-            return {"results": sheets_data}, 200
-        return {"results": []}, 200
-    except Exception as e:
-        print(f"Error fetching sheets {e}")
-        return {"error": "Fetching sheets"}
-
-
-@group_bp.route("/groups/<int:group_id>", methods=["GET"])
+@group_bp.route("/<int:group_id>", methods=["GET"])
 def get_sheets_by_group(group_id):
     try:
         user_id = check_auth_header(request.headers.get("Authorization"))
@@ -91,7 +69,7 @@ def get_sheets_by_group(group_id):
         return {"error": "Fetching sheets failed"}, 500
 
 
-@group_bp.route("/edit-group/<int:group_id>", methods=["POST"])
+@group_bp.route("/edit/<int:group_id>", methods=["POST"])
 def update_group(group_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
@@ -132,7 +110,7 @@ def update_group(group_id):
     return {"message": "Group updated successfully"}, 200
 
 
-@group_bp.route("/search/groups", methods=["GET"])
+@group_bp.route("/search", methods=["GET"])
 def search_group():
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
@@ -145,3 +123,25 @@ def search_group():
         groups_data = [{"id": g.id, "name": g.name, "color": g.color} for g in results]
         return {"results": groups_data}, 200
     return {"results": []}, 200
+
+
+# Search for sheet names matching user input for group creation
+@group_bp.route("/search/sheets", methods=["GET"])
+def search_sheets_for_select():
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        query = request.args.get("q", "").strip()
+        if query:
+            results = Sheet.query.filter(
+                Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
+            ).all()
+            sheets_data = [
+                {"id": s.id, "name": s.name, "color": s.color} for s in results
+            ]
+            return {"results": sheets_data}, 200
+        return {"results": []}, 200
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}

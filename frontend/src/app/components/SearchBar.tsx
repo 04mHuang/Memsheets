@@ -30,8 +30,8 @@ const SearchBar = <T,>( { groupId, setItems, originalItems }: SearchInterface<T>
     }
     try {
       const res = groupId 
-        ? await axiosInstance.get(`/search/sheets/${groupId}?q=${search}`)
-        : await axiosInstance.get(`/search/groups?q=${search}`);
+        ? await axiosInstance.get(`/sheets/search/${groupId}?q=${search}`)
+        : await axiosInstance.get(`/groups/search?q=${search}`);
       setItems(res.data.results);
     }
     catch (error) {

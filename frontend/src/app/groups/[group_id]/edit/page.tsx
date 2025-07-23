@@ -59,7 +59,7 @@ const EditGroup = () => {
 
   const handleEdit = async () => {
     try {
-      await axiosInstance.post(`/edit-group/${group_id}`, group);
+      await axiosInstance.post(`/groups/edit/${group_id}`, group);
       router.back();
     }
     catch (error) {
