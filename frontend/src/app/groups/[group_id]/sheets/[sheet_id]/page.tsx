@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import axiosInstance from "@/app/axiosInstance";
 import EditButtons from "@/app/components/EditButtons";
@@ -9,6 +9,7 @@ import SheetForm from "@/app/components/SheetForm";
 import { isDarkColor } from "@/app/util/colorUtil";
 
 const Sheet = () => {
+  const router = useRouter();
   const params = useParams<{ sheet_id: string }>();
   const { sheet_id } = params;
   const [editMode, setEditMode] = useState(false);
@@ -58,9 +59,20 @@ const Sheet = () => {
     setEditMode(!editMode);
   }
 
-  const handleCancel = () => {
-    setSheet(originalSheet);
-    setEditMode(false);
+  const handleCancel = async () => {
+    if (!editMode) {
+      try {
+        await axiosInstance.delete(`/sheets/delete/${sheet_id}`);
+      }
+      catch (error) {
+        console.error(error);
+      }
+      router.back();
+    }
+    else {
+      setSheet(originalSheet);
+      setEditMode(false);
+    }
   }
 
   // Avoid flicker of default data
