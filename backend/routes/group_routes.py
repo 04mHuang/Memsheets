@@ -110,6 +110,35 @@ def update_group(group_id):
     return {"message": "Group updated successfully"}, 200
 
 
+@group_bp.route("/delete/<int:group_id>/<int:del_sheets>", methods=["DELETE"])
+def delete_group(group_id, del_sheets):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+    if not group:
+        return {"error": "Group not found"}, 404
+    # If user opts to delete associated sheets, clear relevant association table entries
+    if del_sheets:
+        for sheet in group.sheets:
+            sheet.groups.clear()
+            db.session.delete(sheet)
+    else:
+        group.sheets.clear()
+        # Check for sheets that now belong to no group and add to default group Miscellaneous
+        misc_group = Group.query.filter_by(
+            user_id=user_id, name="Miscellaneous"
+        ).first()
+        orphaned_sheets = (
+            Sheet.query.filter_by(user_id=user_id).filter(~Sheet.groups.any()).all()
+        )
+        for sheet in orphaned_sheets:
+            misc_group.sheets.append(sheet)
+    db.session.delete(group)
+    db.session.commit()
+    return {"message": "Success"}, 200
+
+
 @group_bp.route("/search", methods=["GET"])
 def search_group():
     user_id = check_auth_header(request.headers.get("Authorization"))

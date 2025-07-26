@@ -50,6 +50,16 @@ const GroupSheets = () => {
     }
   }, [sheets, originalSheets]);
 
+  const handleDelete = async () => {
+    try {
+      await axiosInstance.delete(`/groups/delete/${group_id}/${0}`)
+    }
+    catch (error) {
+      console.error(error);
+    }
+    router.back();
+  }
+
   return (
     <main className="page-container">
       <div className="flex justify-between items-center mb-4">
@@ -60,7 +70,7 @@ const GroupSheets = () => {
           <EditButtons
             editMode={false}
             submit={() => router.push(`/groups/${group_id}/edit`)}
-            cancel={() => router.back()}
+            cancel={handleDelete}
           />
         </div>
       </div>
