@@ -67,11 +67,14 @@ const GroupSheets = () => {
         {/* Search through the sheets of a specific group by passing the group_id */}
         <div className="flex gap-2 items-center">
           <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
-          <EditButtons
-            editMode={false}
-            submit={() => router.push(`/groups/${group_id}/edit`)}
-            cancel={handleDelete}
-          />
+          {/* Prevent editing and deletion of the group Miscellaneous */}
+          {group_id !== "1" &&
+            <EditButtons
+              editMode={false}
+              submit={() => router.push(`/groups/${group_id}/edit`)}
+              cancel={handleDelete}
+            />
+          }
         </div>
       </div>
       <section className="card-grid">
