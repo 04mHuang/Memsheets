@@ -82,7 +82,7 @@ const Sheet = () => {
 
   return (
     <div className={`page-container mt-4 ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
-      <EditButtons editMode={editMode} submit={handleModeToggle} cancel={handleCancel} />
+      <EditButtons editMode={editMode} submit={handleModeToggle} exit={handleCancel} />
       {editMode ?
         <form
           method="POST"

@@ -70,7 +70,7 @@ const GroupSheets = () => {
             <EditButtons
               editMode={false}
               submit={() => router.push(`/groups/${group_id}/edit`)}
-              cancel={() => setModalOpen(true)}
+              exit={() => setModalOpen(true)}
             />
           }
         </div>
