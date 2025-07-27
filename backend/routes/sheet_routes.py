@@ -7,6 +7,7 @@ from database.db import db
 
 sheet_bp = Blueprint("sheet_bp", __name__, url_prefix="/sheets")
 
+
 @sheet_bp.route("/new", methods=["POST"])
 def create_sheet():
     try:
@@ -112,6 +113,25 @@ def update_sheet(sheet_id):
     }, 200
 
 
+@sheet_bp.route("/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"])
+def delete_sheet(group_id, sheet_id, del_sheet):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return { "error": "Invalid token" }, 401
+    sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
+    if not sheet:
+        return { "error": "Sheet not found" }, 404
+    # If user opts to delete all instances of the sheets, clear associations
+    if del_sheet:
+      sheet.groups.clear()
+      db.session.delete(sheet)
+    else:
+      group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+      sheet.groups.remove(group)
+    db.session.commit()
+    return { "message": "Success" }, 200
+
+
 @sheet_bp.route("/search/<int:group_id>", methods=["GET"])
 def search_sheet(group_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
@@ -129,6 +149,7 @@ def search_sheet(group_id):
             "notes",
         ]
         filters = [getattr(Sheet, field).ilike(f"%{query}%") for field in search_fields]
+        # Filter out for sheets in current group that match the query
         results = (
             Sheet.query.join(sheet_groups, Sheet.id == sheet_groups.c.sheet_id)
             .join(Group, sheet_groups.c.group_id == Group.id)

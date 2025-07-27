@@ -1,16 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import axiosInstance from "@/app/axiosInstance";
+
 import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
+import DeletionModal from "@/app/components/DeletionModal";
+
+import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor } from "@/app/util/colorUtil";
 
 const Sheet = () => {
-  const params = useParams<{ sheet_id: string }>();
-  const { sheet_id } = params;
+  const router = useRouter();
+  const params = useParams<{ group_id: string, sheet_id: string }>();
+  const { sheet_id, group_id } = params;
+  const [modalOpen, setModalOpen] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sheet, setSheet] = useState({
@@ -63,6 +68,17 @@ const Sheet = () => {
     setEditMode(false);
   }
 
+  // deleteSheets is basically a boolean
+  const handleDelete = async (deleteSheets: number) => {
+    try {
+      await axiosInstance.delete(`/sheets/delete/${group_id}/${sheet_id}/${deleteSheets}`);
+    }
+    catch (error) {
+      console.error(error);
+    }
+    router.back();
+  }
+
   // Avoid flicker of default data
   if (loading) {
     return <div>Loading...</div>;
@@ -70,7 +86,8 @@ const Sheet = () => {
 
   return (
     <div className={`page-container mt-4 ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
-      <EditButtons editMode={editMode} submit={handleModeToggle} cancel={handleCancel} />
+      <DeletionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} subject={`${sheet.name} Sheet`} handleDelete={handleDelete} />
+      <EditButtons editMode={editMode} submit={handleModeToggle} exit={() => editMode ? handleCancel() : setModalOpen(true)} />
       {editMode ?
         <form
           method="POST"

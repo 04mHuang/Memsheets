@@ -12,7 +12,7 @@ const NavBar = () => {
 
   return (
     <nav
-      className="flex items-center justify-between py-2 px-5 border-b-1 bg-nav border-light-foreground"
+      className="z-10 flex items-center justify-between py-2 px-5 border-b-1 bg-nav border-light-foreground"
     >
       <div className="flex items-center gap-10">
         <Link href="/" aria-label="Home">

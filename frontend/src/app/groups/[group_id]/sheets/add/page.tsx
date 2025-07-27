@@ -36,7 +36,7 @@ const EditSheet = () => {
       <EditButtons 
         editMode={true} 
         submit={handleSubmit}
-        cancel={() => router.back()}
+        exit={() => router.back()}
       />
       <div className="sheet" style={{ backgroundColor: sheet.color }}>
         <form method="POST" onSubmit={(e) => {e.preventDefault(); handleSubmit();}}>

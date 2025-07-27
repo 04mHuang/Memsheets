@@ -72,7 +72,7 @@ const EditGroup = () => {
       <EditButtons
         editMode={true}
         submit={handleEdit}
-        cancel={() => router.back()}
+        exit={() => router.back()}
       />
       <div className={`sheet ${isDarkColor(group.color) ? "text-background" : "text-foreground"}`} style={{ background: group.color, '--placeholder-color': isDarkColor(group.color) ? "var(--background)" : "var(--foreground)" } as React.CSSProperties}>
         <form method="POST" onSubmit={(e) => { e.preventDefault(); handleEdit(); }}>

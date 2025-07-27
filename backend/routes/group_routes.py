@@ -110,6 +110,26 @@ def update_group(group_id):
     return {"message": "Group updated successfully"}, 200
 
 
+@group_bp.route("/delete/<int:group_id>/<int:del_sheets>", methods=["DELETE"])
+def delete_group(group_id, del_sheets):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+    if not group:
+        return {"error": "Group not found"}, 404
+    # If user opts to delete associated sheets, clear relevant association table entries
+    if del_sheets:
+        for sheet in group.sheets:
+            sheet.groups.clear()
+            db.session.delete(sheet)
+    else:
+        group.sheets.clear()
+    db.session.delete(group)
+    db.session.commit()
+    return {"message": "Success"}, 200
+
+
 @group_bp.route("/search", methods=["GET"])
 def search_group():
     user_id = check_auth_header(request.headers.get("Authorization"))
