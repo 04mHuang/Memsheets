@@ -17,22 +17,22 @@ const DeletionModal = ({ isOpen, onClose, subject, handleDelete }: DeletionModal
   // Will be either "Group" or "Sheet"
   const subjectType = subject.slice(-5);
   const subjectName = subject.slice(0, -6);
-  
+
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title={`Delete ${subjectType}`} >
 
       <p className="mt-2">Are you sure you want to delete <strong>{subjectName}</strong>?</p>
       <p>This action cannot be undone.</p>
-      <div className="mx-7 my-3 text-left p-2 bg-support/[0.3] border-l-5 border-support flex items-center rounded-sm">
+      <div className="mx-4 mt-4 mb-1 text-left p-2 bg-support/[0.3] border-l-5 border-support flex items-center rounded-sm">
         <BsPatchExclamation className="w-25 h-full mr-4 text-dark-support" />
         <p>
           If you wish to delete all instances of <strong>{subjectName}</strong>&apos;s
-          sheets from other groups, select the checkbox below.
+          sheets from other groups, check the checkbox below.
         </p>
       </div>
-      <label>
-        <input type="checkbox" ref={deleteSheetsRef} />
-        Delete sheets
+      <label className="flex gap-2 items-center justify-center">
+        <input type="checkbox" className="mt-1 cursor-pointer" ref={deleteSheetsRef} />
+        <span className="cursor-pointer hover:text-dark-support hover-animation">Delete sheets</span>
       </label>
       <div className="mt-8 mx-5 flex justify-between">
         <button
