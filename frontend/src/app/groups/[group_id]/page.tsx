@@ -45,20 +45,20 @@ const GroupSheets = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleDelete = async () => {
-    setModalOpen(true);
-    // try {
-    //   await axiosInstance.delete(`/groups/delete/${group_id}/${0}`)
-    // }
-    // catch (error) {
-    //   console.error(error);
-    // }
-    // router.back();
+  // deleteSheets is basically a boolean
+  const handleDelete = async (deleteSheets: number) => {
+    try {
+      await axiosInstance.delete(`/groups/delete/${group_id}/${deleteSheets}`)
+    }
+    catch (error) {
+      console.error(error);
+    }
+    router.back();
   }
 
   return (
     <main className="page-container">
-      <DeletionModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} subject={`${pageTitle} Group`} />
+      <DeletionModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} subject={`${pageTitle} Group`} handleDelete={handleDelete} />
       <div className="flex justify-between items-center mb-4">
         {/* If user is searching, change the page title */}
         <h1 className="page-title mb-0">{sheets !== originalSheets ? "Search Results" : pageTitle}</h1>
@@ -70,7 +70,7 @@ const GroupSheets = () => {
             <EditButtons
               editMode={false}
               submit={() => router.push(`/groups/${group_id}/edit`)}
-              cancel={handleDelete}
+              cancel={() => setModalOpen(true)}
             />
           }
         </div>

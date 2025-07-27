@@ -1,3 +1,7 @@
+"use client";
+
+import { useRef } from "react";
+
 import { BsPatchExclamation } from "react-icons/bs";
 import ModalBase from "@/app/components/ModalBase";
 
@@ -5,15 +9,15 @@ interface DeletionModalProps {
   isOpen: boolean;
   onClose: () => void;
   subject: string;
+  handleDelete: (del_sheets: number) => void;
 }
 
-const DeletionModal = ({ isOpen, onClose, subject }: DeletionModalProps) => {
+const DeletionModal = ({ isOpen, onClose, subject, handleDelete }: DeletionModalProps) => {
+  const deleteSheetsRef = useRef<HTMLInputElement>(null);
   // Will be either "Group" or "Sheet"
   const subjectType = subject.slice(-5);
   const subjectName = subject.slice(0, -6);
-  // if (subjectType === "Group") {
-
-  // }
+  
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title={`Delete ${subjectType}`} >
 
@@ -27,7 +31,7 @@ const DeletionModal = ({ isOpen, onClose, subject }: DeletionModalProps) => {
         </p>
       </div>
       <label>
-        <input type="checkbox" />
+        <input type="checkbox" ref={deleteSheetsRef} />
         Delete sheets
       </label>
       <div className="mt-8 mx-5 flex justify-between">
@@ -38,7 +42,7 @@ const DeletionModal = ({ isOpen, onClose, subject }: DeletionModalProps) => {
           Cancel
         </button>
         <button
-          onClick={() => { console.log("delete?") }}
+          onClick={() => handleDelete(deleteSheetsRef.current?.checked ? 1 : 0)}
           className="bg-accent border-accent border-1 text-background px-4 py-2 rounded-sm cursor-pointer hover:bg-red-400 hover:border-red-400 hover-animation"
         >
           Delete
