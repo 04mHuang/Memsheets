@@ -7,6 +7,7 @@ import { FiFilePlus } from "react-icons/fi";
 import EditButtons from "@/app/components/EditButtons";
 import Card from "@/app/components/Card";
 import SearchBar from "@/app/components/SearchBar";
+import DeletionModal from "@/app/components/DeletionModal";
 import axiosInstance from "@/app/axiosInstance";
 
 interface SheetType {
@@ -19,6 +20,7 @@ const GroupSheets = () => {
   const router = useRouter();
   const params = useParams<{ group_id: string; }>();
   const { group_id } = params;
+  const [isModalOpen, setModalOpen] = useState(false);
   const [sheets, setSheets] = useState<SheetType[]>([]);
   // Copy of sheets data to be displayed if a user searches with only whitespace
   const [originalSheets, setOriginalSheets] = useState<SheetType[]>([]);
@@ -43,27 +45,23 @@ const GroupSheets = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // If user is searching, change the page title
-  useEffect(() => {
-    if (sheets !== originalSheets) {
-      setPageTitle("Search Results");
-    }
-  }, [sheets, originalSheets]);
-
   const handleDelete = async () => {
-    try {
-      await axiosInstance.delete(`/groups/delete/${group_id}/${0}`)
-    }
-    catch (error) {
-      console.error(error);
-    }
-    router.back();
+    setModalOpen(true);
+    // try {
+    //   await axiosInstance.delete(`/groups/delete/${group_id}/${0}`)
+    // }
+    // catch (error) {
+    //   console.error(error);
+    // }
+    // router.back();
   }
 
   return (
     <main className="page-container">
+      <DeletionModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} subject={`${pageTitle} Group`} />
       <div className="flex justify-between items-center mb-4">
-        <h1 className="page-title mb-0">{pageTitle}</h1>
+        {/* If user is searching, change the page title */}
+        <h1 className="page-title mb-0">{sheets !== originalSheets ? "Search Results" : pageTitle}</h1>
         {/* Search through the sheets of a specific group by passing the group_id */}
         <div className="flex gap-2 items-center">
           <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
