@@ -20,7 +20,7 @@ const GroupSheets = () => {
   const router = useRouter();
   const params = useParams<{ group_id: string; }>();
   const { group_id } = params;
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [sheets, setSheets] = useState<SheetType[]>([]);
   // Copy of sheets data to be displayed if a user searches with only whitespace
   const [originalSheets, setOriginalSheets] = useState<SheetType[]>([]);
@@ -58,7 +58,7 @@ const GroupSheets = () => {
 
   return (
     <main className="page-container">
-      <DeletionModal isOpen={isModalOpen} onClose={() => setModalOpen(false)} subject={`${pageTitle} Group`} handleDelete={handleDelete} />
+      <DeletionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} subject={`${pageTitle} Group`} handleDelete={handleDelete} />
       <div className="flex justify-between items-center mb-4">
         {/* If user is searching, change the page title */}
         <h1 className="page-title mb-0">{sheets !== originalSheets ? "Search Results" : pageTitle}</h1>
