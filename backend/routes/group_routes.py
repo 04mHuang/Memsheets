@@ -125,15 +125,6 @@ def delete_group(group_id, del_sheets):
             db.session.delete(sheet)
     else:
         group.sheets.clear()
-        # Check for sheets that now belong to no group and add to default group Miscellaneous
-        misc_group = Group.query.filter_by(
-            user_id=user_id, name="Miscellaneous"
-        ).first()
-        orphaned_sheets = (
-            Sheet.query.filter_by(user_id=user_id).filter(~Sheet.groups.any()).all()
-        )
-        for sheet in orphaned_sheets:
-            misc_group.sheets.append(sheet)
     db.session.delete(group)
     db.session.commit()
     return {"message": "Success"}, 200

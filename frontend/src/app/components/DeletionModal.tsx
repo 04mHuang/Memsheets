@@ -24,15 +24,16 @@ const DeletionModal = ({ isOpen, onClose, subject, handleDelete }: DeletionModal
       <p className="mt-2">Are you sure you want to delete <strong>{subjectName}</strong>?</p>
       <p>This action cannot be undone.</p>
       <div className="mx-4 mt-4 mb-1 text-left p-2 bg-support/[0.3] border-l-5 border-support flex items-center rounded-sm">
-        <BsPatchExclamation className="w-25 h-full mr-4 text-dark-support" />
+        <BsPatchExclamation className="w-25 h-full max-h-10 mr-4 text-dark-support" />
         {subjectType === "Group" ?
           <p>
-            If you wish to delete <strong>{subjectName}</strong>&apos;s
-            sheets from all other groups, check the checkbox below.
+            To remove <strong>{subjectName}</strong>&apos;s sheets from all groups,
+            check the box below.
+            Sheets not in any other group will be deleted.
           </p>
           :
           <p>
-            If you wish to delete <strong>{subjectName}</strong> from all other groups,
+            To delete <strong>{subjectName}</strong> from all other groups,
             check the checkbox below.
           </p>
         }
