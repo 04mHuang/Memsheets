@@ -25,14 +25,29 @@ const DeletionModal = ({ isOpen, onClose, subject, handleDelete }: DeletionModal
       <p>This action cannot be undone.</p>
       <div className="mx-4 mt-4 mb-1 text-left p-2 bg-support/[0.3] border-l-5 border-support flex items-center rounded-sm">
         <BsPatchExclamation className="w-25 h-full mr-4 text-dark-support" />
-        <p>
-          If you wish to delete all instances of <strong>{subjectName}</strong>&apos;s
-          sheets from other groups, check the checkbox below.
-        </p>
+        {subjectType === "Group" ?
+          <p>
+            If you wish to delete <strong>{subjectName}</strong>&apos;s
+            sheets from all other groups, check the checkbox below.
+          </p>
+          :
+          <p>
+            If you wish to delete <strong>{subjectName}</strong> from all other groups,
+            check the checkbox below.
+          </p>
+        }
       </div>
       <label className="flex gap-2 items-center justify-center">
         <input type="checkbox" className="mt-1 cursor-pointer" ref={deleteSheetsRef} />
-        <span className="cursor-pointer hover:text-dark-support hover-animation">Delete sheets</span>
+        {subjectType === "Group" ?
+          <span className="cursor-pointer hover:text-dark-support hover-animation">
+            Delete sheets
+          </span>
+          :
+          <span className="cursor-pointer hover:text-dark-support hover-animation">
+            Delete from all groups
+          </span>
+        }
       </label>
       <div className="mt-8 mx-5 flex justify-between">
         <button
