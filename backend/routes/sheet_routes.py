@@ -72,7 +72,11 @@ def get_sheet(sheet_id):
             "notes": sheet.notes,
         }
     ]
-    return {"sheet": sheet_data}, 200
+    groups_data = []
+    for group in sheet.groups:
+      if group.user_id == user_id:
+        groups_data.append({"id": group.id, "name": group.name, "color": group.color})
+    return {"sheet": sheet_data, "groups": groups_data}, 200
 
 
 @sheet_bp.route("/<int:sheet_id>/edit", methods=["POST"])

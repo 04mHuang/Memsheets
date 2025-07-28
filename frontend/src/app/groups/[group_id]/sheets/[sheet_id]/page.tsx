@@ -11,6 +11,12 @@ import DeletionModal from "@/app/components/DeletionModal";
 import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor } from "@/app/util/colorUtil";
 
+interface GroupTagType {
+  id: number,
+  name: string,
+  color: string
+}
+
 const Sheet = () => {
   const router = useRouter();
   const params = useParams<{ group_id: string, sheet_id: string }>();
@@ -27,8 +33,11 @@ const Sheet = () => {
     "likes": "",
     "dislikes": "",
     "allergies": "",
-    "notes": ""
+    "notes": "",
   });
+  const [groupTags, setGroupTags] = useState<GroupTagType[]>([]);
+  // Tooltip used when there are more than 3 group tags
+  const [showTooltip, setShowTooltip] = useState(false);
   // Save original data in case user cancels editing
   const [originalSheet, setOriginalSheet] = useState(sheet);
 
@@ -39,6 +48,7 @@ const Sheet = () => {
           const sheetData = res.data.sheet[0];
           setSheet(sheetData);
           setOriginalSheet(sheetData);
+          setGroupTags(res.data.groups);
           setLoading(false);
         })
         .catch(err => {
@@ -100,6 +110,33 @@ const Sheet = () => {
         :
         <main className="sheet" style={{ backgroundColor: sheet.color }}>
           <h1 className="sheet-name">{sheet.name}</h1>
+          <div className="mb-4">
+            {/* Only show tags for first 3 groups */}
+            {groupTags.slice(0, 3).map((group) => (
+              <span
+                key={group.id}
+                style={{ backgroundColor: group.color }}
+                className={`mr-2 py-1 px-2 rounded-lg ${isDarkColor(group.color) ? 'text-background' : 'text-foreground'}`}
+              >
+                {group.name}
+              </span>
+            ))}
+            {/* If there are more than 3 groups, condense rest into a tooltip */}
+            {groupTags.length > 3 && (
+              <span 
+                className={`relative text-sm cursor-help ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}
+                onMouseEnter={() => setShowTooltip(true)}
+                onMouseLeave={() => setShowTooltip(false)}
+              >
+                + {groupTags.length - 3} more
+                {showTooltip && (
+                  <div className="absolute bottom-full left-0 mb-2 p-2 bg-foreground text-background text-xs rounded whitespace-nowrap z-10 before:content-[''] before:absolute before:top-full before:left-4 before:border-4 before:border-transparent before:border-t-foreground">
+                    {groupTags.slice(3).map(g => g.name).join(', ')}
+                  </div>
+                )}
+              </span>
+            )}
+          </div>
           <div className="sheet-content">
             <section>
               <div className="sheet-photo">
