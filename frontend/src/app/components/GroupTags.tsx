@@ -50,7 +50,7 @@ const GroupTags = ({ groupTags, sheetColor }: GroupTagsProps) => {
           )}
         </span>
       )}
-      <button onClick={() => setShowModal(true)} className="w-5 cursor-pointer">
+      <button type="button" onClick={() => setShowModal(true)} className="w-5 cursor-pointer">
         <BsFillPencilFill className="w-full h-full" />
       </button>
     </div>
