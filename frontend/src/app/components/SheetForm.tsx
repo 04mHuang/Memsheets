@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
+import GroupTags from "@/app/components/GroupTags";
+
 interface SheetData {
   name: string;
   color: string;
@@ -14,12 +16,20 @@ interface SheetData {
   allergies: string;
   notes: string;
 }
+
+interface GroupTagType {
+  id: number,
+  name: string,
+  color: string
+}
+
 interface SheetFormProps {
   sheet: SheetData;
   setSheet: (sheet: SheetData) => void;
+  groupTags: GroupTagType[];
 }
 
-const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
+const SheetForm = ({ sheet, setSheet, groupTags }: SheetFormProps) => {
   const pronounsList = ["Unknown", "she/her", "he/him", "they/them"];
   // Set a recognized value for the select input
   const [pronouns, setPronouns] = useState(pronounsList.includes(sheet.pronouns) ? sheet.pronouns : "Custom");
@@ -47,6 +57,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
         aria-label="Name"
         className="sheet-name sheet-input w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
       />
+      <GroupTags groupTags={groupTags} sheetColor={sheet.color} />
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
