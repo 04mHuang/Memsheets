@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import { isDarkColor } from "../util/colorUtil";
+import { BsFillPencilFill } from "react-icons/bs";
+
+import GroupTagsModal from "@/app/components/GroupTagsModal";
+import { isDarkColor } from "@/app/util/colorUtil";
 
 interface GroupTagType {
   id: number,
@@ -17,9 +20,11 @@ interface GroupTagsProps {
 const GroupTags = ({ groupTags, sheetColor }: GroupTagsProps) => {
   // Tooltip used when there are more than 3 group tags
   const [showTooltip, setShowTooltip] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   return (
-    <div className="mb-4">
+    <div className="mb-4 flex items-center">
+      <GroupTagsModal isOpen={showModal} onClose={() => setShowModal(false)} groupTags={groupTags} />
       {/* Only show tags for first 3 groups */}
       {groupTags.slice(0, 3).map((group) => (
         <span
@@ -33,7 +38,7 @@ const GroupTags = ({ groupTags, sheetColor }: GroupTagsProps) => {
       {/* If there are more than 3 groups, condense rest into a tooltip */}
       {groupTags.length > 3 && (
         <span
-          className={`relative text-sm cursor-help ${isDarkColor(sheetColor) ? 'text-background' : 'text-foreground'}`}
+          className={`relative text-sm mr-3 cursor-help ${isDarkColor(sheetColor) ? 'text-background' : 'text-foreground'}`}
           onMouseEnter={() => setShowTooltip(true)}
           onMouseLeave={() => setShowTooltip(false)}
         >
@@ -45,6 +50,9 @@ const GroupTags = ({ groupTags, sheetColor }: GroupTagsProps) => {
           )}
         </span>
       )}
+      <button onClick={() => setShowModal(true)} className="w-5 cursor-pointer">
+        <BsFillPencilFill className="w-full h-full" />
+      </button>
     </div>
   );
 }
