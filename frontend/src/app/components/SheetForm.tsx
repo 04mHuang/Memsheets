@@ -57,7 +57,7 @@ const SheetForm = ({ sheet, setSheet, groupTags }: SheetFormProps) => {
         aria-label="Name"
         className="sheet-name sheet-input w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
       />
-      <GroupTags groupTags={groupTags} sheetColor={sheet.color} />
+      {groupTags !== undefined && <GroupTags groupTags={groupTags} sheetColor={sheet.color} />}
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
