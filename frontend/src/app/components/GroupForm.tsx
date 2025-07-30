@@ -1,10 +1,12 @@
+"use client";
+
 import { useState, useMemo, useEffect } from "react";
-import AsyncSelect from "react-select/async";
+
 import { MultiValue } from "react-select";
 import debounce from "lodash.debounce";
 
 import axiosInstance from "@/app/axiosInstance";
-import { isDarkColor, adjustColor } from "@/app/util/colorUtil";
+import AddSelect from "@/app/components/AddSelect";
 import { GSInterface, SelectOption } from "@/app/types/index";
 
 interface GroupData {
@@ -79,50 +81,7 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
           value={group.color}
         />
       </label>
-      <AsyncSelect
-        defaultOptions={false}
-        loadOptions={debouncedFetch}
-        onChange={handleSelectChange}
-        value={group.sheets}
-        isMulti
-        cacheOptions
-        placeholder="+ Add existing sheets..."
-        noOptionsMessage={() => "Enter a sheet name to add it"}
-        styles={{
-          control: (base) => ({
-            ...base,
-            backgroundColor: 'var(--background)',
-            marginTop: '1rem',
-            cursor: 'pointer',
-            width: '50%',
-          }),
-          menu: (base) => ({
-            ...base,
-            backgroundColor: 'var(--background)',
-            marginTop: 0,
-            width: '50%',
-          }),
-          option: (base, { data }) => ({
-            ...base,
-            marginBottom: '0.2rem',
-            backgroundColor: data.color,
-            color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
-            ':hover': {
-              backgroundColor: adjustColor(data.color, -40),
-              cursor: 'pointer'
-            }
-          }),
-          multiValue: (base, { data }) => ({
-            ...base,
-            backgroundColor: data.color,
-            color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
-          }),
-          multiValueLabel: (base, { data }) => ({
-            ...base,
-            color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
-          })
-        }}
-      />
+      <AddSelect debouncedFetch={debouncedFetch} handleSelectChange={handleSelectChange} selectValue={group.sheets} />
     </>
   );
 }

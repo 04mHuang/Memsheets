@@ -1,4 +1,6 @@
 // This file contains interfaces used across multiple files
+
+// Used for sheets and groups after fetching their data
 export interface GSInterface {
   id: number;
   name: string;
