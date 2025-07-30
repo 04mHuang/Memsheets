@@ -62,7 +62,7 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
       color: option.color
     }));
     // Retain current group tags and add new group
-    setGroupTags([...groupTags, ...selectedGroup]);
+    setGroupTags([...selectedGroup, ...groupTags]);
   }
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title="Edit Groups List">

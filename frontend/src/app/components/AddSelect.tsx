@@ -29,6 +29,18 @@ const AddSelect = ({ debouncedFetch, handleSelectChange, selectValue, subject }:
           backgroundColor: 'var(--background)',
           marginTop: '1rem',
           cursor: 'pointer',
+          padding: '0.2rem',
+          textAlign: 'left',
+          borderColor: 'var(--foreground)',
+          ':hover': {
+            borderColor: 'var(--accent)',
+          }
+        }),
+        dropdownIndicator: () => ({
+          display: 'none'
+        }),
+        indicatorSeparator: () => ({
+          display: 'none'
         }),
         menu: (base) => ({
           ...base,
