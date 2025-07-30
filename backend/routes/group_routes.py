@@ -131,18 +131,24 @@ def delete_group(group_id, del_sheets):
 
 
 @group_bp.route("/search", methods=["GET"])
-def search_group():
-    user_id = check_auth_header(request.headers.get("Authorization"))
-    if not user_id:
-        return {"error": "Invalid token"}, 401
-    query = request.args.get("q", "").strip()
-    if query:
-        results = Group.query.filter(
-            Group.user_id == user_id, Group.name.ilike(f"%{query}%")
-        ).all()
-        groups_data = [{"id": g.id, "name": g.name, "color": g.color} for g in results]
-        return {"results": groups_data}, 200
-    return {"results": []}, 200
+def search_groups_for_select():
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        query = request.args.get("q", "").strip()
+        if query:
+            results = Group.query.filter(
+                Group.user_id == user_id, Group.name.ilike(f"%{query}%")
+            ).all()
+            groups_data = [
+                {"id": g.id, "name": g.name, "color": g.color} for g in results
+            ]
+            return {"results": groups_data}, 200
+        return {"results": []}, 200
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}
 
 
 # TODO: move to sheet_routes
@@ -168,22 +174,3 @@ def search_sheets_for_select():
         return {"error": "Fetching sheets"}
 
 
-@group_bp.route("/search/group-modal", methods=["GET"])
-def search_groups_for_select():
-    try:
-        user_id = check_auth_header(request.headers.get("Authorization"))
-        if not user_id:
-            return {"error": "Invalid token"}, 401
-        query = request.args.get("q", "").strip()
-        if query:
-            results = Group.query.filter(
-                Group.user_id == user_id, Group.name.ilike(f"%{query}%")
-            ).all()
-            groups_data = [
-                {"id": g.id, "name": g.name, "color": g.color} for g in results
-            ]
-            return {"results": groups_data}, 200
-        return {"results": []}, 200
-    except Exception as e:
-        print(f"Error fetching sheets {e}")
-        return {"error": "Fetching sheets"}

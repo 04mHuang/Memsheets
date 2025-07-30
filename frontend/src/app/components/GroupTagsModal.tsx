@@ -22,7 +22,7 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
   // Fetch groups with names matching the the user's input string
   const fetchGroups = async (input: string) => {
     try {
-      const res = await axiosInstance.get(`/groups/search/group-modal?q=${encodeURIComponent(input)}`);
+      const res = await axiosInstance.get(`/groups/search?q=${encodeURIComponent(input)}`);
       // Return the data in the correct format for AddSelect
       return res.data.results.map((group: GSInterface) => ({
         value: group.id,
