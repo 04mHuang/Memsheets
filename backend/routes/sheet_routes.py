@@ -74,8 +74,10 @@ def get_sheet(sheet_id):
     ]
     groups_data = []
     for group in sheet.groups:
-      if group.user_id == user_id:
-        groups_data.append({"id": group.id, "name": group.name, "color": group.color})
+        if group.user_id == user_id:
+            groups_data.append(
+                {"id": group.id, "name": group.name, "color": group.color}
+            )
     return {"sheet": sheet_data, "groups": groups_data}, 200
 
 
@@ -117,23 +119,42 @@ def update_sheet(sheet_id):
     }, 200
 
 
-@sheet_bp.route("/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"])
+@sheet_bp.route("/<int:sheet_id>/edit/group-list", methods=["POST"])
+def update_group_list(sheet_id):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
+    if not sheet:
+        return {"error": "Sheet not found"}, 404
+    data = request.json
+    # Clear and reattach associations
+    group_ids = [item['id'] for item in data]
+    groups = Group.query.filter(Group.user_id == user_id, Group.id.in_(group_ids)).all()
+    sheet.groups = groups
+    db.session.commit()
+    return {"message": "Success"}, 200
+
+
+@sheet_bp.route(
+    "/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"]
+)
 def delete_sheet(group_id, sheet_id, del_sheet):
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
-        return { "error": "Invalid token" }, 401
+        return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
     if not sheet:
-        return { "error": "Sheet not found" }, 404
+        return {"error": "Sheet not found"}, 404
     # If user opts to delete all instances of the sheets, clear associations
     if del_sheet:
-      sheet.groups.clear()
-      db.session.delete(sheet)
+        sheet.groups.clear()
+        db.session.delete(sheet)
     else:
-      group = Group.query.filter_by(user_id=user_id, id=group_id).first()
-      sheet.groups.remove(group)
+        group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+        sheet.groups.remove(group)
     db.session.commit()
-    return { "message": "Success" }, 200
+    return {"message": "Success"}, 200
 
 
 @sheet_bp.route("/search/<int:group_id>", methods=["GET"])

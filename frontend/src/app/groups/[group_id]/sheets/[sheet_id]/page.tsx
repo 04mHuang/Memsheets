@@ -88,6 +88,17 @@ const Sheet = () => {
     router.back();
   }
 
+  // Save group list edit
+  const handleGroupsEdit = async () => {
+    try {
+      await axiosInstance.post(`/sheets/${sheet_id}/edit/group-list`, groupTags);
+    }
+    catch (error) {
+      console.error(error);
+    }
+    setGroupModalOpen(false);
+  }
+
   // Avoid flicker of default data
   if (loading) {
     return <div>Loading...</div>;
@@ -96,7 +107,7 @@ const Sheet = () => {
   return (
     <div className={`page-container mt-4 ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
       <DeletionModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} subject={`${sheet.name} Sheet`} handleDelete={handleDelete} />
-      <GroupTagsModal isOpen={groupModalOpen} onClose={() => setGroupModalOpen(false)} groupTags={groupTags} setGroupTags={setGroupTags} />
+      <GroupTagsModal isOpen={groupModalOpen} onClose={handleGroupsEdit} groupTags={groupTags} setGroupTags={setGroupTags} />
       <EditButtons editMode={editMode} submit={handleModeToggle} exit={() => editMode ? handleCancel() : setDeleteModalOpen(true)} />
       {editMode ?
         <form
