@@ -82,19 +82,11 @@ def update_group(group_id):
         # Group names must not be whitespace
         if key == "name" and not value.strip():
             setattr(group, key, "Untitled Group")
-        # Add associations between added sheets and correct group
-
         elif key == "sheets":
-            # Clear all existing sheet associations for this group
-            group.sheets.clear()
-
-            # Add all sheets from the updated list
-            for addedSheet in value:
-                # addedSheet has keys color, label, and value
-                sheet = Sheet.query.get(addedSheet["value"])
-                if sheet:
-                    group.sheets.append(sheet)
-
+            # Override associations
+            sheet_ids = [sheet["value"] for sheet in value]
+            sheets = Sheet.query.filter(Sheet.id.in_(sheet_ids)).all()
+            group.sheets = sheets
             # Check for sheets that now belong to no group and add to default group Miscellaneous
             misc_group = Group.query.filter_by(
                 user_id=user_id, name="Miscellaneous"

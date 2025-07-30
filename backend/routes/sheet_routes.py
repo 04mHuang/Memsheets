@@ -128,7 +128,7 @@ def update_group_list(sheet_id):
     if not sheet:
         return {"error": "Sheet not found"}, 404
     data = request.json
-    # Clear and reattach associations
+    # Override associations
     group_ids = [item['id'] for item in data]
     groups = Group.query.filter(Group.user_id == user_id, Group.id.in_(group_ids)).all()
     sheet.groups = groups
