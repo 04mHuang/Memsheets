@@ -18,20 +18,17 @@ interface GroupTagsModalProps extends CustomModalProps {
 
 const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsModalProps) => {
   const [mounted, setMounted] = useState(false);
-  const [selectGroups, setSelectGroups] = useState<SelectOption[]>([]);
 
   // Fetch groups with names matching the the user's input string
   const fetchGroups = async (input: string) => {
     try {
       const res = await axiosInstance.get(`/groups/search/group-modal?q=${encodeURIComponent(input)}`);
-      // Return the data in the correct format for AsyncSelect
-      const formattedGroups = res.data.results.map((group: GSInterface) => ({
+      // Return the data in the correct format for AddSelect
+      return res.data.results.map((group: GSInterface) => ({
         value: group.id,
         label: group.name,
         color: group.color
       }));
-      setSelectGroups(formattedGroups);
-      return formattedGroups;
     }
     catch (error) {
       console.error(error);
@@ -50,25 +47,23 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
     setMounted(true);
   }, []);
   if (!mounted) return null;
-  // Convert GSInterface[] to SelectOption[] for the select component
-  // const selectValue = groupTags.map(group => ({
-  //   value: group.id.toString(),
-  //   label: group.name,
-  //   color: group.color
-  // }));
 
   // Handles the groups added to the sheet
   const handleSelectChange = (val: MultiValue<SelectOption>) => {
-    const selectedGroups = Array.from(val).map(option => ({
+    // Format the selected group's values
+    // i.e. {value, label, color} to {id, name, color}
+    const selectedGroup = Array.from(val).map(option => ({
       id: parseInt(option.value),
       name: option.label,
       color: option.color
     }));
-    setGroupTags(selectedGroups);
+    // Retain current group tags and add new group
+    setGroupTags([...groupTags, ...selectedGroup]);
   }
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title="Edit Groups List">
-      <AddSelect debouncedFetch={debouncedFetch} handleSelectChange={handleSelectChange} selectValue={selectGroups} subject="group" />
+      {/* To not display current groups, leave selectValue as an empty array */}
+      <AddSelect debouncedFetch={debouncedFetch} handleSelectChange={handleSelectChange} selectValue={[]} subject="group" />
       <section className="max-h-120 mt-4 text-left overflow-auto">
         {groupTags.map((group) => (
           <div
