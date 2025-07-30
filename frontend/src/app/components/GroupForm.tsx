@@ -5,21 +5,12 @@ import debounce from "lodash.debounce";
 
 import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor, adjustColor } from "@/app/util/colorUtil";
+import { GSInterface, SelectOption } from "@/app/types/index";
 
-interface Sheet {
-  id: string;
-  name: string;
-  color: string;
-}
-interface SheetOption {
-  value: string;
-  label: string;
-  color: string;
-}
 interface GroupData {
   name: string;
   color: string;
-  sheets: SheetOption[];
+  sheets: SelectOption[];
 }
 interface GroupFormProps {
   group: GroupData;
@@ -34,7 +25,7 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
     try {
       const res = await axiosInstance.get(`/groups/search/sheets?q=${encodeURIComponent(input)}`);
       // Return the data in the correct format for AsyncSelect
-      return res.data.results.map((sheet: Sheet) => ({
+      return res.data.results.map((sheet: GSInterface) => ({
         value: sheet.id,
         label: sheet.name,
         color: sheet.color
@@ -59,7 +50,7 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
   if (!mounted) return null;
 
   // Handles the sheets added to the group
-  const handleSelectChange = (val: MultiValue<SheetOption>) => {
+  const handleSelectChange = (val: MultiValue<SelectOption>) => {
     setGroup({ ...group, sheets: Array.from(val) });
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

@@ -2,17 +2,10 @@ import { BsX } from "react-icons/bs";
 
 import ModalBase from "@/app/components/ModalBase";
 import { isDarkColor } from "@/app/util/colorUtil";
+import { GSInterface, CustomModalProps } from "@/app/types/index";
 
-interface GroupTagType {
-  id: number,
-  name: string,
-  color: string
-}
-
-interface GroupTagsModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  groupTags: GroupTagType[];
+interface GroupTagsModalProps extends CustomModalProps {
+  groupTags: GSInterface[];
 }
 
 const GroupTagsModal = ({ isOpen, onClose, groupTags }: GroupTagsModalProps) => {

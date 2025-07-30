@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 
 import GroupTags from "@/app/components/GroupTags";
+import { GSInterface } from "@/app/types/index";
 
 interface SheetData {
   name: string;
@@ -17,16 +18,10 @@ interface SheetData {
   notes: string;
 }
 
-interface GroupTagType {
-  id: number,
-  name: string,
-  color: string
-}
-
 interface SheetFormProps {
   sheet: SheetData;
   setSheet: (sheet: SheetData) => void;
-  groupTags: GroupTagType[];
+  groupTags: GSInterface[];
 }
 
 const SheetForm = ({ sheet, setSheet, groupTags }: SheetFormProps) => {

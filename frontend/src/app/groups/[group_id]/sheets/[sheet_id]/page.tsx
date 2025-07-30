@@ -11,12 +11,13 @@ import GroupTags from "@/app/components/GroupTags";
 
 import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor } from "@/app/util/colorUtil";
+import { GSInterface } from "@/app/types";
 
-interface GroupTagType {
-  id: number,
-  name: string,
-  color: string
-}
+// interface GroupTagType {
+//   id: number,
+//   name: string,
+//   color: string
+// }
 
 const Sheet = () => {
   const router = useRouter();
@@ -36,7 +37,7 @@ const Sheet = () => {
     "allergies": "",
     "notes": "",
   });
-  const [groupTags, setGroupTags] = useState<GroupTagType[]>([]);
+  const [groupTags, setGroupTags] = useState<GSInterface[]>([]);
   
   // Save original data in case user cancels editing
   const [originalSheet, setOriginalSheet] = useState(sheet);

@@ -1,13 +1,8 @@
 import { useRouter, usePathname } from "next/navigation";
 import { isDarkColor } from "@/app/util/colorUtil";
+import { GSInterface } from "@/app/types/index";
 
-interface CardInterface {
-  id: number,
-  name: string,
-  color: string,
-}
-
-const Card = ({ item, type }: { item: CardInterface; type: string }) => {
+const Card = ({ item, type }: { item: GSInterface; type: string }) => {
   const pathname = usePathname();
   const router = useRouter();
   const id = item.id;

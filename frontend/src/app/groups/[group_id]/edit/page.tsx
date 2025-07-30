@@ -7,17 +7,7 @@ import axiosInstance from "@/app/axiosInstance";
 import EditButtons from "@/app/components/EditButtons";
 import GroupForm from "@/app/components/GroupForm";
 import { isDarkColor } from "@/app/util/colorUtil";
-
-interface Sheet {
-  id: string;
-  name: string;
-  color: string;
-}
-interface SheetOption {
-  value: string;
-  label: string;
-  color: string;
-}
+import { GSInterface, SelectOption } from "@/app/types";
 
 const EditGroup = () => {
   const router = useRouter();
@@ -27,7 +17,7 @@ const EditGroup = () => {
   const [group, setGroup] = useState({
     "name": "",
     "color": "#999999",
-    "sheets": [] as SheetOption[]
+    "sheets": [] as SelectOption[]
   });
   
   // Get current group settings to display in GroupForm
@@ -39,7 +29,7 @@ const EditGroup = () => {
       try {
         const res = await axiosInstance.get(`/groups/${group_id}`);
         // Format sheets to be suitable for AsyncSelect
-        const formattedSheets = res.data.sheets.map((sheet: Sheet) => ({
+        const formattedSheets = res.data.sheets.map((sheet: GSInterface) => ({
           value: sheet.id,
           label: sheet.name,
           color: sheet.color,

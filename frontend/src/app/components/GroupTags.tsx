@@ -5,15 +5,10 @@ import { BsFillPencilFill } from "react-icons/bs";
 
 import GroupTagsModal from "@/app/components/GroupTagsModal";
 import { isDarkColor } from "@/app/util/colorUtil";
-
-interface GroupTagType {
-  id: number,
-  name: string,
-  color: string
-}
+import { GSInterface } from "@/app/types/index";
 
 interface GroupTagsProps {
-  groupTags: GroupTagType[];
+  groupTags: GSInterface[];
   sheetColor: string;
 }
 

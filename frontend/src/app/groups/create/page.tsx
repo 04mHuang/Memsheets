@@ -7,12 +7,7 @@ import axiosInstance from "@/app/axiosInstance";
 import EditButtons from "@/app/components/EditButtons";
 import GroupForm from "@/app/components/GroupForm";
 import { isDarkColor } from "@/app/util/colorUtil";
-
-interface SheetOption {
-  value: string;
-  label: string;
-  color: string;
-}
+import { SelectOption } from "@/app/types";
 
 const CreateGroup = () => {
   const router = useRouter();
@@ -20,7 +15,7 @@ const CreateGroup = () => {
   const [group, setGroup] = useState({
     "name": "",
     "color": "#999999",
-    "sheets": [] as SheetOption[]
+    "sheets": [] as SelectOption[]
   });
   
 
