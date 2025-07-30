@@ -50,6 +50,10 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
 
   // Handles the groups added to the sheet
   const handleSelectChange = (val: MultiValue<SelectOption>) => {
+    // Prevent duplicate added groups
+    const isAlreadyAdded = groupTags.some(group => group.id === parseInt(val[0].value));
+    if (isAlreadyAdded) return;
+    
     // Format the selected group's values
     // i.e. {value, label, color} to {id, name, color}
     const selectedGroup = Array.from(val).map(option => ({
