@@ -3,23 +3,21 @@
 import { useState } from "react";
 import { BsFillPencilFill } from "react-icons/bs";
 
-import GroupTagsModal from "@/app/components/GroupTagsModal";
 import { isDarkColor } from "@/app/util/colorUtil";
 import { GSInterface } from "@/app/types/index";
 
 interface GroupTagsProps {
   groupTags: GSInterface[];
   sheetColor: string;
+  setGroupModalOpen: (isOpen: boolean) => void;
 }
 
-const GroupTags = ({ groupTags, sheetColor }: GroupTagsProps) => {
+const GroupTags = ({ groupTags, sheetColor, setGroupModalOpen }: GroupTagsProps) => {
   // Tooltip used when there are more than 3 group tags
   const [showTooltip, setShowTooltip] = useState(false);
-  const [showModal, setShowModal] = useState(false);
 
   return (
     <div className="mb-4 flex items-center">
-      <GroupTagsModal isOpen={showModal} onClose={() => setShowModal(false)} groupTags={groupTags} />
       {/* Only show tags for first 3 groups */}
       {groupTags.slice(0, 3).map((group) => (
         <span
@@ -45,7 +43,7 @@ const GroupTags = ({ groupTags, sheetColor }: GroupTagsProps) => {
           )}
         </span>
       )}
-      <button type="button" onClick={() => setShowModal(true)} className="w-5 cursor-pointer">
+      <button type="button" onClick={() => setGroupModalOpen(true)} className="w-5 cursor-pointer">
         <BsFillPencilFill className="w-full h-full" />
       </button>
     </div>

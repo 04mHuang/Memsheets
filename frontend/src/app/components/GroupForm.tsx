@@ -81,7 +81,12 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
           value={group.color}
         />
       </label>
-      <AddSelect debouncedFetch={debouncedFetch} handleSelectChange={handleSelectChange} selectValue={group.sheets} />
+      <AddSelect
+        debouncedFetch={debouncedFetch}
+        handleSelectChange={handleSelectChange}
+        selectValue={group.sheets}
+        subject="sheet"
+      />
     </>
   );
 }

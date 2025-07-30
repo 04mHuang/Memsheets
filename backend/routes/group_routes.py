@@ -145,6 +145,7 @@ def search_group():
     return {"results": []}, 200
 
 
+# TODO: move to sheet_routes
 # Search for sheet names matching user input for group creation
 @group_bp.route("/search/sheets", methods=["GET"])
 def search_sheets_for_select():
@@ -161,6 +162,27 @@ def search_sheets_for_select():
                 {"id": s.id, "name": s.name, "color": s.color} for s in results
             ]
             return {"results": sheets_data}, 200
+        return {"results": []}, 200
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}
+
+
+@group_bp.route("/search/group-modal", methods=["GET"])
+def search_groups_for_select():
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        query = request.args.get("q", "").strip()
+        if query:
+            results = Group.query.filter(
+                Group.user_id == user_id, Group.name.ilike(f"%{query}%")
+            ).all()
+            groups_data = [
+                {"id": g.id, "name": g.name, "color": g.color} for g in results
+            ]
+            return {"results": groups_data}, 200
         return {"results": []}, 200
     except Exception as e:
         print(f"Error fetching sheets {e}")

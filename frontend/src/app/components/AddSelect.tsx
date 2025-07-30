@@ -9,9 +9,10 @@ interface AddSelectProps {
   debouncedFetch: (inputValue: string, callback: (options: SelectOption[]) => void) => void;
   handleSelectChange: (val: MultiValue<SelectOption>) => void;
   selectValue: SelectOption[];
+  subject: string;
 }
 
-const AddSelect = ({ debouncedFetch, handleSelectChange, selectValue }: AddSelectProps) => {
+const AddSelect = ({ debouncedFetch, handleSelectChange, selectValue, subject }: AddSelectProps) => {
   return (
     <AsyncSelect
       defaultOptions={false}
@@ -20,21 +21,19 @@ const AddSelect = ({ debouncedFetch, handleSelectChange, selectValue }: AddSelec
       value={selectValue}
       isMulti
       cacheOptions
-      placeholder="+ Add existing sheets..."
-      noOptionsMessage={() => "Enter a sheet name to add it"}
+      placeholder={`+ Add existing ${subject}s...`}
+      noOptionsMessage={() => `Enter a ${subject} name to add it`}
       styles={{
         control: (base) => ({
           ...base,
           backgroundColor: 'var(--background)',
           marginTop: '1rem',
           cursor: 'pointer',
-          width: '50%',
         }),
         menu: (base) => ({
           ...base,
           backgroundColor: 'var(--background)',
           marginTop: 0,
-          width: '50%',
         }),
         option: (base, { data }) => ({
           ...base,
