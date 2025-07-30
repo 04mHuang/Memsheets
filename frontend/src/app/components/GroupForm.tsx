@@ -25,7 +25,7 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
   // Fetch sheets with names matching the the user's input string
   const fetchSheets = async (input: string) => {
     try {
-      const res = await axiosInstance.get(`/groups/search/sheets?q=${encodeURIComponent(input)}`);
+      const res = await axiosInstance.get(`/sheets/search/sheets?q=${encodeURIComponent(input)}`);
       // Return the data in the correct format for AsyncSelect
       return res.data.results.map((sheet: GSInterface) => ({
         value: sheet.id,

@@ -7,6 +7,7 @@ from database.db import db
 group_bp = Blueprint("group_bp", __name__, url_prefix="/groups")
 
 
+# Fetch list of all groups
 @group_bp.route("", methods=["GET"])
 def get_groups():
     user_id = check_auth_header(request.headers.get("Authorization"))
@@ -18,6 +19,7 @@ def get_groups():
     return {"groups": groups_data}, 200
 
 
+# Create a new group
 @group_bp.route("/create", methods=["POST"])
 def create_group():
     try:
@@ -48,6 +50,7 @@ def create_group():
         return {"error": "New group creation failed"}, 500
 
 
+# Fetch a specific group
 @group_bp.route("/<int:group_id>", methods=["GET"])
 def get_sheets_by_group(group_id):
     try:
@@ -69,6 +72,7 @@ def get_sheets_by_group(group_id):
         return {"error": "Fetching sheets failed"}, 500
 
 
+# Edit a specific group
 @group_bp.route("/edit/<int:group_id>", methods=["POST"])
 def update_group(group_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
@@ -102,6 +106,7 @@ def update_group(group_id):
     return {"message": "Group updated successfully"}, 200
 
 
+# Delete a specific group (through DeletionModal)
 @group_bp.route("/delete/<int:group_id>/<int:del_sheets>", methods=["DELETE"])
 def delete_group(group_id, del_sheets):
     user_id = check_auth_header(request.headers.get("Authorization"))
@@ -122,6 +127,7 @@ def delete_group(group_id, del_sheets):
     return {"message": "Success"}, 200
 
 
+# Search used in both search bar and create/edit groups list (through GroupTagsModal)
 @group_bp.route("/search", methods=["GET"])
 def search_groups_for_select():
     try:
@@ -141,28 +147,3 @@ def search_groups_for_select():
     except Exception as e:
         print(f"Error fetching sheets {e}")
         return {"error": "Fetching sheets"}
-
-
-# TODO: move to sheet_routes
-# Search for sheet names matching user input for group creation
-@group_bp.route("/search/sheets", methods=["GET"])
-def search_sheets_for_select():
-    try:
-        user_id = check_auth_header(request.headers.get("Authorization"))
-        if not user_id:
-            return {"error": "Invalid token"}, 401
-        query = request.args.get("q", "").strip()
-        if query:
-            results = Sheet.query.filter(
-                Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
-            ).all()
-            sheets_data = [
-                {"id": s.id, "name": s.name, "color": s.color} for s in results
-            ]
-            return {"results": sheets_data}, 200
-        return {"results": []}, 200
-    except Exception as e:
-        print(f"Error fetching sheets {e}")
-        return {"error": "Fetching sheets"}
-
-
