@@ -147,3 +147,24 @@ def search_groups_for_select():
     except Exception as e:
         print(f"Error fetching sheets {e}")
         return {"error": "Fetching sheets"}
+
+
+# Remove group from group list (through GroupTagsModal)
+@group_bp.route("/remove/<int:sheet_id>/<int:group_id>", methods=["DELETE"])
+def remove_group(sheet_id, group_id):
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
+        if not sheet:
+            return {"error": "Sheet not found"}, 404
+        group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+        if not group:
+            return {"error": "Group not found"}, 404
+        sheet.groups.remove(group)
+        db.session.commit()
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}
+    return {"message": "Success"}, 200

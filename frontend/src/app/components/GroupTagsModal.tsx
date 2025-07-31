@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useMemo } from "react";
+import { useParams } from "next/navigation";
 import debounce from "lodash.debounce";
 import { MultiValue } from "react-select";
 import { BsX } from "react-icons/bs";
@@ -17,6 +18,8 @@ interface GroupTagsModalProps extends CustomModalProps {
 }
 
 const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsModalProps) => {
+  const params = useParams<{ sheet_id: string }>();
+  const { sheet_id } = params;
   const [mounted, setMounted] = useState(false);
 
   // Fetch groups with names matching the the user's input string
@@ -64,6 +67,17 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
     // Retain current group tags and add new group
     setGroupTags([...selectedGroup, ...groupTags]);
   }
+
+  const removeGroup = async (groupId: number) => {
+    try {
+      await axiosInstance.delete(`/groups/remove/${sheet_id}/${groupId}`);
+    }
+    catch (error) {
+      console.error(error);
+    }
+    setGroupTags(groupTags.filter(group => group.id !== groupId));
+  }
+
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title="Edit Groups List">
       {/* To not display current groups, leave selectValue as an empty array */}
@@ -77,6 +91,7 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
           >
             {group.name}
             <button
+              onClick={() => removeGroup(group.id)}
               className="w-7 cursor-pointer hover:bg-white/25 rounded-full"
               title={`Remove from ${group.name}`}
             >
