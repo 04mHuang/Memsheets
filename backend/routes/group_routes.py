@@ -163,6 +163,13 @@ def remove_group(sheet_id, group_id):
         if not group:
             return {"error": "Group not found"}, 404
         sheet.groups.remove(group)
+        if len(sheet.groups) == 0:
+            # Check if sheet belongs to no group and add to default group Miscellaneous
+            # Cannot delete a sheet through removing its groups
+            misc_group = Group.query.filter_by(
+                user_id=user_id, name="Miscellaneous"
+            ).first()
+            sheet.groups.append(misc_group)
         db.session.commit()
     except Exception as e:
         print(f"Error fetching sheets {e}")
