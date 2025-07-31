@@ -116,7 +116,7 @@ const Sheet = () => {
           className="sheet"
           style={{ backgroundColor: sheet.color }}
         >
-          <SheetForm sheet={sheet} setSheet={setSheet} groupTags={groupTags} />
+          <SheetForm sheet={sheet} setSheet={setSheet} groupTags={groupTags} setGroupModalOpen={setGroupModalOpen} />
         </form>
         :
         <main className="sheet" style={{ backgroundColor: sheet.color }}>

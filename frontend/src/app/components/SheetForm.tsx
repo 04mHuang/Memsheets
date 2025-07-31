@@ -21,10 +21,11 @@ interface SheetData {
 interface SheetFormProps {
   sheet: SheetData;
   setSheet: (sheet: SheetData) => void;
-  groupTags: GSInterface[];
+  groupTags?: GSInterface[];
+  setGroupModalOpen?: (isOpen: boolean) => void;
 }
 
-const SheetForm = ({ sheet, setSheet, groupTags }: SheetFormProps) => {
+const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormProps) => {
   const pronounsList = ["Unknown", "she/her", "he/him", "they/them"];
   // Set a recognized value for the select input
   const [pronouns, setPronouns] = useState(pronounsList.includes(sheet.pronouns) ? sheet.pronouns : "Custom");
@@ -52,7 +53,7 @@ const SheetForm = ({ sheet, setSheet, groupTags }: SheetFormProps) => {
         aria-label="Name"
         className="sheet-name sheet-input w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
       />
-      {groupTags !== undefined && <GroupTags groupTags={groupTags} sheetColor={sheet.color} />}
+      {groupTags !== undefined && setGroupModalOpen && <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />}
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
