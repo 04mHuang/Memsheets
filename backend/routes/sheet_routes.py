@@ -132,8 +132,18 @@ def update_group_list(sheet_id):
     if not sheet:
         return {"error": "Sheet not found"}, 404
     data = request.json
+    group_ids = [item["id"] for item in data]
+    # If user removes all groups, prevent complete association override
+    if len(group_ids) == 0:
+        # Check if sheet belongs to no group and add to default group Miscellaneous
+        # To prevent deleting a sheet through removing all its groups
+        misc_group = Group.query.filter_by(
+            user_id=user_id, name="Miscellaneous"
+        ).first()
+        sheet.groups.append(misc_group)
+        db.session.commit()
+        return {"message": "Success"}, 200
     # Override associations
-    group_ids = [item['id'] for item in data]
     groups = Group.query.filter(Group.user_id == user_id, Group.id.in_(group_ids)).all()
     sheet.groups = groups
     db.session.commit()
