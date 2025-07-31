@@ -56,7 +56,7 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
     // Prevent duplicate added groups
     const isAlreadyAdded = groupTags.some(group => group.id === parseInt(val[0].value));
     if (isAlreadyAdded) return;
-    
+
     // Format the selected group's values
     // i.e. {value, label, color} to {id, name, color}
     const selectedGroup = Array.from(val).map(option => ({
@@ -80,9 +80,12 @@ const GroupTagsModal = ({ isOpen, onClose, groupTags, setGroupTags }: GroupTagsM
 
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title="Edit Groups List">
+      <p className="text-sm text-left italic mt-2">
+        If this sheet has no groups, it will automatically be added to the default Miscellaneous group.
+      </p>
       {/* To not display current groups, leave selectValue as an empty array */}
       <AddSelect debouncedFetch={debouncedFetch} handleSelectChange={handleSelectChange} selectValue={[]} subject="group" />
-      <section className="max-h-120 mt-4 text-left overflow-auto">
+      <section className="max-h-120 mt-2 text-left overflow-auto">
         {groupTags.map((group) => (
           <div
             key={group.id}
