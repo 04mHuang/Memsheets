@@ -9,21 +9,16 @@ import Card from "@/app/components/Card";
 import SearchBar from "@/app/components/SearchBar";
 import DeletionModal from "@/app/components/DeletionModal";
 import axiosInstance from "@/app/axiosInstance";
-
-interface SheetType {
-  id: number;
-  name: string;
-  color: string;
-}
+import { GSInterface } from "@/app/types";
 
 const GroupSheets = () => {
   const router = useRouter();
   const params = useParams<{ group_id: string; }>();
   const { group_id } = params;
   const [modalOpen, setModalOpen] = useState(false);
-  const [sheets, setSheets] = useState<SheetType[]>([]);
+  const [sheets, setSheets] = useState<GSInterface[]>([]);
   // Copy of sheets data to be displayed if a user searches with only whitespace
-  const [originalSheets, setOriginalSheets] = useState<SheetType[]>([]);
+  const [originalSheets, setOriginalSheets] = useState<GSInterface[]>([]);
   const [pageTitle, setPageTitle] = useState("Sheets");
 
   useEffect(() => {
@@ -64,7 +59,7 @@ const GroupSheets = () => {
         <h1 className="page-title mb-0">{sheets !== originalSheets ? "Search Results" : pageTitle}</h1>
         {/* Search through the sheets of a specific group by passing the group_id */}
         <div className="flex gap-2 items-center">
-          <SearchBar<SheetType> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
+          <SearchBar<GSInterface> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
           {/* Prevent editing and deletion of the group Miscellaneous */}
           {group_id !== "1" &&
             <EditButtons

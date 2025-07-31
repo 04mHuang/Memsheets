@@ -1,9 +1,8 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { FaXmark } from "react-icons/fa6";
+import { CustomModalProps } from "@/app/types/index";
 
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface ModalProps extends CustomModalProps {
   title: string;
   children: React.ReactNode;
 }

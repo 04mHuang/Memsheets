@@ -79,7 +79,7 @@ body {
     @apply flex gap-20;
   }
   .sheet-name {
-    @apply text-3xl font-bold mb-5 resize-none overflow-hidden;
+    @apply text-3xl font-bold mb-2 resize-none overflow-hidden;
     field-sizing: content;
   }
   .sheet-photo {

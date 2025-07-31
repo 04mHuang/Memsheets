@@ -8,7 +8,8 @@ from database.db import db
 sheet_bp = Blueprint("sheet_bp", __name__, url_prefix="/sheets")
 
 
-@sheet_bp.route("/new", methods=["POST"])
+# Create a new sheet with user inputs
+@sheet_bp.route("/create", methods=["POST"])
 def create_sheet():
     try:
         user_id = check_auth_header(request.headers.get("Authorization"))
@@ -51,6 +52,7 @@ def create_sheet():
         return {"error": "New sheet creation failed"}, 500
 
 
+# Fetch a specific sheet
 @sheet_bp.route("/<int:sheet_id>", methods=["GET"])
 def get_sheet(sheet_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
@@ -72,9 +74,16 @@ def get_sheet(sheet_id):
             "notes": sheet.notes,
         }
     ]
-    return {"sheet": sheet_data}, 200
+    groups_data = []
+    for group in sheet.groups:
+        if group.user_id == user_id:
+            groups_data.append(
+                {"id": group.id, "name": group.name, "color": group.color}
+            )
+    return {"sheet": sheet_data, "groups": groups_data}, 200
 
 
+# Edit sheet information
 @sheet_bp.route("/<int:sheet_id>/edit", methods=["POST"])
 def update_sheet(sheet_id):
     user_id = check_auth_header(request.headers.get("Authorization"))
@@ -113,25 +122,79 @@ def update_sheet(sheet_id):
     }, 200
 
 
-@sheet_bp.route("/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"])
+# Edit group list of a sheet (through GroupTagsModal)
+@sheet_bp.route("/<int:sheet_id>/edit/group-list", methods=["POST"])
+def update_group_list(sheet_id):
+    user_id = check_auth_header(request.headers.get("Authorization"))
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+    sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
+    if not sheet:
+        return {"error": "Sheet not found"}, 404
+    data = request.json
+    group_ids = [item["id"] for item in data]
+    # If user removes all groups, prevent complete association override
+    if len(group_ids) == 0:
+        # Check if sheet belongs to no group and add to default group Miscellaneous
+        # To prevent deleting a sheet through removing all its groups
+        misc_group = Group.query.filter_by(
+            user_id=user_id, name="Miscellaneous"
+        ).first()
+        sheet.groups.append(misc_group)
+        db.session.commit()
+        return {"message": "Success"}, 200
+    # Override associations
+    groups = Group.query.filter(Group.user_id == user_id, Group.id.in_(group_ids)).all()
+    sheet.groups = groups
+    db.session.commit()
+    return {"message": "Success"}, 200
+
+
+# Delete a sheet (through DeletionModal)
+@sheet_bp.route(
+    "/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"]
+)
 def delete_sheet(group_id, sheet_id, del_sheet):
     user_id = check_auth_header(request.headers.get("Authorization"))
     if not user_id:
-        return { "error": "Invalid token" }, 401
+        return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
     if not sheet:
-        return { "error": "Sheet not found" }, 404
+        return {"error": "Sheet not found"}, 404
     # If user opts to delete all instances of the sheets, clear associations
     if del_sheet:
-      sheet.groups.clear()
-      db.session.delete(sheet)
+        sheet.groups.clear()
+        db.session.delete(sheet)
     else:
-      group = Group.query.filter_by(user_id=user_id, id=group_id).first()
-      sheet.groups.remove(group)
+        group = Group.query.filter_by(user_id=user_id, id=group_id).first()
+        sheet.groups.remove(group)
     db.session.commit()
-    return { "message": "Success" }, 200
+    return {"message": "Success"}, 200
 
 
+# Search for sheet names matching user input for group creation
+@sheet_bp.route("/search/sheets", methods=["GET"])
+def search_sheets_for_select():
+    try:
+        user_id = check_auth_header(request.headers.get("Authorization"))
+        if not user_id:
+            return {"error": "Invalid token"}, 401
+        query = request.args.get("q", "").strip()
+        if query:
+            results = Sheet.query.filter(
+                Sheet.user_id == user_id, Sheet.name.ilike(f"%{query}%")
+            ).all()
+            sheets_data = [
+                {"id": s.id, "name": s.name, "color": s.color} for s in results
+            ]
+            return {"results": sheets_data}, 200
+        return {"results": []}, 200
+    except Exception as e:
+        print(f"Error fetching sheets {e}")
+        return {"error": "Fetching sheets"}
+
+
+# Search for sheets using various sheet fields within a specific group for the search bar
 @sheet_bp.route("/search/<int:group_id>", methods=["GET"])
 def search_sheet(group_id):
     user_id = check_auth_header(request.headers.get("Authorization"))

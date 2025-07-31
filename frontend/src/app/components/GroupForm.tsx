@@ -1,25 +1,18 @@
+"use client";
+
 import { useState, useMemo, useEffect } from "react";
-import AsyncSelect from "react-select/async";
+
 import { MultiValue } from "react-select";
 import debounce from "lodash.debounce";
 
 import axiosInstance from "@/app/axiosInstance";
-import { isDarkColor, adjustColor } from "@/app/util/colorUtil";
+import AddSelect from "@/app/components/AddSelect";
+import { GSInterface, SelectOption } from "@/app/types/index";
 
-interface Sheet {
-  id: string;
-  name: string;
-  color: string;
-}
-interface SheetOption {
-  value: string;
-  label: string;
-  color: string;
-}
 interface GroupData {
   name: string;
   color: string;
-  sheets: SheetOption[];
+  sheets: SelectOption[];
 }
 interface GroupFormProps {
   group: GroupData;
@@ -32,9 +25,9 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
   // Fetch sheets with names matching the the user's input string
   const fetchSheets = async (input: string) => {
     try {
-      const res = await axiosInstance.get(`/groups/search/sheets?q=${encodeURIComponent(input)}`);
+      const res = await axiosInstance.get(`/sheets/search/sheets?q=${encodeURIComponent(input)}`);
       // Return the data in the correct format for AsyncSelect
-      return res.data.results.map((sheet: Sheet) => ({
+      return res.data.results.map((sheet: GSInterface) => ({
         value: sheet.id,
         label: sheet.name,
         color: sheet.color
@@ -59,7 +52,7 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
   if (!mounted) return null;
 
   // Handles the sheets added to the group
-  const handleSelectChange = (val: MultiValue<SheetOption>) => {
+  const handleSelectChange = (val: MultiValue<SelectOption>) => {
     setGroup({ ...group, sheets: Array.from(val) });
   }
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -88,49 +81,11 @@ const GroupForm = ({ group, setGroup }: GroupFormProps) => {
           value={group.color}
         />
       </label>
-      <AsyncSelect
-        defaultOptions={false}
-        loadOptions={debouncedFetch}
-        onChange={handleSelectChange}
-        value={group.sheets}
-        isMulti
-        cacheOptions
-        placeholder="+ Add existing sheets..."
-        noOptionsMessage={() => "Enter a sheet name to add it"}
-        styles={{
-          control: (base) => ({
-            ...base,
-            backgroundColor: 'var(--background)',
-            marginTop: '1rem',
-            cursor: 'pointer',
-            width: '50%',
-          }),
-          menu: (base) => ({
-            ...base,
-            backgroundColor: 'var(--background)',
-            marginTop: 0,
-            width: '50%',
-          }),
-          option: (base, { data }) => ({
-            ...base,
-            marginBottom: '0.2rem',
-            backgroundColor: data.color,
-            color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
-            ':hover': {
-              backgroundColor: adjustColor(data.color, -40),
-              cursor: 'pointer'
-            }
-          }),
-          multiValue: (base, { data }) => ({
-            ...base,
-            backgroundColor: data.color,
-            color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
-          }),
-          multiValueLabel: (base, { data }) => ({
-            ...base,
-            color: isDarkColor(data.color) ? 'var(--background)' : 'var(--foreground)',
-          })
-        }}
+      <AddSelect
+        debouncedFetch={debouncedFetch}
+        handleSelectChange={handleSelectChange}
+        selectValue={group.sheets}
+        subject="sheet"
       />
     </>
   );

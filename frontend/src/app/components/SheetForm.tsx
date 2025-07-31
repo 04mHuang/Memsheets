@@ -3,6 +3,9 @@
 import React, { useState } from "react";
 import Image from "next/image";
 
+import GroupTags from "@/app/components/GroupTags";
+import { GSInterface } from "@/app/types/index";
+
 interface SheetData {
   name: string;
   color: string;
@@ -14,12 +17,15 @@ interface SheetData {
   allergies: string;
   notes: string;
 }
+
 interface SheetFormProps {
   sheet: SheetData;
   setSheet: (sheet: SheetData) => void;
+  groupTags?: GSInterface[];
+  setGroupModalOpen?: (isOpen: boolean) => void;
 }
 
-const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
+const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormProps) => {
   const pronounsList = ["Unknown", "she/her", "he/him", "they/them"];
   // Set a recognized value for the select input
   const [pronouns, setPronouns] = useState(pronounsList.includes(sheet.pronouns) ? sheet.pronouns : "Custom");
@@ -47,6 +53,7 @@ const SheetForm = ({ sheet, setSheet }: SheetFormProps) => {
         aria-label="Name"
         className="sheet-name sheet-input w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
       />
+      {groupTags !== undefined && setGroupModalOpen && <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />}
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">

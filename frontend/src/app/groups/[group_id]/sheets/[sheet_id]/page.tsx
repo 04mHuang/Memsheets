@@ -1,21 +1,27 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 
 import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
 import DeletionModal from "@/app/components/DeletionModal";
+import GroupTags from "@/app/components/GroupTags";
+import GroupTagsModal from "@/app/components/GroupTagsModal";
 
 import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor } from "@/app/util/colorUtil";
+import { GSInterface } from "@/app/types";
 
 const Sheet = () => {
   const router = useRouter();
   const params = useParams<{ group_id: string, sheet_id: string }>();
   const { sheet_id, group_id } = params;
-  const [modalOpen, setModalOpen] = useState(false);
+  // States to control modal visibility
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [groupModalOpen, setGroupModalOpen] = useState(false);
+
   const [editMode, setEditMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [sheet, setSheet] = useState({
@@ -27,8 +33,10 @@ const Sheet = () => {
     "likes": "",
     "dislikes": "",
     "allergies": "",
-    "notes": ""
+    "notes": "",
   });
+  const [groupTags, setGroupTags] = useState<GSInterface[]>([]);
+
   // Save original data in case user cancels editing
   const [originalSheet, setOriginalSheet] = useState(sheet);
 
@@ -39,6 +47,7 @@ const Sheet = () => {
           const sheetData = res.data.sheet[0];
           setSheet(sheetData);
           setOriginalSheet(sheetData);
+          setGroupTags(res.data.groups);
           setLoading(false);
         })
         .catch(err => {
@@ -79,6 +88,17 @@ const Sheet = () => {
     router.back();
   }
 
+  // Save group list edit
+  const handleGroupsEdit = async () => {
+    try {
+      await axiosInstance.post(`/sheets/${sheet_id}/edit/group-list`, groupTags);
+    }
+    catch (error) {
+      console.error(error);
+    }
+    setGroupModalOpen(false);
+  }
+
   // Avoid flicker of default data
   if (loading) {
     return <div>Loading...</div>;
@@ -86,8 +106,9 @@ const Sheet = () => {
 
   return (
     <div className={`page-container mt-4 ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
-      <DeletionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} subject={`${sheet.name} Sheet`} handleDelete={handleDelete} />
-      <EditButtons editMode={editMode} submit={handleModeToggle} exit={() => editMode ? handleCancel() : setModalOpen(true)} />
+      <DeletionModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} subject={`${sheet.name} Sheet`} handleDelete={handleDelete} />
+      <GroupTagsModal isOpen={groupModalOpen} onClose={handleGroupsEdit} groupTags={groupTags} setGroupTags={setGroupTags} />
+      <EditButtons editMode={editMode} submit={handleModeToggle} exit={() => editMode ? handleCancel() : setDeleteModalOpen(true)} />
       {editMode ?
         <form
           method="POST"
@@ -95,11 +116,12 @@ const Sheet = () => {
           className="sheet"
           style={{ backgroundColor: sheet.color }}
         >
-          <SheetForm sheet={sheet} setSheet={setSheet} />
+          <SheetForm sheet={sheet} setSheet={setSheet} groupTags={groupTags} setGroupModalOpen={setGroupModalOpen} />
         </form>
         :
         <main className="sheet" style={{ backgroundColor: sheet.color }}>
           <h1 className="sheet-name">{sheet.name}</h1>
+          <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />
           <div className="sheet-content">
             <section>
               <div className="sheet-photo">

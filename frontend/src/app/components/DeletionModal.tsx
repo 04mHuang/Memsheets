@@ -1,13 +1,12 @@
 "use client";
 
 import { useRef } from "react";
-
 import { BsPatchExclamation } from "react-icons/bs";
-import ModalBase from "@/app/components/ModalBase";
 
-interface DeletionModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+import ModalBase from "@/app/components/ModalBase";
+import { CustomModalProps } from "@/app/types/index";
+
+interface DeletionModalProps extends CustomModalProps {
   subject: string;
   handleDelete: (del_sheets: number) => void;
 }

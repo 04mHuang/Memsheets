@@ -24,7 +24,7 @@ const EditSheet = () => {
 
   const handleSubmit = async () => {
     try {
-      await axiosInstance.post("/sheets/new", { ...sheet, group_id: group_id });
+      await axiosInstance.post("/sheets/create", { ...sheet, group_id: group_id });
       router.back();
     }
     catch (error) {
