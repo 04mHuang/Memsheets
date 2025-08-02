@@ -1,18 +1,13 @@
-from dotenv import load_dotenv
-import os
-
-load_dotenv()
-
-address_prefix = "/avatars/"
+address_prefix = "/avatars/avatar_"
 
 AVAILABLE_AVATARS = [
-  f"{address_prefix}bunny.webp",
-  f"{address_prefix}cat.webp",
-  f"{address_prefix}crane.webp",
-  f"{address_prefix}frog.webp",
-  f"{address_prefix}koala.webp",
-  f"{address_prefix}raven.webp",
-  f"{address_prefix}snake.webp",
-  f"{address_prefix}unicorn.webp",
-  f"{address_prefix}wolf.webp",  
+  f"{address_prefix}0.webp",
+  f"{address_prefix}1.webp",
+  f"{address_prefix}2.webp",
+  f"{address_prefix}3.webp",
+  f"{address_prefix}4.webp",
+  f"{address_prefix}5.webp",
+  f"{address_prefix}6.webp",
+  f"{address_prefix}7.webp",
+  f"{address_prefix}8.webp",  
 ]
