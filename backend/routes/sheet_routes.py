@@ -12,6 +12,7 @@ sheet_bp = Blueprint("sheet_bp", __name__, url_prefix="/sheets")
 def fetch_avatars():
   return {"avatars": AVAILABLE_AVATARS}, 200
 
+
 # Create a new sheet with user inputs
 @sheet_bp.route("/create", methods=["POST"])
 def create_sheet():
@@ -70,6 +71,7 @@ def get_sheet(sheet_id):
         {
             "name": sheet.name,
             "color": sheet.color,
+            "avatar": sheet.avatar,
             "nickname": sheet.nickname,
             "pronouns": sheet.pronouns,
             "birthday": sheet.birthday.isoformat() if sheet.birthday else "",
@@ -116,6 +118,7 @@ def update_sheet(sheet_id):
         "sheet": {
             "name": sheet.name,
             "color": sheet.color,
+            "avatar": sheet.avatar,
             "nickname": sheet.nickname,
             "pronouns": sheet.pronouns,
             "birthday": sheet.birthday.isoformat() if sheet.birthday else "",

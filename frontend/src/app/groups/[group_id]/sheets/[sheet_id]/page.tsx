@@ -126,7 +126,7 @@ const Sheet = () => {
           <div className="sheet-content">
             <section>
               <div className="sheet-photo">
-                <Image src="/sheet-pic.png" alt="Sheet picture" width={200} height={200} />
+                <Image src={sheet.avatar} alt="Sheet picture" width={200} height={200} />
               </div>
               <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
               <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>
