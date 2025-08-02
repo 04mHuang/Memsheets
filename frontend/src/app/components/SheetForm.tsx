@@ -47,7 +47,12 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
 
   return (
     <>
-      <AvatarModal isOpen={avatarModalOpen} onClose={() => setAvatarModalOpen(false)} />
+      <AvatarModal
+        isOpen={avatarModalOpen}
+        onClose={() => setAvatarModalOpen(false)}
+        avatar={sheet.avatar}
+        setAvatar={(avatar) => setSheet({ ...sheet, avatar: avatar })}
+      />
       <input
         type="text"
         name="name"
@@ -61,7 +66,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
-            <Image src="/sheet-pic.png" alt="Sheet photo" width={200} height={200} />
+            <Image src={sheet.avatar} alt="Sheet photo" width={200} height={200} />
             <button type="button" onClick={() => setAvatarModalOpen(true)}>open modal</button>
           </div>
           <input
