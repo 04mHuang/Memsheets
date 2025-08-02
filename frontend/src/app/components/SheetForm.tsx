@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
 import GroupTags from "@/app/components/GroupTags";
@@ -9,6 +9,7 @@ import { GSInterface } from "@/app/types/index";
 interface SheetData {
   name: string;
   color: string;
+  avatar: string;
   nickname: string;
   pronouns: string;
   birthday: string;

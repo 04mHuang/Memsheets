@@ -13,6 +13,7 @@ const EditSheet = () => {
   const [sheet, setSheet] = useState({
     "name": "",
     "color": "#999999",
+    "avatar": "/avatars/bunny.webp",
     "nickname": "",
     "pronouns": "",
     "birthday": new Date().toISOString().slice(0, 10),
