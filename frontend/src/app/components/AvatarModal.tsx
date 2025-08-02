@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { BsCheck } from "react-icons/bs";
 
 import axiosInstance from "@/app/axiosInstance";
 import { CustomModalProps } from "@/app/types/index";
@@ -37,8 +38,20 @@ const AvatarModal = ({ isOpen, onClose, avatar, setAvatar }: AvatarModalProps) =
     <ModalBase isOpen={isOpen} onClose={onClose} title="Choose an Avatar">
       <section className="mt-5 grid grid-cols-3 gap-5">
         {avatars.map((avatar) => (
-          <button key={avatar} onClick={() => setSelectedAvatar(avatar)}>
-            <Image src={avatar} alt={avatar} width={400} height={400} />
+          <button key={avatar} onClick={() => setSelectedAvatar(avatar)} className="relative cursor-pointer hover:scale-105 hover:brightness-110 hover-animation">
+            {/* If user has selected an avatar, show a checkmark on the selected avatar */}
+            {selectedAvatar === avatar &&
+              <div className="absolute top-2 left-2 bg-emerald-200 rounded-full">
+                <BsCheck className="w-7 h-7 text-emerald-500" />
+              </div>
+            }
+            <Image
+              src={avatar}
+              alt={avatar}
+              width={400}
+              height={400}
+              className={`rounded-md ${selectedAvatar === avatar ? "border-5 bg-emerald-500" : ""}`}
+            />
           </button>
         ))}
       </section>
