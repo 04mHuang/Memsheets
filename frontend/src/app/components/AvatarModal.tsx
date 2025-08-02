@@ -37,20 +37,24 @@ const AvatarModal = ({ isOpen, onClose, avatar, setAvatar }: AvatarModalProps) =
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title="Choose an Avatar">
       <section className="mt-5 grid grid-cols-3 gap-5">
-        {avatars.map((avatar) => (
-          <button key={avatar} onClick={() => setSelectedAvatar(avatar)} className="relative cursor-pointer hover:scale-105 hover:brightness-110 hover-animation">
+        {avatars.map((avatarImage) => (
+          <button key={avatarImage} onClick={() => setSelectedAvatar(avatarImage)} className="relative cursor-pointer hover:scale-105 hover:brightness-110 hover-animation">
+            {avatar === avatarImage &&
+              <div className="absolute top-3 left-3 p-2 border-emerald-200 border-2 rounded-full" />
+            }
             {/* If user has selected an avatar, show a checkmark on the selected avatar */}
-            {selectedAvatar === avatar &&
+            {selectedAvatar === avatarImage &&
               <div className="absolute top-2 left-2 bg-emerald-200 rounded-full">
                 <BsCheck className="w-7 h-7 text-emerald-500" />
               </div>
             }
+            
             <Image
-              src={avatar}
-              alt={avatar}
+              src={avatarImage}
+              alt={avatarImage}
               width={400}
               height={400}
-              className={`rounded-md ${selectedAvatar === avatar ? "border-5 bg-emerald-500" : ""}`}
+              className={`rounded-md ${selectedAvatar === avatarImage ? "border-5 bg-emerald-500" : ""}`}
             />
           </button>
         ))}

@@ -125,8 +125,8 @@ const Sheet = () => {
           <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />
           <div className="sheet-content">
             <section>
-              <div className="sheet-photo">
-                <Image src={sheet.avatar} alt="Sheet picture" width={200} height={200} />
+              <div className="sheet-photo pb-13">
+                <Image src={sheet.avatar} alt="Sheet picture" width={250} height={250} />
               </div>
               <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
               <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>
