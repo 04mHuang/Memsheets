@@ -66,8 +66,14 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
-            <Image src={sheet.avatar} alt="Sheet photo" width={200} height={200} />
-            <button type="button" onClick={() => setAvatarModalOpen(true)}>open modal</button>
+            <Image src={sheet.avatar} alt="Sheet photo" width={250} height={250} />
+            <button 
+            type="button" 
+            onClick={() => setAvatarModalOpen(true)}
+            className="mt-2 border-dashed border-1 border-dark-support text-foreground bg-background rounded w-full cursor-pointer hover:brightness-80 hover-animation"
+            >
+              Change Avatar
+            </button>
           </div>
           <input
             type="text"
