@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 
+import AvatarModal from "@/app/components/AvatarModal";
 import GroupTags from "@/app/components/GroupTags";
 import { GSInterface } from "@/app/types/index";
 
@@ -30,6 +31,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
   const pronounsList = ["Unknown", "she/her", "he/him", "they/them"];
   // Set a recognized value for the select input
   const [pronouns, setPronouns] = useState(pronounsList.includes(sheet.pronouns) ? sheet.pronouns : "Custom");
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   // Value for maximum date that can be selected
   const formattedDate = new Date().toISOString().slice(0, 10);
 
@@ -45,6 +47,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
 
   return (
     <>
+      <AvatarModal isOpen={avatarModalOpen} onClose={() => setAvatarModalOpen(false)} />
       <input
         type="text"
         name="name"
@@ -59,6 +62,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
         <section className="sheet-basic">
           <div className="sheet-photo">
             <Image src="/sheet-pic.png" alt="Sheet photo" width={200} height={200} />
+            <button type="button" onClick={() => setAvatarModalOpen(true)}>open modal</button>
           </div>
           <input
             type="text"
