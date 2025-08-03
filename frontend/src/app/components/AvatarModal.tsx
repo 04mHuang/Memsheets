@@ -5,6 +5,7 @@ import Image from "next/image";
 import { BsCheck } from "react-icons/bs";
 
 import axiosInstance from "@/app/axiosInstance";
+import { createAlt } from "@/app/util/imageUtil";
 import { CustomModalProps } from "@/app/types/index";
 import ModalBase from "@/app/components/ModalBase";
 
@@ -39,6 +40,7 @@ const AvatarModal = ({ isOpen, onClose, avatar, setAvatar }: AvatarModalProps) =
       <section className="mt-5 grid grid-cols-3 gap-5">
         {avatars.map((avatarImage) => (
           <button key={avatarImage} onClick={() => setSelectedAvatar(avatarImage)} className="relative cursor-pointer hover:scale-105 hover:brightness-110 hover-animation">
+            {/* Small denotation of currently saved avatar */}
             {avatar === avatarImage &&
               <div className="absolute top-3 left-3 p-2 border-emerald-200 border-2 rounded-full" />
             }
@@ -51,7 +53,7 @@ const AvatarModal = ({ isOpen, onClose, avatar, setAvatar }: AvatarModalProps) =
             
             <Image
               src={avatarImage}
-              alt={avatarImage}
+              alt={`${createAlt(avatarImage)} ${selectedAvatar === avatarImage ? "selected" : ""}`}
               width={400}
               height={400}
               className={`rounded-md ${selectedAvatar === avatarImage ? "border-5 bg-emerald-500" : ""}`}
