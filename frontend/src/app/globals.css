@@ -83,7 +83,7 @@ body {
     field-sizing: content;
   }
   .sheet-photo {
-    @apply border-5 border-b-35 border-background w-fit;
+    @apply bg-background p-2 pb-4;
   }
   .sheet-basic {
     @apply mt-2 text-lg;

@@ -1,11 +1,16 @@
 from flask import Blueprint, request
 from sqlalchemy import or_
+from database.avatars import AVAILABLE_AVATARS
 
 from jwt_util import check_auth_header
 from database.models import Group, Sheet, sheet_groups
 from database.db import db
 
 sheet_bp = Blueprint("sheet_bp", __name__, url_prefix="/sheets")
+
+@sheet_bp.route("/avatars", methods=["GET"])
+def fetch_avatars():
+  return {"avatars": AVAILABLE_AVATARS}, 200
 
 
 # Create a new sheet with user inputs
@@ -23,6 +28,7 @@ def create_sheet():
         new_sheet = Sheet(
             user_id=user_id,
             name=data["name"] if data["name"].strip() else "Untitled Sheet",
+            avatar=data.get("avatar"),
             color=data.get("color"),
             nickname=(
                 data.get("nickname") if data.get("nickname", "").strip() else "N/A"
@@ -65,6 +71,7 @@ def get_sheet(sheet_id):
         {
             "name": sheet.name,
             "color": sheet.color,
+            "avatar": sheet.avatar,
             "nickname": sheet.nickname,
             "pronouns": sheet.pronouns,
             "birthday": sheet.birthday.isoformat() if sheet.birthday else "",
@@ -111,6 +118,7 @@ def update_sheet(sheet_id):
         "sheet": {
             "name": sheet.name,
             "color": sheet.color,
+            "avatar": sheet.avatar,
             "nickname": sheet.nickname,
             "pronouns": sheet.pronouns,
             "birthday": sheet.birthday.isoformat() if sheet.birthday else "",

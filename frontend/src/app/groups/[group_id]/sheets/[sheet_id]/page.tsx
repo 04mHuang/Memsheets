@@ -12,6 +12,7 @@ import GroupTagsModal from "@/app/components/GroupTagsModal";
 
 import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor } from "@/app/util/colorUtil";
+import { createAlt } from "@/app/util/imageUtil";
 import { GSInterface } from "@/app/types";
 
 const Sheet = () => {
@@ -27,6 +28,7 @@ const Sheet = () => {
   const [sheet, setSheet] = useState({
     "name": "",
     "color": "#999999",
+    "avatar": "",
     "nickname": "",
     "pronouns": "",
     "birthday": new Date().toISOString().slice(0, 10),
@@ -124,8 +126,8 @@ const Sheet = () => {
           <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />
           <div className="sheet-content">
             <section>
-              <div className="sheet-photo">
-                <Image src="/sheet-pic.png" alt="Sheet picture" width={200} height={200} />
+              <div className="sheet-photo pb-13">
+                <Image src={sheet.avatar} alt={createAlt(sheet.avatar)} width={250} height={250} />
               </div>
               <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
               <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>

@@ -15,7 +15,7 @@ const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
 
       {/* Center the panel */}
       <div className="fixed inset-0 flex items-center justify-center">
-        <DialogPanel className="bg-background p-6 rounded-xl border-light-foreground border-3 w-full max-w-md">
+        <DialogPanel className="bg-background p-6 rounded-xl border-light-foreground border-3 w-full max-w-xl">
           {/* Close button */}
           <div className="relative -top-4 -right-4 flex justify-end hover-animation">
             <button onClick={onClose} className="cursor-pointer hover:bg-foreground/[0.2] w-10 h-10 p-2 rounded-full">

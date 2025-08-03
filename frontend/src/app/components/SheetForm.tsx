@@ -1,14 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import { useState } from "react";
 import Image from "next/image";
 
+import AvatarModal from "@/app/components/AvatarModal";
 import GroupTags from "@/app/components/GroupTags";
 import { GSInterface } from "@/app/types/index";
 
 interface SheetData {
   name: string;
   color: string;
+  avatar: string;
   nickname: string;
   pronouns: string;
   birthday: string;
@@ -29,6 +31,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
   const pronounsList = ["Unknown", "she/her", "he/him", "they/them"];
   // Set a recognized value for the select input
   const [pronouns, setPronouns] = useState(pronounsList.includes(sheet.pronouns) ? sheet.pronouns : "Custom");
+  const [avatarModalOpen, setAvatarModalOpen] = useState(false);
   // Value for maximum date that can be selected
   const formattedDate = new Date().toISOString().slice(0, 10);
 
@@ -44,6 +47,12 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
 
   return (
     <>
+      <AvatarModal
+        isOpen={avatarModalOpen}
+        onClose={() => setAvatarModalOpen(false)}
+        avatar={sheet.avatar}
+        setAvatar={(avatar) => setSheet({ ...sheet, avatar: avatar })}
+      />
       <input
         type="text"
         name="name"
@@ -57,7 +66,14 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
-            <Image src="/sheet-pic.png" alt="Sheet photo" width={200} height={200} />
+            <Image src={sheet.avatar} alt="Sheet photo" width={250} height={250} />
+            <button 
+            type="button" 
+            onClick={() => setAvatarModalOpen(true)}
+            className="mt-2 border-dashed border-1 border-dark-support text-foreground bg-background rounded w-full cursor-pointer hover:brightness-80 hover-animation"
+            >
+              Change Avatar
+            </button>
           </div>
           <input
             type="text"

@@ -17,7 +17,7 @@ const GroupTags = ({ groupTags, sheetColor, setGroupModalOpen }: GroupTagsProps)
   const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div className="mb-4 flex items-center">
+    <div className="mb-2 flex items-center">
       {/* Only show tags for first 3 groups */}
       {groupTags.slice(0, 3).map((group) => (
         <span

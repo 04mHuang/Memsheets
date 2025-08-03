@@ -24,6 +24,7 @@ class Sheet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False, index=True)
     name = db.Column(db.String(200), default="Untitled Sheet")
+    avatar = db.Column(db.String(200), default="/avatars/0_bunny.webp")
     color = db.Column(db.String(7), default='#999999')
     nickname = db.Column(db.Text)
     pronouns = db.Column(db.Text)
