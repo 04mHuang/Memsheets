@@ -24,7 +24,7 @@ const Login = () => {
       const response = await axios.post("/api/users/login", formData);
       // Clear errors before redirecting in case of slow loading
       setError(null);
-      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("access_token", response.data.access_token);
       router.push("/groups");
     }
     catch {

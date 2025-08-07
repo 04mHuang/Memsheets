@@ -8,9 +8,9 @@ const instance = axios.create({
 // Can only be used after token is generated and stored in localStorage i.e. after successful login
 // Needed to check which user is accessing the site
 instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem("token");
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  const access_token = localStorage.getItem("access_token");
+  if (access_token) {
+    config.headers.Authorization = `Bearer ${access_token}`;
   }
   return config;
 });

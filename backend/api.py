@@ -2,6 +2,8 @@ import os
 from dotenv import load_dotenv
 from flask_cors import CORS
 from flask import Flask
+from flask_jwt_extended import JWTManager
+from datetime import timedelta
 
 from database.db import db
 from extensions import bcrypt
@@ -21,6 +23,10 @@ def create_app():
         f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@localhost:5432/memsheets"
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
+
+    JWTManager(app)
 
     bcrypt.init_app(app)
     CORS(app)

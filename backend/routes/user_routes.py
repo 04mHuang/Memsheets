@@ -1,5 +1,6 @@
 from flask import Blueprint, request
-from jwt_util import create_token
+# from jwt_util import create_token
+from flask_jwt_extended import create_access_token
 from database.models import User, Group
 from extensions import bcrypt
 from database.db import db
@@ -56,8 +57,9 @@ def login_user():
         user = User.query.filter_by(email=data["email"]).first()
         if user and bcrypt.check_password_hash(user.password, data["password"]):
             # Create and return JWT to client
-            token = create_token(user.id)
-            return {"token": token}, 200
+            # Must be cast to string for flask-jwt-extended's function
+            token = create_access_token(identity=str(user.id))
+            return {"access_token": token}, 200
         else:
             return {"error": "Invalid email or password"}, 401
     except Exception as e:
