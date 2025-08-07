@@ -94,7 +94,7 @@ def get_sheet(sheet_id):
 
 # Edit sheet information
 @sheet_bp.route("/<int:sheet_id>/edit", methods=["POST"])
-@jwt_required
+@jwt_required()
 def update_sheet(sheet_id):
     user_id = get_jwt_identity()
     if not user_id:
@@ -135,7 +135,7 @@ def update_sheet(sheet_id):
 
 # Edit group list of a sheet (through GroupTagsModal)
 @sheet_bp.route("/<int:sheet_id>/edit/group-list", methods=["POST"])
-@jwt_required
+@jwt_required()
 def update_group_list(sheet_id):
     user_id = get_jwt_identity()
     if not user_id:
@@ -166,7 +166,7 @@ def update_group_list(sheet_id):
 @sheet_bp.route(
     "/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"]
 )
-@jwt_required
+@jwt_required()
 def delete_sheet(group_id, sheet_id, del_sheet):
     user_id = get_jwt_identity()
     if not user_id:
@@ -187,7 +187,7 @@ def delete_sheet(group_id, sheet_id, del_sheet):
 
 # Search for sheet names matching user input for group creation
 @sheet_bp.route("/search/sheets", methods=["GET"])
-@jwt_required
+@jwt_required()
 def search_sheets_for_select():
     try:
         user_id = get_jwt_identity()
@@ -210,7 +210,7 @@ def search_sheets_for_select():
 
 # Search for sheets using various sheet fields within a specific group for the search bar
 @sheet_bp.route("/search/<int:group_id>", methods=["GET"])
-@jwt_required
+@jwt_required()
 def search_sheet(group_id):
     user_id = get_jwt_identity()
     if not user_id:
