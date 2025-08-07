@@ -2,7 +2,7 @@ from flask import Blueprint, request
 from sqlalchemy import or_
 from database.avatars import AVAILABLE_AVATARS
 
-from jwt_util import check_auth_header
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from database.models import Group, Sheet, sheet_groups
 from database.db import db
 
@@ -15,9 +15,10 @@ def fetch_avatars():
 
 # Create a new sheet with user inputs
 @sheet_bp.route("/create", methods=["POST"])
+@jwt_required()
 def create_sheet():
     try:
-        user_id = check_auth_header(request.headers.get("Authorization"))
+        user_id = get_jwt_identity()
         if not user_id:
             return {"error": "Invalid token"}, 401
         data = request.json
@@ -60,8 +61,9 @@ def create_sheet():
 
 # Fetch a specific sheet
 @sheet_bp.route("/<int:sheet_id>", methods=["GET"])
+@jwt_required()
 def get_sheet(sheet_id):
-    user_id = check_auth_header(request.headers.get("Authorization"))
+    user_id = get_jwt_identity()
     if not user_id:
         return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
@@ -92,8 +94,9 @@ def get_sheet(sheet_id):
 
 # Edit sheet information
 @sheet_bp.route("/<int:sheet_id>/edit", methods=["POST"])
+@jwt_required
 def update_sheet(sheet_id):
-    user_id = check_auth_header(request.headers.get("Authorization"))
+    user_id = get_jwt_identity()
     if not user_id:
         return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
@@ -132,8 +135,9 @@ def update_sheet(sheet_id):
 
 # Edit group list of a sheet (through GroupTagsModal)
 @sheet_bp.route("/<int:sheet_id>/edit/group-list", methods=["POST"])
+@jwt_required
 def update_group_list(sheet_id):
-    user_id = check_auth_header(request.headers.get("Authorization"))
+    user_id = get_jwt_identity()
     if not user_id:
         return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
@@ -162,8 +166,9 @@ def update_group_list(sheet_id):
 @sheet_bp.route(
     "/delete/<int:group_id>/<int:sheet_id>/<int:del_sheet>", methods=["DELETE"]
 )
+@jwt_required
 def delete_sheet(group_id, sheet_id, del_sheet):
-    user_id = check_auth_header(request.headers.get("Authorization"))
+    user_id = get_jwt_identity()
     if not user_id:
         return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
@@ -182,9 +187,10 @@ def delete_sheet(group_id, sheet_id, del_sheet):
 
 # Search for sheet names matching user input for group creation
 @sheet_bp.route("/search/sheets", methods=["GET"])
+@jwt_required
 def search_sheets_for_select():
     try:
-        user_id = check_auth_header(request.headers.get("Authorization"))
+        user_id = get_jwt_identity()
         if not user_id:
             return {"error": "Invalid token"}, 401
         query = request.args.get("q", "").strip()
@@ -204,8 +210,9 @@ def search_sheets_for_select():
 
 # Search for sheets using various sheet fields within a specific group for the search bar
 @sheet_bp.route("/search/<int:group_id>", methods=["GET"])
+@jwt_required
 def search_sheet(group_id):
-    user_id = check_auth_header(request.headers.get("Authorization"))
+    user_id = get_jwt_identity()
     if not user_id:
         return {"error": "Invalid token"}, 401
     query = request.args.get("q", "").strip()
