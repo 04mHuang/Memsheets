@@ -31,7 +31,6 @@ def create_app():
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10)
-    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     JWTManager(app)
 
     bcrypt.init_app(app)

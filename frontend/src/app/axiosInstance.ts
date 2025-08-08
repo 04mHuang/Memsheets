@@ -1,19 +1,29 @@
 import axios from "axios";
 
+const getCookie = (name: string) => {
+  const allCookies = `; ${document.cookie}`;
+  // Isolate the leading cookies from the cookies starting with the specified cookie
+  const parts = allCookies.split(`; ${name}=`);
+  if (parts.length === 2) {
+    // Extract the specified cookie from the trailing cookies
+    return parts.pop()?.split(";").shift();
+  }
+  return "";
+}
+
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_ADDRESS,
   withCredentials: true,
 })
 
-// Intercepts requests sent from client to add authorization header
-// Can only be used after token is generated and stored in localStorage i.e. after successful login
-// Needed to check which user is accessing the site
-// instance.interceptors.request.use((config) => {
-//   const access_token = localStorage.getItem("access_token");
-//   if (access_token) {
-//     config.headers.Authorization = `Bearer ${access_token}`;
-//   }
-//   return config;
-// });
+// Intercepts requests sent from client to add CSRF token to header
+// Can only be used after a successful login
+instance.interceptors.request.use((config) => {
+  const csrfToken = getCookie("csrf_access_token");
+  if (csrfToken) {
+    config.headers["X-CSRF-TOKEN"] = csrfToken;
+  }
+  return config;
+});
 
 export default instance;
