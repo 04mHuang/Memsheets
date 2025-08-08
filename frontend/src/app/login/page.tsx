@@ -21,10 +21,9 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post("/api/users/login", formData);
+      await axios.post("/api/users/login", formData);
       // Clear errors before redirecting in case of slow loading
       setError(null);
-      localStorage.setItem("access_token", response.data.access_token);
       router.push("/groups");
     }
     catch {

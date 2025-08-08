@@ -23,13 +23,19 @@ def create_app():
         f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@localhost:5432/memsheets"
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    
+    app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
+    # False in development only
+    app.config["JWT_COOKIE_SECURE"] = False
+    # Access token cookie will be sent with every request
+    app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
     app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
-    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(days=1)
-
+    app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(minutes=10)
+    app.config["JWT_COOKIE_CSRF_PROTECT"] = False
     JWTManager(app)
 
     bcrypt.init_app(app)
-    CORS(app)
+    CORS(app, supports_credentials=True)
     db.init_app(app)
     
     app.register_blueprint(user_bp)

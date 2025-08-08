@@ -1,6 +1,6 @@
-from flask import Blueprint, request
+from flask import Blueprint, request, jsonify
 # from jwt_util import create_token
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 from database.models import User, Group
 from extensions import bcrypt
 from database.db import db
@@ -9,7 +9,7 @@ from database.db import db
 user_bp = Blueprint("user_bp", __name__, url_prefix="/users")
 
 @user_bp.route("/signup", methods=["POST"])
-def create_user():
+def signup():
     try:
         data = request.json
         if (
@@ -39,7 +39,6 @@ def create_user():
 
         return {"message": "User created successfully"}, 201
     except Exception as e:
-        print(f"Error creating user: {e}")
         # UNIQUE constraint violation handling for email
         if "duplicate key value violates unique constraint" in str(e):
             return {"error": "Email in use"}, 400
@@ -47,7 +46,7 @@ def create_user():
 
 
 @user_bp.route("/login", methods=["POST"])
-def login_user():
+def login():
     try:
         data = request.json
         if not data or "email" not in data or "password" not in data:
@@ -58,10 +57,19 @@ def login_user():
         if user and bcrypt.check_password_hash(user.password, data["password"]):
             # Create and return JWT to client
             # Must be cast to string for flask-jwt-extended's function
-            token = create_access_token(identity=str(user.id))
-            return {"access_token": token}, 200
+            access_token = create_access_token(identity=str(user.id))
+            response = jsonify({"message": "Successful login"})
+            set_access_cookies(response, access_token)
+            return response
         else:
             return {"error": "Invalid email or password"}, 401
     except Exception as e:
         print(f"Error logging in user: {e}")
         return {"error": "Login failed"}, 500
+    
+
+@user_bp.route("/logout", methods=["POST"])
+def logout():
+  response = jsonify({"message": "Logout successful"})
+  unset_jwt_cookies(response)
+  return {"message": "Successful logout"}, 200
