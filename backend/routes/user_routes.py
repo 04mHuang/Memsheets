@@ -1,5 +1,4 @@
 from flask import Blueprint, request, jsonify
-# from jwt_util import create_token
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 from database.models import User, Group
 from extensions import bcrypt
