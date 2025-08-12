@@ -26,4 +26,20 @@ instance.interceptors.request.use((config) => {
   return config;
 });
 
+// Backend to frontend
+// Catch 401 errors for due to timed out access tokens
+instance.interceptors.response.use(
+  (response) => {
+    // Successful response
+    return response;
+  },
+  (error) => {
+    if (error.response?.status === 401 && typeof window !== "undefined") {
+      window.location.href = "/login";
+    }
+    // Return the error
+    return Promise.reject(error);
+  }
+);
+
 export default instance;
