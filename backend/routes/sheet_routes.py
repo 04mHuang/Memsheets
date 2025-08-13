@@ -63,7 +63,7 @@ def create_sheet():
 @sheet_bp.route("/<int:sheet_id>", methods=["GET"])
 @jwt_required()
 def get_sheet(sheet_id):
-    user_id = get_jwt_identity()
+    user_id = int(get_jwt_identity())
     if not user_id:
         return {"error": "Invalid token"}, 401
     sheet = Sheet.query.filter_by(user_id=user_id, id=sheet_id).first()
@@ -157,6 +157,7 @@ def update_group_list(sheet_id):
         return {"message": "Success"}, 200
     # Override associations
     groups = Group.query.filter(Group.user_id == user_id, Group.id.in_(group_ids)).all()
+    print(groups)
     sheet.groups = groups
     db.session.commit()
     return {"message": "Success"}, 200
