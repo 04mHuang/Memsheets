@@ -157,7 +157,6 @@ def update_group_list(sheet_id):
         return {"message": "Success"}, 200
     # Override associations
     groups = Group.query.filter(Group.user_id == user_id, Group.id.in_(group_ids)).all()
-    print(groups)
     sheet.groups = groups
     db.session.commit()
     return {"message": "Success"}, 200
