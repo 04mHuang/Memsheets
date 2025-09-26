@@ -1,6 +1,9 @@
+Authlib==1.6.4
 bcrypt==4.3.0
 blinker==1.9.0
+cffi==2.0.0
 click==8.2.1
+cryptography==46.0.1
 dotenv==0.9.9
 Flask==3.1.1
 Flask-Bcrypt==1.0.1
@@ -13,6 +16,7 @@ itsdangerous==2.2.0
 Jinja2==3.1.6
 MarkupSafe==3.0.2
 psycopg2-binary==2.9.10
+pycparser==2.23
 PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.0

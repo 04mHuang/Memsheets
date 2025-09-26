@@ -17,7 +17,7 @@ from extensions import bcrypt
 load_dotenv()
 
 # Import blueprints after extensions to avoid circular imports
-from routes.user_routes import user_bp
+from routes.user_routes import user_bp, oauth
 from routes.group_routes import group_bp
 from routes.sheet_routes import sheet_bp
 
@@ -42,6 +42,7 @@ def create_app():
 
     bcrypt.init_app(app)
     CORS(app, supports_credentials=True)
+    oauth.init_app(app)
     db.init_app(app)
 
     app.register_blueprint(user_bp)
