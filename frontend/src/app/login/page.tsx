@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -18,10 +18,17 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   }
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    const formData = new FormData(e.currentTarget as HTMLFormElement);
+    const loginMethod = formData.get("loginMethod");
     try {
-      await axios.post("/api/users/login", formData);
+      if (loginMethod === "standard") {
+        await axios.post("/api/users/login", formData);
+      }
+      else if (loginMethod === "google") {
+        await axios.post("/api/users/login-google")
+      }
       // Clear errors before redirecting in case of slow loading
       setError(null);
       router.push("/groups");
@@ -30,6 +37,11 @@ const Login = () => {
       setError("Invalid email or password.");
     }
   }
+  const handleGoogleLogin = () => {
+    // Redirect directly to the OAuth endpoint
+    window.location.href = "/api/users/login-google";
+  }
+
 
   return (
     <div className="account-page">
@@ -46,7 +58,7 @@ const Login = () => {
           </h1>
         </div>
         <h2 className="my-8 text-3xl font-bold">Login</h2>
-        <form method="POST" onSubmit={handleSubmit} className="flex flex-col" >
+        <form method="POST" onSubmit={handleLogin} className="flex flex-col" >
           <input
             type="email"
             onChange={handleChange}
@@ -66,8 +78,12 @@ const Login = () => {
             required
           />
           {error && <p className="error">{error}</p>}
-          <button type="submit" className="account-input account-button hover-animation">
+          <button type="submit" name="loginMethod" value="standard" className="account-input account-button hover-animation">
             Login
+          </button>
+          {/* <button type="submit" name="loginMethod" value="google"> */}
+          <button type="button" onClick={handleGoogleLogin}>
+            Login with Google
           </button>
           <div className="flex justify-center mt-8 gap-1">
             <p>New to Memsheets?</p>
