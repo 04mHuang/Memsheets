@@ -20,15 +20,8 @@ const Login = () => {
   }
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget as HTMLFormElement);
-    const loginMethod = formData.get("loginMethod");
     try {
-      if (loginMethod === "standard") {
-        await axios.post("/api/users/login", formData);
-      }
-      else if (loginMethod === "google") {
-        await axios.post("/api/users/login-google")
-      }
+      await axios.post("/api/users/login", formData);
       // Clear errors before redirecting in case of slow loading
       setError(null);
       router.push("/groups");
@@ -78,10 +71,9 @@ const Login = () => {
             required
           />
           {error && <p className="error">{error}</p>}
-          <button type="submit" name="loginMethod" value="standard" className="account-input account-button hover-animation">
+          <button type="submit" className="account-input account-button hover-animation">
             Login
           </button>
-          {/* <button type="submit" name="loginMethod" value="google"> */}
           <button type="button" onClick={handleGoogleLogin}>
             Login with Google
           </button>

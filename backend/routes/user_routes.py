@@ -119,4 +119,4 @@ def authorize_google():
 def logout():
   response = jsonify({"message": "Logout successful"})
   unset_jwt_cookies(response)
-  return {"message": "Successful logout"}, 200
+  return response, 200
