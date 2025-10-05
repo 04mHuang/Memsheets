@@ -33,7 +33,7 @@ const Login = () => {
   }
   const handleGoogleLogin = () => {
     // Redirect directly to the OAuth endpoint
-    window.location.href = "/api/users/login-google";
+    window.open("/api/users/login-google", "popup", "width=600, height=700");
   }
 
 
