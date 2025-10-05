@@ -10,6 +10,7 @@ from flask_jwt_extended import (
     get_jwt_identity,
 )
 from datetime import datetime, timezone, timedelta
+from flask_migrate import Migrate
 
 from database.db import db
 from extensions import bcrypt
@@ -17,7 +18,7 @@ from extensions import bcrypt
 load_dotenv()
 
 # Import blueprints after extensions to avoid circular imports
-from routes.user_routes import user_bp
+from routes.user_routes import user_bp, oauth
 from routes.group_routes import group_bp
 from routes.sheet_routes import sheet_bp
 
@@ -30,18 +31,22 @@ def create_app():
         f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@localhost:5432/memsheets"
     )
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # Flask key for session management
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 
     app.config["JWT_TOKEN_LOCATION"] = ["cookies"]
     # False in development only
     app.config["JWT_COOKIE_SECURE"] = False
     # Access token cookie will be sent with every request
     app.config["JWT_ACCESS_COOKIE_PATH"] = "/"
-    app.config["JWT_SECRET_KEY"] = os.getenv("SECRET_KEY")
+    app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")
     app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)
     JWTManager(app)
 
     bcrypt.init_app(app)
     CORS(app, supports_credentials=True)
+    oauth.init_app(app)
+    Migrate(app, db)
     db.init_app(app)
 
     app.register_blueprint(user_bp)

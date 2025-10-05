@@ -8,7 +8,10 @@ const NavBar = () => {
 
   const handleLogout = async () => {
     try {
-      await axiosInstance.post("/users/logout");
+      await axiosInstance.post("/users/logout", {}, { withCredentials: true });
+      // Clear any client-side storage
+      document.cookie = "access_token_cookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "csrf_access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
     }
     catch (error) {
       console.error(error);

@@ -12,8 +12,16 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), nullable=False, index=True)
     email = db.Column(db.String(100), unique=True, nullable=False, index=True)
-    password = db.Column(db.String(255), nullable=False)
+    password = db.Column(db.String(255), nullable=True)
+    oauth_provider = db.Column(db.String(50), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
+    
+    __table_args__ = (
+        db.CheckConstraint(
+            '(password IS NOT NULL AND oauth_provider IS NULL) OR (password IS NULL AND oauth_provider IS NOT NULL)',
+            name='password_oauth_check'
+        ),
+    )
 
     def __repr__(self):
         return f'<User {self.username}>'

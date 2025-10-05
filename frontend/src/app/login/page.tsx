@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
@@ -18,7 +19,7 @@ const Login = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   }
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       await axios.post("/api/users/login", formData);
@@ -30,6 +31,11 @@ const Login = () => {
       setError("Invalid email or password.");
     }
   }
+  const handleGoogleLogin = () => {
+    // Redirect directly to the OAuth endpoint
+    window.open("/api/users/login-google", "popup", "width=600, height=700");
+  }
+
 
   return (
     <div className="account-page">
@@ -46,7 +52,7 @@ const Login = () => {
           </h1>
         </div>
         <h2 className="my-8 text-3xl font-bold">Login</h2>
-        <form method="POST" onSubmit={handleSubmit} className="flex flex-col" >
+        <form method="POST" onSubmit={handleLogin} className="flex flex-col" >
           <input
             type="email"
             onChange={handleChange}
@@ -68,6 +74,11 @@ const Login = () => {
           {error && <p className="error">{error}</p>}
           <button type="submit" className="account-input account-button hover-animation">
             Login
+          </button>
+          <p className="text-center mt-5">or</p>
+          <button type="button" onClick={handleGoogleLogin} className="account-input flex justify-center items-center gap-5 hover-animation hover:cursor-pointer hover:bg-support/[0.3]">
+            <FcGoogle />
+            Login with Google
           </button>
           <div className="flex justify-center mt-8 gap-1">
             <p>New to Memsheets?</p>
