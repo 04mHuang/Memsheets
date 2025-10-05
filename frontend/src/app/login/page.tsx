@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
@@ -74,7 +75,9 @@ const Login = () => {
           <button type="submit" className="account-input account-button hover-animation">
             Login
           </button>
-          <button type="button" onClick={handleGoogleLogin}>
+          <p className="text-center mt-5">or</p>
+          <button type="button" onClick={handleGoogleLogin} className="account-input flex justify-center items-center gap-5 hover-animation hover:cursor-pointer hover:bg-support/[0.3]">
+            <FcGoogle />
             Login with Google
           </button>
           <div className="flex justify-center mt-8 gap-1">
