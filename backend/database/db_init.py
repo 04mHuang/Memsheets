@@ -43,17 +43,5 @@ def create_database():
     cursor.close()
     conn.close()
 
-def create_tables():
-  # Connect to database
-  app = Flask(__name__)
-  app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}'
-  app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-  db.init_app(app)
-  with app.app_context():
-    db.create_all()
-    print('All tables created successfully')
-
 if __name__ == '__main__':
   create_database()
-  create_tables()

@@ -1,11 +1,26 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, url_for, redirect
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 from database.models import User, Group
 from extensions import bcrypt
 from database.db import db
-
+from dotenv import load_dotenv
+from authlib.integrations.flask_client import OAuth
+import os
 
 user_bp = Blueprint("user_bp", __name__, url_prefix="/users")
+load_dotenv()
+
+oauth = OAuth()
+google = oauth.register(
+        name="google",
+        client_id=os.getenv("GOOGLE_CLIENT_ID"),
+        client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
+        # Automatically configures Google's OAuth 2.0 endpoints
+        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
+        client_kwargs={
+          "scope": "openid profile email",
+        },
+    )
 
 @user_bp.route("/signup", methods=["POST"])
 def signup():
@@ -67,8 +82,41 @@ def login():
         return {"error": "Login failed"}, 500
     
 
+@user_bp.route("/login-google", methods=["GET", "POST"])
+def google_login():
+    return google.authorize_redirect(url_for("user_bp.authorize_google", _external=True))
+
+@user_bp.route("/login-google/callback")
+def authorize_google():
+    try:
+        token = google.authorize_access_token()
+        user_info = google.get("https://www.googleapis.com/oauth2/v2/userinfo").json()
+        user = User.query.filter_by(email=user_info["email"]).first()
+        if not user:
+            # Create new user if not exists
+            user = User(
+                username=user_info["name"],
+                email=user_info["email"],
+                oauth_provider="google"
+            )
+            db.session.add(user)
+            db.session.commit()
+            # Create default 'Miscellaneous' group for new user
+            default_group = Group(
+                user_id=user.id, name="Miscellaneous", color="#999999"
+            )
+            db.session.add(default_group)
+            db.session.commit()
+        access_token = create_access_token(identity=str(user.id))
+        response = redirect("http://localhost:3000/groups")
+        set_access_cookies(response, access_token)
+        return response
+    except Exception as e:
+        print(f"Error during Google OAuth: {e}")
+        return {"error": "Google login failed"}, 500
+
 @user_bp.route("/logout", methods=["POST"])
 def logout():
   response = jsonify({"message": "Logout successful"})
   unset_jwt_cookies(response)
-  return {"message": "Successful logout"}, 200
+  return response, 200

@@ -24,6 +24,8 @@ Set up the database:
 ```
 chmod +x database/init_wrapper.sh
 ./database/init_wrapper.sh
+flask db init
+flask db upgrade
 ```
 Run server:
 ```
