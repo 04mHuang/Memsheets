@@ -1,26 +1,10 @@
-from flask import Blueprint, request, jsonify, url_for, redirect
+from flask import Blueprint, request, jsonify, url_for, redirect, session
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 from database.models import User, Group
-from extensions import bcrypt
+from extensions import bcrypt, google
 from database.db import db
-from dotenv import load_dotenv
-from authlib.integrations.flask_client import OAuth
-import os
 
 user_bp = Blueprint("user_bp", __name__, url_prefix="/users")
-load_dotenv()
-
-oauth = OAuth()
-google = oauth.register(
-        name="google",
-        client_id=os.getenv("GOOGLE_CLIENT_ID"),
-        client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
-        # Automatically configures Google's OAuth 2.0 endpoints
-        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
-        client_kwargs={
-          "scope": "openid profile email",
-        },
-    )
 
 @user_bp.route("/signup", methods=["POST"])
 def signup():
@@ -107,6 +91,7 @@ def authorize_google():
             )
             db.session.add(default_group)
             db.session.commit()
+        session["google_token"] = token
         access_token = create_access_token(identity=str(user.id))
         response = redirect("http://localhost:3000/groups")
         set_access_cookies(response, access_token)

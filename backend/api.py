@@ -13,14 +13,15 @@ from datetime import datetime, timezone, timedelta
 from flask_migrate import Migrate
 
 from database.db import db
-from extensions import bcrypt
+from extensions import bcrypt, oauth
 
 load_dotenv()
 
 # Import blueprints after extensions to avoid circular imports
-from routes.user_routes import user_bp, oauth
+from routes.user_routes import user_bp
 from routes.group_routes import group_bp
 from routes.sheet_routes import sheet_bp
+from routes.gCal_routes import gCal_bp
 
 
 def create_app():
@@ -52,6 +53,7 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(group_bp)
     app.register_blueprint(sheet_bp)
+    app.register_blueprint(gCal_bp)
 
     # Implicit refresh of token close to expiring
     @app.after_request
