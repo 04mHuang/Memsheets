@@ -33,7 +33,7 @@ const Login = () => {
   }
   const handleGoogleLogin = () => {
     // Redirect directly to the OAuth endpoint
-    window.open("/api/users/login-google", "popup", "width=600, height=700");
+    window.open("/api/users/login-google", "_self");
   }
 
 
