@@ -62,15 +62,14 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
         aria-label="Name"
         className="sheet-name sheet-input w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
       />
-      {groupTags !== undefined && setGroupModalOpen && <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />}
       <div className="sheet-content">
         <section className="sheet-basic">
           <div className="sheet-photo">
             <Image src={sheet.avatar} alt="Sheet photo" width={250} height={250} />
-            <button 
-            type="button" 
-            onClick={() => setAvatarModalOpen(true)}
-            className="mt-2 border-dashed border-1 border-dark-support text-foreground bg-background rounded w-full cursor-pointer hover:brightness-80 hover-animation"
+            <button
+              type="button"
+              onClick={() => setAvatarModalOpen(true)}
+              className="mt-2 border-dashed border-1 border-dark-support text-foreground bg-background rounded w-full cursor-pointer hover:brightness-80 hover-animation"
             >
               Change Avatar
             </button>
@@ -88,7 +87,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
             name="pronouns"
             value={pronouns}
             onChange={handleSelectChange}
-            className="sheet-basic sheet-input w-29"
+            className="sheet-basic sheet-input w-1/2"
           >
             <option value="Unknown">Unknown</option>
             <option value="she/her">she/her</option>
@@ -104,7 +103,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
               value={sheet.pronouns === "N/A" || sheet.pronouns === "Custom" ? "" : sheet.pronouns}
               placeholder="Pronouns"
               aria-label="Pronouns"
-              className="sheet-input ml-1"
+              className="sheet-input ml-1 mt-2 w-1/3"
               size={6}
             />
           }
@@ -129,6 +128,10 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
               className="rounded-xl"
             />
           </label>
+          {groupTags !== undefined &&
+            setGroupModalOpen &&
+            <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} isEditable={true} />
+          }
         </section>
         <div className="sheet-details">
           <label>
@@ -139,7 +142,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
               value={sheet.likes === "N/A" ? "" : sheet.likes}
               placeholder="Likes"
               aria-label="Likes"
-              className="sheet-input sheet-detail"
+              className="sheet-input"
             />
           </label>
           <label>
@@ -150,7 +153,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
               value={sheet.dislikes === "N/A" ? "" : sheet.dislikes}
               placeholder="Dislikes"
               aria-label="Dislikes"
-              className="sheet-input sheet-detail"
+              className="sheet-input"
             />
           </label>
           <label>
@@ -161,7 +164,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
               value={sheet.allergies === "N/A" ? "" : sheet.allergies}
               placeholder="Allergies"
               aria-label="Allergies"
-              className="sheet-input sheet-detail"
+              className="sheet-input"
             />
           </label>
           <label>
@@ -172,7 +175,7 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
               value={sheet.notes === "N/A" ? "" : sheet.notes}
               placeholder="Additional notes"
               aria-label="Additional notes"
-              className="sheet-input sheet-detail"
+              className="sheet-input"
             />
           </label>
         </div>

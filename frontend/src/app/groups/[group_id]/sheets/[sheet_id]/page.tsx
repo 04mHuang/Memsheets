@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
+import { FaPlus } from "react-icons/fa";
 
 import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
@@ -107,49 +108,74 @@ const Sheet = () => {
   }
 
   return (
-    <div className={`page-container mt-4 ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
+    <div className={`flex gap-10 page-container ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
       <DeletionModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} subject={`${sheet.name} Sheet`} handleDelete={handleDelete} />
       <GroupTagsModal isOpen={groupModalOpen} onClose={handleGroupsEdit} groupTags={groupTags} setGroupTags={setGroupTags} />
-      <EditButtons editMode={editMode} submit={handleModeToggle} exit={() => editMode ? handleCancel() : setDeleteModalOpen(true)} />
-      {editMode ?
-        <form
-          method="POST"
-          onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}
-          className="sheet"
-          style={{ backgroundColor: sheet.color }}
-        >
-          <SheetForm sheet={sheet} setSheet={setSheet} groupTags={groupTags} setGroupModalOpen={setGroupModalOpen} />
-        </form>
-        :
-        <main className="sheet" style={{ backgroundColor: sheet.color }}>
-          <h1 className="sheet-name">{sheet.name}</h1>
-          <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} />
-          <div className="sheet-content">
-            <section>
-              <div className="sheet-photo pb-13">
-                <Image src={sheet.avatar} alt={createAlt(sheet.avatar)} width={250} height={250} />
-              </div>
-              <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
-              <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>
-              <p className="sheet-basic"><strong>Birthday:</strong> {sheet.birthday}</p>
-            </section>
-            <section className="sheet-details">
-              <h2 className="sheet-heading">Likes</h2>
-              <hr className="border-dashed" />
-              <p className="sheet-detail">{sheet.likes}</p>
-              <h2 className="sheet-heading">Dislikes</h2>
-              <hr className="border-dashed" />
-              <p className="sheet-detail">{sheet.dislikes}</p>
-              <h2 className="sheet-heading">Allergies</h2>
-              <hr className="border-dashed" />
-              <p className="sheet-detail">{sheet.allergies}</p>
-              <h2 className="sheet-heading">Additional notes</h2>
-              <hr className="border-dashed" />
-              <p className="sheet-detail">{sheet.notes}</p>
-            </section>
-          </div>
-        </main>
-      }
+      <div className="basis-3/4">
+        <EditButtons editMode={editMode} submit={handleModeToggle} exit={() => editMode ? handleCancel() : setDeleteModalOpen(true)} />
+        {editMode ?
+          <form
+            method="POST"
+            onSubmit={(e) => { e.preventDefault(); handleModeToggle(); }}
+            className="sheet"
+            style={{ backgroundColor: sheet.color }}
+          >
+            <SheetForm sheet={sheet} setSheet={setSheet} groupTags={groupTags} setGroupModalOpen={setGroupModalOpen} />
+          </form>
+          :
+          <main className="sheet" style={{ backgroundColor: sheet.color }}>
+            <h1 className="sheet-name">{sheet.name}</h1>
+            <div className="sheet-content">
+              <section className="sheet-basics">
+                <div className="sheet-photo pb-13">
+                  <Image src={sheet.avatar} alt={createAlt(sheet.avatar)} width={250} height={250} />
+                </div>
+                <p className="sheet-basic"><strong>Nickname:</strong> {sheet.nickname}</p>
+                <p className="sheet-basic"><strong>Pronouns:</strong> {sheet.pronouns}</p>
+                <p className="sheet-basic"><strong>Birthday:</strong> {sheet.birthday}</p>
+                <GroupTags groupTags={groupTags} sheetColor={sheet.color} setGroupModalOpen={setGroupModalOpen} isEditable={false} />
+              </section>
+              <section className="sheet-details">
+                <div>
+                  <h2 className="sheet-heading">Likes</h2>
+                  <hr className="border-dashed" />
+                  <p className="sheet-detail">{sheet.likes}</p>
+                </div>
+                <div>
+                  <h2 className="sheet-heading">Dislikes</h2>
+                  <hr className="border-dashed" />
+                  <p className="sheet-detail">{sheet.dislikes}</p>
+                </div>
+                <div>
+                  <h2 className="sheet-heading">Allergies</h2>
+                  <hr className="border-dashed" />
+                  <p className="sheet-detail">{sheet.allergies}</p>
+                </div>
+                <div>
+                  <h2 className="sheet-heading">Additional notes</h2>
+                  <hr className="border-dashed" />
+                  <p className="sheet-detail">{sheet.notes}</p>
+                </div>
+              </section>
+            </div>
+          </main>
+        }
+      </div>
+      <section className="basis-1/4 h-[calc(100vh-10rem)] shrink-0">
+        <div className="flex">
+          <button
+            className="ml-auto bg-support h-10 w-10 rounded-4xl p-2 text-foreground hover:cursor-pointer hover:bg-dark-support hover:text-background"
+          >
+            <FaPlus className="w-full h-full " />
+          </button>
+        </div>
+        <div className="events">
+          <h2 className="sheet-name">Events</h2>
+          <ol>
+            <li>Event 1</li>
+          </ol>
+        </div>
+      </section>
     </div>
   );
 }
