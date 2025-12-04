@@ -21,6 +21,7 @@ load_dotenv()
 from routes.user_routes import user_bp
 from routes.group_routes import group_bp
 from routes.sheet_routes import sheet_bp
+from routes.event_routes import event_bp
 from routes.gCal_routes import gCal_bp
 
 
@@ -53,6 +54,7 @@ def create_app():
     app.register_blueprint(user_bp)
     app.register_blueprint(group_bp)
     app.register_blueprint(sheet_bp)
+    app.register_blueprint(event_bp)
     app.register_blueprint(gCal_bp)
 
     # Implicit refresh of token close to expiring

@@ -3,13 +3,13 @@
 import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
-import { FaPlus } from "react-icons/fa";
 
 import EditButtons from "@/app/components/EditButtons";
 import SheetForm from "@/app/components/SheetForm";
-import DeletionModal from "@/app/components/DeletionModal";
+import EventsSection from "@/app/components/EventsSection";
 import GroupTags from "@/app/components/GroupTags";
 import GroupTagsModal from "@/app/components/GroupTagsModal";
+import DeletionModal from "@/app/components/DeletionModal";
 
 import axiosInstance from "@/app/axiosInstance";
 import { isDarkColor } from "@/app/util/colorUtil";
@@ -161,21 +161,7 @@ const Sheet = () => {
           </main>
         }
       </div>
-      <section className="basis-1/4 h-[calc(100vh-10rem)] shrink-0">
-        <div className="flex">
-          <button
-            className="ml-auto bg-support h-10 w-10 rounded-4xl p-2 text-foreground hover:cursor-pointer hover:bg-dark-support hover:text-background"
-          >
-            <FaPlus className="w-full h-full " />
-          </button>
-        </div>
-        <div className="events">
-          <h2 className="sheet-name">Events</h2>
-          <ol>
-            <li>Event 1</li>
-          </ol>
-        </div>
-      </section>
+      <EventsSection sheet_id={sheet_id} />
     </div>
   );
 }

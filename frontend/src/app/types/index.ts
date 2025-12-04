@@ -15,3 +15,7 @@ export interface SelectOption {
   label: string;
   color: string;
 }
+export interface Event {
+  id: string;
+  name: string;
+}
