@@ -8,6 +8,7 @@
   --accent: #C98A74;
   --support: #9CB6AD;
   --dark-support: #508170;
+  --placeholder-color: #8b7d6b;
 }
 
 @theme inline {
@@ -38,6 +39,12 @@ body {
 
 /* Custom Tailwind CSS classes */
 @layer components {
+  input::placeholder {
+    color: var(--placeholder-color);
+  }
+  textarea {
+    @apply min-h-20 max-h-40;
+  }
   /* Applies to hover animations */
   .hover-animation {
     @apply transition-all duration-200 ease-in-out;
@@ -76,7 +83,7 @@ body {
     @apply border mt-2 p-10 flex flex-col flex-1 min-h-[calc(100vh-12rem)]; 
   }
   .events {
-    @apply border p-4 mt-2 min-h-[calc(100vh-12rem)]; 
+    @apply border p-4 mt-2 min-h-[calc(100vh-12rem)] max-h-[calc(100vh-12rem)] overflow-y-scroll; 
   }
   .sheet-content {
     @apply flex gap-20 flex-1 text-xl;
@@ -93,9 +100,6 @@ body {
   }
   .sheet-input {
     @apply bg-background/[0.5] px-2 rounded-md border-1 border-foreground w-full;
-  }
-  .sheet-input::placeholder {
-    color: var(--placeholder-color);
   }
   .sheet-details {
     @apply flex flex-col flex-1 justify-between mb-20;

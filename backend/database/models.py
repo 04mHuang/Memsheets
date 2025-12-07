@@ -1,4 +1,5 @@
 from .db import db
+from datetime import date
 
 # Association table for many-to-many relationship between sheets and groups
 sheet_groups = db.Table('sheet_groups',
@@ -72,7 +73,8 @@ class Event(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'), nullable=False)
     name = db.Column(db.String(100), default="Untitled Event")
-    description = db.Column(db.String(250), nullable=False)
+    description = db.Column(db.String(250), nullable=True)
+    date = db.Column(db.Date, nullable=True, default=date.today())
     reminder = db.Column(db.Enum('none','weekly', 'monthly', 'yearly', name='reminder_type'), default='none')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())

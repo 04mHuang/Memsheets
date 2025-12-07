@@ -18,4 +18,7 @@ export interface SelectOption {
 export interface Event {
   id: string;
   name: string;
+  description: string;
+  date: string;
+  reminder: string;
 }

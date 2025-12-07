@@ -8,21 +8,25 @@ import axiosInstance from "@/app/axiosInstance";
 interface EventModalProps extends CustomModalProps {
   setEvents: React.Dispatch<React.SetStateAction<Event[]>>;
   sheet_id?: string;
+  refetchEvents: () => void;
 }
 
-const EventsModal = ({ isOpen, onClose, setEvents, sheet_id }: EventModalProps) => {
+const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalProps) => {
   const [eventData, setEventData] = useState({
     name: "",
     description: "",
-    reminder: "none"
+    reminder: "none",
+    date: new Date().toISOString().slice(0, 10)
   });
 
   const createEvent = async () => {
     try {
       const res = await axiosInstance.post(`/events/${sheet_id}/create`, eventData);
-      setEvents(prev => [...prev, res.data?.event]);
-      setEventData({ name: "", description: "", reminder: "none" });
-      onClose();
+      if (res.data?.message) {
+        refetchEvents();
+        setEventData({ name: "", description: "", reminder: "none", date: new Date().toISOString().slice(0, 10) });
+        onClose();
+      }
     }
     catch (error) {
       console.error(error);
@@ -30,7 +34,7 @@ const EventsModal = ({ isOpen, onClose, setEvents, sheet_id }: EventModalProps) 
   }
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title={`Create New Event`} >
-      <form onSubmit={(e) => { e.preventDefault(); createEvent(); }} className="space-y-4 text-left">
+      <form id="event-form" onSubmit={(e) => { e.preventDefault(); createEvent(); }} className="space-y-4 text-left">
         <div>
           <label className="block text-sm font-medium mb-1 text-left">Event Name</label>
           <input
@@ -38,7 +42,7 @@ const EventsModal = ({ isOpen, onClose, setEvents, sheet_id }: EventModalProps) 
             value={eventData.name}
             onChange={(e) => setEventData(prev => ({ ...prev, name: e.target.value }))}
             className="sheet-input"
-            required
+            placeholder="Untitled Event"
           />
         </div>
         <div>
@@ -48,6 +52,15 @@ const EventsModal = ({ isOpen, onClose, setEvents, sheet_id }: EventModalProps) 
             onChange={(e) => setEventData(prev => ({ ...prev, description: e.target.value }))}
             className="sheet-input"
             rows={3}
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1 text-left">Date</label>
+          <input
+            type="date"
+            value={eventData.date}
+            onChange={(e) => setEventData(prev => ({ ...prev, date: e.target.value }))}
+            className="sheet-input"
             required
           />
         </div>
@@ -73,8 +86,9 @@ const EventsModal = ({ isOpen, onClose, setEvents, sheet_id }: EventModalProps) 
           Cancel
         </button>
         <button
-          onClick={createEvent}
-          className="bg-accent border-accent border-1 text-background px-4 py-2 rounded-sm cursor-pointer hover:bg-red-400 hover:border-red-400 hover-animation"
+          type="submit"
+          form="event-form"
+          className="text-foreground border border-dark-support bg-support px-4 py-2 rounded-sm cursor-pointer hover:bg-dark-support hover:text-background hover:border-support hover-animation"
         >
           Create
         </button>

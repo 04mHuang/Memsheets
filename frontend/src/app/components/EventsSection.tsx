@@ -16,22 +16,27 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
   // States to control modal visibility
   const [modalOpen, setModalOpen] = useState(false);
 
-  useEffect(() => {
+  const fetchEvents = () => {
     if (sheet_id) {
       axiosInstance.get(`/events/${sheet_id}`)
         .then(res => {
-          setEvents(res.data.events);
+          setEvents(res.data.events || []);
         })
         .catch(err => {
-          console.error(err);
+          console.error('Events endpoint not available:', err.message);
+          setEvents([]);
         });
     }
+  };
+
+  useEffect(() => {
+    fetchEvents();
   }, [sheet_id]);
   
 
   return (
     <section className="basis-1/4 h-[calc(100vh-10rem)] shrink-0">
-      <EventsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} sheet_id={sheet_id} setEvents={setEvents} />
+      <EventsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} sheet_id={sheet_id} setEvents={setEvents} refetchEvents={fetchEvents} />
       <div className="flex">
         <button
           onClick={() => setModalOpen(true)}
@@ -42,13 +47,16 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
       </div>
       <div className="events">
         <h2 className="sheet-name">Events</h2>
-        {events.length === 0 ?
+        {!events || events.length === 0 ?
           <p>No events found.</p>
           :
           <ol>
-            {events.map((event) => (
-              <li key={event.id} className="event-item">
-                <h3 className="event-title">{event.name}</h3>
+            {events.map((event, index) => (
+              <li key={event?.id || index} className="event-item">
+                <h3 className="event-title">{event?.name}</h3>
+                <p className="event-date">{new Date(event?.date).toLocaleDateString()}</p>
+                <p className="event-description">{event?.description}</p>
+                <p>{event?.reminder}</p>
               </li>
             ))}
           </ol>

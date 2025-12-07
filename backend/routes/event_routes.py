@@ -2,6 +2,7 @@ from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from database.models import Sheet, Event
 from database.db import db
+from datetime import datetime
 
 event_bp = Blueprint("event_bp", __name__, url_prefix="/events")
 
@@ -18,7 +19,7 @@ def get_events_by_sheet(sheet_id):
         return {"error": "Sheet not found"}, 404
 
     events = Event.query.filter_by(sheet_id=sheet_id).all()
-    events_data = [{"id": e.id, "name": e.name, "description": e.description, "reminder": e.reminder} for e in events]
+    events_data = [{"id": e.id, "name": e.name, "description": e.description, "date": e.date.isoformat() if e.date else None, "reminder": e.reminder} for e in events]
     return {"events": events_data}, 200
   
 # Create a new event for a sheet
@@ -35,10 +36,12 @@ def create_event(sheet_id):
         data = request.json
         if not data or "name" not in data or "description" not in data:
             return {"error": "Invalid input"}, 400
+        
         new_event = Event(
             sheet_id=sheet_id,
             name=data["name"] if data["name"].strip() else "Untitled Event",
             description=data["description"],
+            date=data.get("date"),
             reminder=data.get("reminder", "none"),
         )
         db.session.add(new_event)
