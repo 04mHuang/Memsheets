@@ -15,7 +15,7 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
   const [eventData, setEventData] = useState({
     name: "",
     description: "",
-    reminder: "none",
+    reminder: "None",
     date: new Date().toISOString().slice(0, 10)
   });
 
@@ -24,7 +24,7 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
       const res = await axiosInstance.post(`/events/${sheet_id}/create`, eventData);
       if (res.data?.message) {
         refetchEvents();
-        setEventData({ name: "", description: "", reminder: "none", date: new Date().toISOString().slice(0, 10) });
+        setEventData({ name: "", description: "", reminder: "None", date: new Date().toISOString().slice(0, 10) });
         onClose();
       }
     }
@@ -71,10 +71,10 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
             onChange={(e) => setEventData(prev => ({ ...prev, reminder: e.target.value }))}
             className="sheet-input"
           >
-            <option value="none">None</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
+            <option value="None">None</option>
+            <option value="Weekly">Weekly</option>
+            <option value="Monthly">Monthly</option>
+            <option value="Yearly">Yearly</option>
           </select>
         </div>
       </form>
@@ -90,7 +90,7 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
           form="event-form"
           className="text-foreground border border-dark-support bg-support px-4 py-2 rounded-sm cursor-pointer hover:bg-dark-support hover:text-background hover:border-support hover-animation"
         >
-          Create
+          Save
         </button>
       </div>
     </ModalBase>

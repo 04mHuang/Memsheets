@@ -54,9 +54,8 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
             {events.map((event, index) => (
               <li key={event?.id || index} className="event-item">
                 <h3 className="event-title">{event?.name}</h3>
-                <p className="event-date">{new Date(event?.date).toLocaleDateString()}</p>
+                <p className="event-date">{new Date(event?.date).toLocaleDateString()} {event?.reminder !== 'none' && <span className="event-reminder">({event?.reminder})</span>}</p>
                 <p className="event-description">{event?.description}</p>
-                <p>{event?.reminder}</p>
               </li>
             ))}
           </ol>

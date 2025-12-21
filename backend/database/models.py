@@ -75,7 +75,7 @@ class Event(db.Model):
     name = db.Column(db.String(100), default="Untitled Event")
     description = db.Column(db.String(250), nullable=True)
     date = db.Column(db.Date, nullable=True, default=date.today())
-    reminder = db.Column(db.Enum('none','weekly', 'monthly', 'yearly', name='reminder_type'), default='none')
+    reminder = db.Column(db.Enum('None','Weekly', 'Monthly', 'Yearly', name='reminder_type'), default='None')
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 

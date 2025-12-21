@@ -82,9 +82,6 @@ body {
   .sheet {
     @apply border mt-2 p-10 flex flex-col flex-1 min-h-[calc(100vh-12rem)]; 
   }
-  .events {
-    @apply border p-4 mt-2 min-h-[calc(100vh-12rem)] max-h-[calc(100vh-12rem)] overflow-y-scroll; 
-  }
   .sheet-content {
     @apply flex gap-20 flex-1 text-xl;
   }
@@ -113,6 +110,19 @@ body {
   .color-input {
      @apply flex items-center gap-2 w-fit;
   }
+  /* Applies to events section for sheet pages */
+  .events {
+    @apply border p-4 mt-2 min-h-[calc(100vh-12rem)] max-h-[calc(100vh-12rem)] overflow-y-auto; 
+  }
+  .event-item {
+    @apply p-2 mb-2 bg-nav border;
+  }
+  .event-title {
+    @apply text-xl font-bold;
+  }
+  .event-description, .event-date {
+    @apply text-lg;
+  }
   /* Applies to login and sign up pages */
   .account-page {
     @apply flex bg-nav h-screen;
@@ -131,5 +141,28 @@ body {
   }
   .error {
     @apply font-bold text-accent;
+  }
+}
+
+/* Custom Scrollbar */
+*::-webkit-scrollbar {
+  width: 14px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--nav);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--foreground);
+  border-radius: 3px;
+  border: 2px solid #e2b787;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--foreground)
+                     var(--nav);
   }
 }
