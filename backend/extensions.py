@@ -16,6 +16,6 @@ google = oauth.register(
         # Automatically configures Google's OAuth 2.0 endpoints
         server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
         client_kwargs={
-          "scope": "openid profile email https://www.googleapis.com/auth/calendar.events",
+          "scope": "openid profile email https://www.googleapis.com/auth/calendar",
         },
     )

@@ -15,6 +15,7 @@ class User(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False, index=True)
     password = db.Column(db.String(255), nullable=True)
     oauth_provider = db.Column(db.String(50), nullable=True)
+    google_calendar_id = db.Column(db.String(255), nullable=True)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     
     __table_args__ = (

@@ -3,6 +3,7 @@ from flask_jwt_extended import create_access_token, set_access_cookies, unset_jw
 from database.models import User, Group
 from extensions import bcrypt, google
 from database.db import db
+import requests
 
 user_bp = Blueprint("user_bp", __name__, url_prefix="/users")
 
@@ -64,7 +65,23 @@ def login():
     except Exception as e:
         print(f"Error logging in user: {e}")
         return {"error": "Login failed"}, 500
-    
+  
+  
+def create_google_calendar(access_token):
+    url = "https://www.googleapis.com/calendar/v3/calendars"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "summary": "Memsheets",
+        "timeZone": "UTC",
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    response.raise_for_status()
+    return response.json()["id"]
+
 
 @user_bp.route("/login-google", methods=["GET", "POST"])
 def google_login():
@@ -93,6 +110,9 @@ def authorize_google():
             db.session.commit()
         session["google_token"] = token
         access_token = create_access_token(identity=str(user.id))
+        # Must have user created and committed before creating calendar
+        user.google_calendar_id = create_google_calendar(token["access_token"])
+        db.session.commit()
         response = redirect("http://localhost:3000/groups")
         set_access_cookies(response, access_token)
         return response
