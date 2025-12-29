@@ -110,10 +110,11 @@ def authorize_google():
             db.session.commit()
         session["google_token"] = token
         access_token = create_access_token(identity=str(user.id))
-        # Must have user created and committed before creating calendar
-        user.google_calendar_id = create_google_calendar(token["access_token"])
-        db.session.commit()
-        response = redirect("http://localhost:3000/groups")
+        # Only create calendar on first login
+        if not user.google_calendar_id:
+            user.google_calendar_id = create_google_calendar(token["access_token"])
+            db.session.commit()
+        response = redirect("http://localhost:3000/")
         set_access_cookies(response, access_token)
         return response
     except Exception as e:

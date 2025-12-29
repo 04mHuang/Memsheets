@@ -1,37 +1,39 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { FcGoogle } from "react-icons/fc";
 import Link from "next/link";
 import Image from "next/image";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const Login = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  })
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  }
-  const handleLogin = async (e: React.FormEvent) => {
+  
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError(null);
+    
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    
     try {
-      await axios.post("/api/users/login", formData);
-      // Clear errors before redirecting in case of slow loading
-      setError(null);
-      router.push("/groups");
+      await axios.post('/api/users/login', { email, password });
+      localStorage.setItem("auth_method", "password");
+      router.push('/');
+    } catch (err: any) {
+      if (err.response?.status === 401) {
+        setError('Invalid email or password');
+      } else {
+        setError('An error occurred. Please try again.');
+      }
     }
-    catch {
-      setError("Invalid email or password.");
-    }
-  }
+  };
+
   const handleGoogleLogin = () => {
+    localStorage.setItem("auth_method", "google");
     // Redirect directly to the OAuth endpoint
     window.open("/api/users/login-google", "_self");
   }
@@ -52,11 +54,11 @@ const Login = () => {
           </h1>
         </div>
         <h2 className="my-8 text-3xl font-bold">Login</h2>
-        <form method="POST" onSubmit={handleLogin} className="flex flex-col" >
+        <form onSubmit={handleLogin} className="flex flex-col" >
           <input
             type="email"
-            onChange={handleChange}
             name="email"
+            autoComplete="email"
             aria-label="Email"
             placeholder="Email"
             className="account-input"
@@ -64,8 +66,8 @@ const Login = () => {
           />
           <input
             type="password"
-            onChange={handleChange}
             name="password"
+            autoComplete="current-password"
             aria-label="Password"
             placeholder="Password"
             className="account-input"

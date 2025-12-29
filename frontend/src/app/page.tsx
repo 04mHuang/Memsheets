@@ -20,21 +20,29 @@ interface CalendarEvent {
 const Home = () => {
   const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
   useEffect(() => {
+    const auth = localStorage.getItem("auth_method");
     (async () => {
       try {
-        const res = await axiosInstance.get("/cal/get-events")
+        let res = null;
+        if (auth == "password") {
+          res = await axiosInstance.get("/events");
+        }
+        else {
+          res = await axiosInstance.get("/cal/get-events");
+        }
         setCalendar(res.data)
+        console.log(res.data)
       }
       catch (error) {
         console.error(error)
       }
-    })();
+    })();    
   }, []);
 
   return (
     <div className="container max-w-screen-xl px-4">
       <main className="flex flex-col justify-items-center">
-        {calendar.length > 0 && <FullCalendar
+        <FullCalendar
           plugins={[dayGridPlugin]}
           events={calendar.map((c: CalendarEvent) => ({
             title: c.summary,
@@ -51,7 +59,6 @@ const Home = () => {
             `);
           }}
         />
-        }
       </main>
     </div>
   );

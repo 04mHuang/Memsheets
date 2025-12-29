@@ -6,6 +6,21 @@ from datetime import datetime
 
 event_bp = Blueprint("event_bp", __name__, url_prefix="/events")
 
+# Fetch list of all events
+@event_bp.route("/", methods=["GET"])
+@jwt_required()
+def get_all_events():
+    user_id = get_jwt_identity()
+    if not user_id:
+        return {"error": "Invalid token"}, 401
+
+    sheets = Sheet.query.filter_by(user_id=user_id).all()
+    sheet_ids = [sheet.id for sheet in sheets]
+
+    events = Event.query.filter(Event.sheet_id.in_(sheet_ids)).all()
+    events_data = [{"id": e.id, "sheet_id": e.sheet_id, "name": e.name, "description": e.description, "date": e.date.isoformat() if e.date else None, "reminder": e.reminder} for e in events]
+    return {"events": events_data}, 200
+
 # Fetch list of all events for a sheet
 @event_bp.route("/<int:sheet_id>", methods=["GET"])
 @jwt_required()

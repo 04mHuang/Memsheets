@@ -16,7 +16,7 @@ def get_events():
       return {"error": "Invalid token"}, 401
   user = User.query.filter_by(id=user_id).first()
   response = google.get(
-    f"https://www.googleapis.com/calendar/v3/calendars/{user.google_calendar_id}/events",
+    f"https://www.googleapis.com/calendar/v3/calendars/{user.google_calendar_id}/events?timeMin=2020-01-01T00:00:00Z&singleEvents=true&orderBy=startTime",
     token=token
   )
   events = response.json().get("items", [])
