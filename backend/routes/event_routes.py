@@ -67,17 +67,22 @@ def create_event(sheet_id):
         }
         # Create RRULE for recurrence
         recurrence_type = data["recurrence"].upper()
-        if recurrence_type == "NONE":
-            recurrence_rule = None
-        else:
-          base_date = datetime.strptime(event_date, "%Y-%m-%d").date()
-          if recurrence_type == "WEEKLY":
-            until_date = base_date + timedelta(weeks=36)
-          elif recurrence_type == "MONTHLY":
-              until_date = base_date + relativedelta(months=12)
-          elif recurrence_type == "YEARLY":
-              until_date = base_date + relativedelta(years=1)
-          recurrence_rule = [f"RRULE:FREQ={recurrence_type};DTSTART={event_date.replace('-', '')}T000000;UNTIL={until_date.strftime('%Y%m%d')}T235959"]
+        recurrence_rule = None
+        
+        if recurrence_type != "NONE":
+            base_date = datetime.strptime(event_date, "%Y-%m-%d").date()
+            dtstart = event_date.replace('-', '')
+            
+            if recurrence_type == "WEEKLY":
+                until_date = base_date + timedelta(weeks=36)
+            elif recurrence_type == "MONTHLY":
+                until_date = base_date + relativedelta(months=12)
+            elif recurrence_type == "YEARLY":
+                until_date = base_date + relativedelta(years=1)
+            
+            until_str = until_date.strftime('%Y%m%d')
+            bysetpos = ";BYMONTHDAY=-1" if recurrence_type == "MONTHLY" and base_date.day >= 29 else ""
+            recurrence_rule = [f"RRULE:FREQ={recurrence_type}{bysetpos};DTSTART={dtstart}T000000;UNTIL={until_str}T235959"]
 
         new_event = Event(
             sheet_id=sheet_id,
