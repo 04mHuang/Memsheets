@@ -12,19 +12,26 @@ interface EventModalProps extends CustomModalProps {
 }
 
 const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalProps) => {
+  // Get user's timezone
+  const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
   const [eventData, setEventData] = useState({
-    name: "",
+    summary: "",
     description: "",
-    reminder: "None",
-    date: new Date().toISOString().slice(0, 10)
+    recurrence: "None",
+    event_date: new Date().toISOString().slice(0, 10),
+    timezone: userTimezone
   });
+
+  const handleInputChange = (field: string, value: string) => {
+    setEventData(prev => ({ ...prev, [field]: value }));
+  };
 
   const createEvent = async () => {
     try {
       const res = await axiosInstance.post(`/events/${sheet_id}/create`, eventData);
       if (res.data?.message) {
         refetchEvents();
-        setEventData({ name: "", description: "", reminder: "None", date: new Date().toISOString().slice(0, 10) });
+        setEventData({ summary: "", description: "", recurrence: "None", event_date: new Date().toISOString().slice(0, 10), timezone: userTimezone });
         onClose();
       }
     }
@@ -32,6 +39,7 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
       console.error(error);
     }
   }
+  
   return (
     <ModalBase isOpen={isOpen} onClose={onClose} title={`Create New Event`} >
       <form id="event-form" onSubmit={(e) => { e.preventDefault(); createEvent(); }} className="space-y-4 text-left">
@@ -39,8 +47,8 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
           <label className="block text-sm font-medium mb-1 text-left">Event Name</label>
           <input
             type="text"
-            value={eventData.name}
-            onChange={(e) => setEventData(prev => ({ ...prev, name: e.target.value }))}
+            value={eventData.summary}
+            onChange={(e) => handleInputChange('summary', e.target.value)}
             className="sheet-input"
             placeholder="Untitled Event"
           />
@@ -49,7 +57,7 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
           <label className="block text-sm font-medium mb-1 text-left">Description</label>
           <textarea
             value={eventData.description}
-            onChange={(e) => setEventData(prev => ({ ...prev, description: e.target.value }))}
+            onChange={(e) => handleInputChange('description', e.target.value)}
             className="sheet-input"
             rows={3}
           />
@@ -58,17 +66,38 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
           <label className="block text-sm font-medium mb-1 text-left">Date</label>
           <input
             type="date"
-            value={eventData.date}
-            onChange={(e) => setEventData(prev => ({ ...prev, date: e.target.value }))}
+            value={eventData.event_date}
+            onChange={(e) => handleInputChange('event_date', e.target.value)}
             className="sheet-input"
             required
           />
         </div>
+
         <div>
-          <label className="block text-sm font-medium mb-1 text-left">Reminder</label>
+          <label className="block text-sm font-medium mb-1 text-left">Timezone</label>
           <select
-            value={eventData.reminder}
-            onChange={(e) => setEventData(prev => ({ ...prev, reminder: e.target.value }))}
+            value={eventData.timezone}
+            onChange={(e) => handleInputChange('timezone', e.target.value)}
+            className="sheet-input"
+          >
+            <option value={userTimezone}>{userTimezone} (Your Timezone)</option>
+            <option value="UTC">UTC (Coordinated Universal Time)</option>
+            <option value="America/New_York">EST/EDT (Eastern Time)</option>
+            <option value="America/Chicago">CST/CDT (Central Time)</option>
+            <option value="America/Denver">MST/MDT (Mountain Time)</option>
+            <option value="America/Los_Angeles">PST/PDT (Pacific Time)</option>
+            <option value="Europe/London">GMT/BST (London)</option>
+            <option value="Europe/Paris">CET/CEST (Central Europe)</option>
+            <option value="Asia/Tokyo">JST (Japan Standard Time)</option>
+            <option value="Asia/Shanghai">CST (China Standard Time)</option>
+            <option value="Australia/Sydney">AEST/AEDT (Sydney)</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium mb-1 text-left">Recurrence</label>
+          <select
+            value={eventData.recurrence}
+            onChange={(e) => handleInputChange('recurrence', e.target.value)}
             className="sheet-input"
           >
             <option value="None">None</option>

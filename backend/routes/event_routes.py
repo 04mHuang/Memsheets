@@ -2,12 +2,13 @@ from flask import Blueprint, request
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from database.models import Sheet, Event
 from database.db import db
-from datetime import datetime
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 event_bp = Blueprint("event_bp", __name__, url_prefix="/events")
 
 # Fetch list of all events
-@event_bp.route("/", methods=["GET"])
+@event_bp.route("/get-events", methods=["GET"])
 @jwt_required()
 def get_all_events():
     user_id = get_jwt_identity()
@@ -18,8 +19,8 @@ def get_all_events():
     sheet_ids = [sheet.id for sheet in sheets]
 
     events = Event.query.filter(Event.sheet_id.in_(sheet_ids)).all()
-    events_data = [{"id": e.id, "sheet_id": e.sheet_id, "name": e.name, "description": e.description, "date": e.date.isoformat() if e.date else None, "reminder": e.reminder} for e in events]
-    return {"events": events_data}, 200
+    events_data = [{"id": e.id, "sheet_id": e.sheet_id, "summary": e.summary, "description": e.description, "start": e.start, "end": e.end, "recurrence": e.recurrence} for e in events]
+    return events_data, 200
 
 # Fetch list of all events for a sheet
 @event_bp.route("/<int:sheet_id>", methods=["GET"])
@@ -34,7 +35,7 @@ def get_events_by_sheet(sheet_id):
         return {"error": "Sheet not found"}, 404
 
     events = Event.query.filter_by(sheet_id=sheet_id).all()
-    events_data = [{"id": e.id, "name": e.name, "description": e.description, "date": e.date.isoformat() if e.date else None, "reminder": e.reminder} for e in events]
+    events_data = [{"id": e.id, "summary": e.summary, "description": e.description, "start": e.start, "end": e.end, "recurrence": e.recurrence} for e in events]
     return {"events": events_data}, 200
   
 # Create a new event for a sheet
@@ -49,15 +50,42 @@ def create_event(sheet_id):
         if not sheet:
             return {"error": "Sheet not found"}, 404
         data = request.json
-        if not data or "name" not in data or "description" not in data:
-            return {"error": "Invalid input"}, 400
+        event_date = data.get("event_date")
+        timezone = data.get("timezone", "UTC")
         
+        # Create all-day event with dateTime format for RRULE compatibility
+        start_datetime = f"{event_date}T00:00:00"
+        end_datetime = f"{event_date}T23:59:59"
+        
+        start_json = {
+            "dateTime": start_datetime,
+            "timeZone": timezone
+        }
+        end_json = {
+            "dateTime": end_datetime,
+            "timeZone": timezone
+        }
+        # Create RRULE for recurrence
+        recurrence_type = data["recurrence"].upper()
+        if recurrence_type == "NONE":
+            recurrence_rule = None
+        else:
+          base_date = datetime.strptime(event_date, "%Y-%m-%d").date()
+          if recurrence_type == "WEEKLY":
+            until_date = base_date + timedelta(weeks=36)
+          elif recurrence_type == "MONTHLY":
+              until_date = base_date + relativedelta(months=12)
+          elif recurrence_type == "YEARLY":
+              until_date = base_date + relativedelta(years=1)
+          recurrence_rule = [f"RRULE:FREQ={recurrence_type};DTSTART={event_date.replace('-', '')}T000000;UNTIL={until_date.strftime('%Y%m%d')}T235959"]
+
         new_event = Event(
             sheet_id=sheet_id,
-            name=data["name"] if data["name"].strip() else "Untitled Event",
+            summary=data["summary"] if data["summary"].strip() else "Untitled Event",
             description=data["description"],
-            date=data.get("date"),
-            reminder=data.get("reminder", "none"),
+            start=start_json,
+            end=end_json,
+            recurrence=recurrence_rule,
         )
         db.session.add(new_event)
         db.session.commit()

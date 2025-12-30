@@ -17,8 +17,17 @@ export interface SelectOption {
 }
 export interface Event {
   id: string;
-  name: string;
+  summary: string;
   description: string;
-  date: string;
-  reminder: string;
+  start: {
+    dateTime?: string;
+    date?: string;
+    timeZone?: string;
+  };
+  end?: {
+    dateTime?: string;
+    date?: string;
+    timeZone?: string;
+  };
+  recurrence?: string[];
 }

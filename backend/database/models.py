@@ -73,10 +73,14 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'), nullable=False)
-    name = db.Column(db.String(100), default="Untitled Event")
+    # Same essential fields as Google Calendar API
+    summary = db.Column(db.String(100), default="Untitled Event")
     description = db.Column(db.String(250), nullable=True)
-    date = db.Column(db.Date, nullable=True, default=date.today())
-    reminder = db.Column(db.Enum('None','Weekly', 'Monthly', 'Yearly', name='reminder_type'), default='None')
+    # {"dateTime": "2025-12-26T03:00:00Z", "timeZone": "America/New_York"} or { date": "2025-12-26" }
+    start = db.Column(db.JSON, nullable=True)
+    end = db.Column(db.JSON, nullable=True)
+    # ["RRULE:FREQ=WEEKLY;UNTIL=20250701T170000Z"]
+    recurrence = db.Column(db.JSON, nullable=True)  
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp())
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 

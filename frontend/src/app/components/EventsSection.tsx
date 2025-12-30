@@ -13,8 +13,18 @@ interface EventsSectionProps {
 
 const EventsSection = ({ sheet_id }: EventsSectionProps) => {
   const [events, setEvents] = useState<Event[]>([]);
-  // States to control modal visibility
   const [modalOpen, setModalOpen] = useState(false);
+
+  const parseRecurrence = (recurrence?: string[]) => {
+    if (!recurrence || recurrence.length === 0) return null;
+    const rrule = recurrence[0];
+    const freqMatch = rrule.match(/FREQ=([A-Z]+)/);
+    if (freqMatch) {
+      const freq = freqMatch[1].toLowerCase();
+      return freq.charAt(0).toUpperCase() + freq.slice(1);
+    }
+    return null;
+  };
 
   const fetchEvents = () => {
     if (sheet_id) {
@@ -53,8 +63,11 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
           <ol>
             {events.map((event, index) => (
               <li key={event?.id || index} className="event-item">
-                <h3 className="event-title">{event?.name}</h3>
-                <p className="event-date">{new Date(event?.date).toLocaleDateString()} {event?.reminder !== 'none' && <span className="event-reminder">({event?.reminder})</span>}</p>
+                <h3 className="event-title">{event?.summary}</h3>
+                <p className="event-date">
+                  {event?.start?.dateTime ? new Date(event.start.dateTime).toLocaleDateString() : event?.start?.date ? new Date(event.start.date).toLocaleDateString() : 'No date'}
+                  {event?.recurrence && <span> ({parseRecurrence(event.recurrence)})</span>}
+                </p>
                 <p className="event-description">{event?.description}</p>
               </li>
             ))}
