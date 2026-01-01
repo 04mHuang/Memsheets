@@ -12,6 +12,7 @@ const NavBar = () => {
       // Clear any client-side storage
       document.cookie = "access_token_cookie=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
       document.cookie = "csrf_access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      localStorage.removeItem("auth_method");
     }
     catch (error) {
       console.error(error);

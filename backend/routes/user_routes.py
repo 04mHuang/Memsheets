@@ -1,26 +1,11 @@
-from flask import Blueprint, request, jsonify, url_for, redirect
+from flask import Blueprint, request, jsonify, url_for, redirect, session
 from flask_jwt_extended import create_access_token, set_access_cookies, unset_jwt_cookies
 from database.models import User, Group
-from extensions import bcrypt
+from extensions import bcrypt, google
 from database.db import db
-from dotenv import load_dotenv
-from authlib.integrations.flask_client import OAuth
-import os
+import requests
 
 user_bp = Blueprint("user_bp", __name__, url_prefix="/users")
-load_dotenv()
-
-oauth = OAuth()
-google = oauth.register(
-        name="google",
-        client_id=os.getenv("GOOGLE_CLIENT_ID"),
-        client_secret=os.getenv("GOOGLE_CLIENT_SECRET"),
-        # Automatically configures Google's OAuth 2.0 endpoints
-        server_metadata_url="https://accounts.google.com/.well-known/openid-configuration",
-        client_kwargs={
-          "scope": "openid profile email",
-        },
-    )
 
 @user_bp.route("/signup", methods=["POST"])
 def signup():
@@ -80,7 +65,23 @@ def login():
     except Exception as e:
         print(f"Error logging in user: {e}")
         return {"error": "Login failed"}, 500
-    
+  
+  
+def create_google_calendar(access_token):
+    url = "https://www.googleapis.com/calendar/v3/calendars"
+    headers = {
+        "Authorization": f"Bearer {access_token}",
+        "Content-Type": "application/json",
+    }
+    payload = {
+        "summary": "Memsheets",
+        "timeZone": "UTC",
+    }
+
+    response = requests.post(url, headers=headers, json=payload)
+    response.raise_for_status()
+    return response.json()["id"]
+
 
 @user_bp.route("/login-google", methods=["GET", "POST"])
 def google_login():
@@ -107,8 +108,13 @@ def authorize_google():
             )
             db.session.add(default_group)
             db.session.commit()
+        session["google_token"] = token
         access_token = create_access_token(identity=str(user.id))
-        response = redirect("http://localhost:3000/groups")
+        # Only create calendar on first login
+        if not user.google_calendar_id:
+            user.google_calendar_id = create_google_calendar(token["access_token"])
+            db.session.commit()
+        response = redirect("http://localhost:3000/")
         set_access_cookies(response, access_token)
         return response
     except Exception as e:

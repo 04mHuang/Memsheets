@@ -15,3 +15,23 @@ export interface SelectOption {
   label: string;
   color: string;
 }
+export interface Event {
+  id: string;
+  summary: string;
+  description: string;
+  start: {
+    dateTime?: string;
+    date?: string;
+    timeZone?: string;
+  };
+  end?: {
+    dateTime?: string;
+    date?: string;
+    timeZone?: string;
+  };
+  recurrence?: string[];
+  sheet_id?: string;
+  group_id?: string;
+  sheet_name?: string;
+  color?: string;
+}

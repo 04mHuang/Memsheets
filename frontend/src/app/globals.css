@@ -8,6 +8,7 @@
   --accent: #C98A74;
   --support: #9CB6AD;
   --dark-support: #508170;
+  --placeholder-color: #8b7d6b;
 }
 
 @theme inline {
@@ -38,13 +39,19 @@ body {
 
 /* Custom Tailwind CSS classes */
 @layer components {
+  input::placeholder {
+    color: var(--placeholder-color);
+  }
+  textarea {
+    @apply min-h-20 max-h-40;
+  }
   /* Applies to hover animations */
   .hover-animation {
     @apply transition-all duration-200 ease-in-out;
   }
   /* Applies to Groups and Sheets page */
   .page-container {
-    @apply mt-8 mx-40 ;
+    @apply mt-8 mx-40 h-[calc(100vh-8rem)];
   }
   .page-title {
     @apply text-4xl mb-4;
@@ -73,38 +80,48 @@ body {
   }
   /* Applies to individual sheet pages and some applies to add group page */
   .sheet {
-    @apply mt-2 mb-8 p-10 rounded-3xl; 
+    @apply border mt-2 p-10 flex flex-col flex-1 min-h-[calc(100vh-12rem)]; 
   }
   .sheet-content {
-    @apply flex gap-20;
+    @apply flex gap-20 flex-1 text-xl;
   }
   .sheet-name {
-    @apply text-3xl font-bold mb-2 resize-none overflow-hidden;
+    @apply text-3xl font-bold mb-4 resize-none overflow-hidden;
     field-sizing: content;
   }
   .sheet-photo {
     @apply bg-background p-2 pb-4;
   }
   .sheet-basic {
-    @apply mt-2 text-lg;
+    @apply mt-2 ;
   }
   .sheet-input {
-    @apply bg-background/[0.5] px-2 rounded-md border-1 border-foreground;
-  }
-  .sheet-input::placeholder {
-    color: var(--placeholder-color);
+    @apply bg-background/[0.5] px-2 rounded-md border-1 border-foreground w-full;
   }
   .sheet-details {
-    @apply flex flex-col flex-1;
+    @apply flex flex-col flex-1 justify-between mb-20;
   }
-  .sheet-detail {
-    @apply mb-2 w-full min-h-15;
+  .sheet-basics {
+    @apply flex flex-col gap-2;
   }
   .sheet-heading {
-    @apply text-lg font-bold;
+    @apply text-2xl font-bold;
   }
   .color-input {
      @apply flex items-center gap-2 w-fit;
+  }
+  /* Applies to events section for sheet pages */
+  .events {
+    @apply border-2 p-4 mt-2 min-h-[calc(100vh-12rem)] max-h-[calc(100vh-12rem)] overflow-y-auto bg-nav; 
+  }
+  .event-item {
+    @apply p-2 mb-4 border bg-background relative;
+  }
+  .event-title {
+    @apply text-xl font-bold;
+  }
+  .event-description, .event-date {
+    @apply text-lg;
   }
   /* Applies to login and sign up pages */
   .account-page {
@@ -124,5 +141,28 @@ body {
   }
   .error {
     @apply font-bold text-accent;
+  }
+}
+
+/* Custom Scrollbar */
+*::-webkit-scrollbar {
+  width: 14px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--nav);
+  border-radius: 3px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--foreground);
+  border-radius: 3px;
+  border: 2px solid #e2b787;
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  * {
+    scrollbar-color: var(--foreground)
+                     var(--nav);
   }
 }

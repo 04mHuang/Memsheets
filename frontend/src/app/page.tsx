@@ -1,27 +1,72 @@
-// "use client";
+"use client";
 
-import Link from "next/link";
-// import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
+import rrulePlugin from "@fullcalendar/rrule";
+import { isDarkColor } from "@/app/util/colorUtil";
+import axiosInstance from "@/app/axiosInstance";
+import { Event } from "@/app/types/index";
+import EventsSection from "@/app/components/EventsSection";
+
+interface CalendarEvent {
+  summary: string;
+  start: {
+    dateTime?: string;
+    date?: string;
+  };
+  end?: {
+    dateTime?: string;
+    date?: string;
+  };
+  recurrence?: string[];
+  color: string;
+}
 
 const Home = () => {
-  // const [currentTime, setCurrentTime] = useState(0);
-
-  // useEffect(() => {
-  //   fetch('/api/time').then(res => res.json()).then(data => {
-  //     console.log(data);
-  //     setCurrentTime(data.time);
-  //   });
-  // }, []);
+  const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
+  
+  useEffect(() => {
+    const auth = localStorage.getItem("auth_method");
+    (async () => {
+      try {
+        let res = null;
+        if (auth == "password") {
+          res = await axiosInstance.get("/events/get-events");
+        }
+        else {
+          res = await axiosInstance.get("/cal/get-events");
+        }
+        setCalendar(res.data)
+        console.log(res)
+      }
+      catch (error) {
+        console.error(error)
+      }
+    })();    
+  }, []);
+  
   return (
-    // grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]
-    <div className="container max-w-screen-xl px-4">
-      {/* flex flex-col gap-[32px] row-start-2 items-center sm:items-start */}
-      <main className="flex flex-col justify-items-center">
-        <h1>What memories will you write today?</h1>
-        {/* TODO: replace link with button */}
-        <Link href="/login">Start writing</Link>
-      </main>
-    </div>
+    <main className="max-w-full flex px-10 my-10 justify-center gap-6">
+      <section className="flex-4 bg-amber-50 p-4">
+        <FullCalendar
+          plugins={[dayGridPlugin, rrulePlugin]}
+          contentHeight="auto"
+          dayMaxEvents={3} // Show max 3 events, then "+more" link
+          events={calendar.map((c: CalendarEvent) => ({
+            title: c.summary,
+            start: c.start.dateTime || c.start.date,
+            end: c.end?.dateTime || c.end?.date,
+            allDay: true, // Force all-day display
+            rrule: c.recurrence?.[0], // Pass RRULE string
+            backgroundColor: c.color, // Use sheet color
+            borderColor: isDarkColor(c.color) ? 'var(--background)' : 'var(--foreground)',
+            textColor: isDarkColor(c.color) ? 'var(--background)' : 'var(--foreground)',
+          }))}
+        />
+      </section>
+      <EventsSection />
+    </main>
   );
 }
 export default Home;
