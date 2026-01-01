@@ -28,7 +28,10 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
 
   const createEvent = async () => {
     try {
-      const res = await axiosInstance.post(`/events/${sheet_id}/create`, eventData);
+      const auth = localStorage.getItem("auth_method");
+      const endpoint = auth === "google" ? `/cal/${sheet_id}/create` : `/events/${sheet_id}/create`;
+      
+      const res = await axiosInstance.post(endpoint, eventData);
       if (res.data?.message) {
         refetchEvents();
         setEventData({ summary: "", description: "", recurrence: "None", event_date: new Date().toISOString().slice(0, 10), timezone: userTimezone });

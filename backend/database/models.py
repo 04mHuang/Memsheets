@@ -73,8 +73,11 @@ class Event(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     sheet_id = db.Column(db.Integer, db.ForeignKey('sheets.id'), nullable=False)
-    # Same essential fields as Google Calendar API
-    summary = db.Column(db.String(100), default="Untitled Event")
+    # For Google Calendar events, store the Google event ID
+    google_event_id = db.Column(db.String(255), nullable=True)
+    # Same essential fields as Google Calendar API (nullable for Google Calendar events)
+    # e.g. Google Calendar events store default "Untitled Event" in database but actual data comes from Google Calendar API
+    summary = db.Column(db.String(100), default="Untitled Event", nullable=True)
     description = db.Column(db.String(250), nullable=True)
     # {"dateTime": "2025-12-26T03:00:00Z", "timeZone": "America/New_York"} or { date": "2025-12-26" }
     start = db.Column(db.JSON, nullable=True)
@@ -85,4 +88,4 @@ class Event(db.Model):
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
 
     def __repr__(self):
-        return f'<Event {self.name}>'
+        return f'<Event {self.summary or self.google_event_id}>'

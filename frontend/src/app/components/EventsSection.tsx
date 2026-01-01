@@ -48,7 +48,10 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
 
   const fetchEvents = () => {
     if (sheet_id) {
-      axiosInstance.get(`/events/${sheet_id}`)
+      const auth = localStorage.getItem("auth_method");
+      const endpoint = auth === "google" ? `/cal/${sheet_id}` : `/events/${sheet_id}`;
+      
+      axiosInstance.get(endpoint)
         .then(res => {
           setEvents(res.data.events || []);
         })
