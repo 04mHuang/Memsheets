@@ -100,7 +100,8 @@ def create_google_event(sheet_id):
       google_event_id = response.json().get('id')
       event_record = Event(
         google_event_id=google_event_id,
-        sheet_id=sheet_id
+        sheet_id=sheet_id,
+        summary=data["summary"] if data["summary"].strip() else "Untitled Event"
       )
       db.session.add(event_record)
       db.session.commit()

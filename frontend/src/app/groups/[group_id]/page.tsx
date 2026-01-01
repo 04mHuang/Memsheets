@@ -6,7 +6,6 @@ import { FiFilePlus } from "react-icons/fi";
 
 import EditButtons from "@/app/components/EditButtons";
 import Card from "@/app/components/Card";
-import SearchBar from "@/app/components/SearchBar";
 import DeletionModal from "@/app/components/DeletionModal";
 import axiosInstance from "@/app/axiosInstance";
 import { GSInterface } from "@/app/types";
@@ -55,11 +54,8 @@ const GroupSheets = () => {
     <main className="page-container">
       <DeletionModal isOpen={modalOpen} onClose={() => setModalOpen(false)} subject={`${pageTitle} Group`} handleDelete={handleDelete} />
       <div className="flex justify-between items-center mb-4">
-        {/* If user is searching, change the page title */}
-        <h1 className="page-title mb-0">{sheets !== originalSheets ? "Search Results" : pageTitle}</h1>
-        {/* Search through the sheets of a specific group by passing the group_id */}
+        <h1 className="page-title mb-0">{pageTitle}</h1>
         <div className="flex gap-2 items-center">
-          <SearchBar<GSInterface> groupId={group_id} setItems={setSheets} originalItems={originalSheets} />
           {/* Prevent editing and deletion of the group Miscellaneous */}
           {group_id !== "1" &&
             <EditButtons
