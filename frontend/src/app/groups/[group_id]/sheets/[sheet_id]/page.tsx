@@ -108,7 +108,7 @@ const Sheet = () => {
   }
 
   return (
-    <div className={`flex gap-10 page-container ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
+    <main className={`flex gap-10 page-container ${isDarkColor(sheet.color) ? 'text-background' : 'text-foreground'}`}>
       <DeletionModal isOpen={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} subject={`${sheet.name} Sheet`} handleDelete={handleDelete} />
       <GroupTagsModal isOpen={groupModalOpen} onClose={handleGroupsEdit} groupTags={groupTags} setGroupTags={setGroupTags} />
       <div className="basis-3/4">
@@ -123,7 +123,7 @@ const Sheet = () => {
             <SheetForm sheet={sheet} setSheet={setSheet} groupTags={groupTags} setGroupModalOpen={setGroupModalOpen} />
           </form>
           :
-          <main className="sheet" style={{ backgroundColor: sheet.color }}>
+          <section className="sheet" style={{ backgroundColor: sheet.color }}>
             <h1 className="sheet-name">{sheet.name}</h1>
             <div className="sheet-content">
               <section className="sheet-basics">
@@ -158,11 +158,11 @@ const Sheet = () => {
                 </div>
               </section>
             </div>
-          </main>
+          </section>
         }
       </div>
       <EventsSection sheet_id={sheet_id} />
-    </div>
+    </main>
   );
 }
 export default Sheet;

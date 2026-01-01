@@ -51,7 +51,7 @@ body {
   }
   /* Applies to Groups and Sheets page */
   .page-container {
-    @apply mt-8 mx-40 h-[calc(100vh-8rem)];
+    @apply mt-8 mx-40 h-[calc(100vh-6.5rem)];
   }
   .page-title {
     @apply text-4xl mb-4;
@@ -96,7 +96,7 @@ body {
     @apply mt-2 ;
   }
   .sheet-input {
-    @apply bg-background/[0.5] px-2 rounded-md border-1 border-foreground w-full;
+    @apply bg-background/50 px-2 rounded-md border border-foreground w-full;
   }
   .sheet-details {
     @apply flex flex-col flex-1 justify-between mb-20;
@@ -112,7 +112,8 @@ body {
   }
   /* Applies to events section for sheet pages */
   .events {
-    @apply border-2 p-4 mt-2 min-h-[calc(100vh-12rem)] max-h-[calc(100vh-12rem)] overflow-y-auto bg-nav; 
+    @apply border-2 p-4 min-h-[calc(100vh-12rem)] max-h-full overflow-y-auto bg-nav; 
+    field-sizing: border-box;
   }
   .event-item {
     @apply p-2 mb-4 border bg-background relative;
@@ -190,4 +191,20 @@ body {
     scrollbar-color: var(--foreground)
                      var(--nav);
   }
+}
+
+/* FullCalendar button customization */
+.fc-button {
+  background-color: var(--dark-support) !important;
+  border-color: var(--dark-support) !important;
+  color: var(--background) !important;
+}
+.fc-button:hover {
+  background-color: var(--support) !important;
+  border-color: var(--support) !important;
+}
+.fc-button:disabled {
+  background-color: var(--light-foreground) !important;
+  border-color: var(--light-foreground) !important;
+  opacity: 0.6;
 }

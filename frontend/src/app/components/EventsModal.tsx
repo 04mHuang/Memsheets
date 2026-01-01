@@ -75,27 +75,6 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
             required
           />
         </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-1 text-left">Timezone</label>
-          <select
-            value={eventData.timezone}
-            onChange={(e) => handleInputChange('timezone', e.target.value)}
-            className="sheet-input"
-          >
-            <option value={userTimezone}>{userTimezone} (Your Timezone)</option>
-            <option value="UTC">UTC (Coordinated Universal Time)</option>
-            <option value="America/New_York">EST/EDT (Eastern Time)</option>
-            <option value="America/Chicago">CST/CDT (Central Time)</option>
-            <option value="America/Denver">MST/MDT (Mountain Time)</option>
-            <option value="America/Los_Angeles">PST/PDT (Pacific Time)</option>
-            <option value="Europe/London">GMT/BST (London)</option>
-            <option value="Europe/Paris">CET/CEST (Central Europe)</option>
-            <option value="Asia/Tokyo">JST (Japan Standard Time)</option>
-            <option value="Asia/Shanghai">CST (China Standard Time)</option>
-            <option value="Australia/Sydney">AEST/AEDT (Sydney)</option>
-          </select>
-        </div>
         <div>
           <label className="block text-sm font-medium mb-1 text-left">Recurrence</label>
           <select
@@ -113,7 +92,7 @@ const EventsModal = ({ isOpen, onClose, sheet_id, refetchEvents }: EventModalPro
       <div className="mt-8 mx-5 flex justify-between">
         <button
           onClick={onClose}
-          className="border-light-foreground border-1 px-4 py-2 rounded-sm cursor-pointer hover:bg-foreground/[0.1] hover-animation"
+          className="border-light-foreground border px-4 py-2 rounded-sm cursor-pointer hover:bg-foreground/10 hover-animation"
         >
           Cancel
         </button>

@@ -48,15 +48,33 @@ const Home = () => {
   
   return (
     <main className="max-w-full flex px-10 my-10 justify-center gap-6">
-      <section className="flex-4 bg-amber-50 p-4">
+      <section className="flex-4 border-2 border-dark-support bg-amber-50 p-4">
+        {/* Styling for the today, <, and > buttons */}
+        <style jsx global>{`
+          .fc .fc-button {
+            background-color: var(--dark-support) !important;
+            border-color: var(--dark-support) !important;
+            color: var(--background) !important;
+          }
+          .fc .fc-button:hover {
+            background-color: var(--accent) !important;
+            border-color: var(--accent) !important;
+          }
+          .fc .fc-button:disabled {
+            background-color: var(--support) !important;
+            border-color: var(--support) !important;
+            color: var(--foreground) !important;
+            opacity: 0.6;
+          }
+        `}</style>
         <FullCalendar
           plugins={[dayGridPlugin, rrulePlugin]}
-          contentHeight="auto"
+          height="100%"
+          timeZone="local"
           dayMaxEvents={3} // Show max 3 events, then "+more" link
           events={calendar.map((c: CalendarEvent) => ({
             title: c.summary,
-            start: c.start.dateTime || c.start.date,
-            end: c.end?.dateTime || c.end?.date,
+            start: c.start.date || c.start.dateTime?.split('T')[0],
             allDay: true, // Force all-day display
             rrule: c.recurrence?.[0], // Pass RRULE string
             backgroundColor: c.color, // Use sheet color

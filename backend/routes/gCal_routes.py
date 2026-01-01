@@ -32,10 +32,11 @@ def get_all_events():
     db_event = Event.query.filter_by(
       google_event_id=event.get('id')
     ).first()
-    
+    print(db_event)
     sheet = None
     if db_event:
       sheet = Sheet.query.get(db_event.sheet_id)
+      print(sheet)
     e_data = {
       "id": event.get('id'),
       "summary": event.get('summary'),
@@ -95,8 +96,7 @@ def create_google_event(sheet_id):
       token=token
     )
     
-    if response.status_code == 200:
-      # Save association to database
+    if response.status_code in [200, 201]:
       google_event_id = response.json().get('id')
       event_record = Event(
         google_event_id=google_event_id,
