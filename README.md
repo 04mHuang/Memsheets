@@ -8,12 +8,8 @@ In one terminal, navigate to backend folder:
 cd backend
 ```
 
-Create a .env file such as:
-```
-DB_USER=<INSERT ANYTHING>
-DB_PASSWORD=<INSERT ANYTHING>
-SECRET_KEY=<INSERT ANYTHING>
-```
+Create a .env file following .env.example
+
 Set up virtual environment and run server:
 ```
 python -m venv venv
@@ -36,10 +32,8 @@ In another terminal, navigate to frontend folder:
 ```
 cd frontend
 ```
-Create a .env file:
-```
-NEXT_PUBLIC_SERVER_ADDRESS = http://localhost:5000/
-```
+Create a .env file following .env.example
+
 Set up and run client:
 ```
 npm install
