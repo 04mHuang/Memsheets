@@ -45,7 +45,7 @@ const SearchPage = () => {
               <Link
                 key={group.id}
                 href={`/groups/${group.id}`}
-                className="search-result-item"
+                className="search-result-item hover-animation"
               >
                 <div className="search-result-content">
                   <FaBook color={group.color} size={25} />
@@ -66,7 +66,7 @@ const SearchPage = () => {
               <Link
                 key={sheet.id}
                 href={`/groups/1/sheets/${sheet.id}`}
-                className="search-result-item"
+                className="search-result-item hover-animation"
               >
                 <div className="search-result-content">
                   <IoIosDocument color={sheet.color} size={25} />
@@ -87,7 +87,7 @@ const SearchPage = () => {
               <Link
                 key={event.id}
                 href={`/groups/${event.group_id}/sheets/${event.sheet_id}`}
-                className="search-result-item"
+                className="search-result-item hover-animation"
               >
                 <div className="search-result-content">
                   <FaBookmark color={event.sheet_color} size={25} />

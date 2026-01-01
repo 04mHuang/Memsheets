@@ -153,7 +153,7 @@ body {
     @apply space-y-2;
   }
   .search-result-item {
-    @apply block p-3 border rounded-lg hover:bg-gray-50 transition-colors;
+    @apply block p-3 border-2 bg-nav/50 rounded-lg hover:bg-nav hover:border-support;
   }
   .search-result-content {
     @apply flex items-center gap-3;
@@ -165,7 +165,7 @@ body {
     @apply font-medium;
   }
   .search-result-meta {
-    @apply text-sm text-gray-500;
+    @apply text-sm text-dark-support;
   }
 }
 
