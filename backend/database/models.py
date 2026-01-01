@@ -41,7 +41,7 @@ class Sheet(db.Model):
     birthday = db.Column(db.Date)
     likes = db.Column(db.Text)
     dislikes = db.Column(db.Text)
-    allergies = db.Column(db.Text)
+    description = db.Column(db.Text)
     notes = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=db.func.current_timestamp(), index=True)
     updated_at = db.Column(db.DateTime, default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())

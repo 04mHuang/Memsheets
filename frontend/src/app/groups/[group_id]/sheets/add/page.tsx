@@ -19,7 +19,7 @@ const EditSheet = () => {
     "birthday": new Date().toISOString().slice(0, 10),
     "likes": "",
     "dislikes": "",
-    "allergies": "",
+    "description": "",
     "notes": ""
   });
 

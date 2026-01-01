@@ -35,7 +35,7 @@ const Sheet = () => {
     "birthday": new Date().toISOString().slice(0, 10),
     "likes": "",
     "dislikes": "",
-    "allergies": "",
+    "description": "",
     "notes": "",
   });
   const [groupTags, setGroupTags] = useState<GSInterface[]>([]);
@@ -137,6 +137,11 @@ const Sheet = () => {
               </section>
               <section className="sheet-details">
                 <div>
+                  <h2 className="sheet-heading">Description</h2>
+                  <hr className="border-dashed" />
+                  <p className="sheet-detail">{sheet.description}</p>
+                </div>
+                <div>
                   <h2 className="sheet-heading">Likes</h2>
                   <hr className="border-dashed" />
                   <p className="sheet-detail">{sheet.likes}</p>
@@ -145,11 +150,6 @@ const Sheet = () => {
                   <h2 className="sheet-heading">Dislikes</h2>
                   <hr className="border-dashed" />
                   <p className="sheet-detail">{sheet.dislikes}</p>
-                </div>
-                <div>
-                  <h2 className="sheet-heading">Allergies</h2>
-                  <hr className="border-dashed" />
-                  <p className="sheet-detail">{sheet.allergies}</p>
                 </div>
                 <div>
                   <h2 className="sheet-heading">Additional notes</h2>

@@ -16,7 +16,7 @@ interface SheetData {
   birthday: string;
   likes: string;
   dislikes: string;
-  allergies: string;
+  description: string;
   notes: string;
 }
 
@@ -157,13 +157,13 @@ const SheetForm = ({ sheet, setSheet, groupTags, setGroupModalOpen }: SheetFormP
             />
           </label>
           <label>
-            <h2 className="sheet-heading">Allergies</h2>
+            <h2 className="sheet-heading">Description</h2>
             <textarea
-              name="allergies"
+              name="description"
               onChange={handleChange}
-              value={sheet.allergies === "N/A" ? "" : sheet.allergies}
-              placeholder="Allergies"
-              aria-label="Allergies"
+              value={sheet.description === "N/A" ? "" : sheet.description}
+              placeholder="Description"
+              aria-label="Description"
               className="sheet-input"
             />
           </label>

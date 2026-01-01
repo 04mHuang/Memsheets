@@ -42,8 +42,8 @@ def create_sheet():
             dislikes=(
                 data.get("dislikes") if data.get("dislikes", "").strip() else "N/A"
             ),
-            allergies=(
-                data.get("allergies") if data.get("allergies", "").strip() else "N/A"
+            description=(
+                data.get("description") if data.get("description", "").strip() else "N/A"
             ),
             notes=data.get("notes") if data.get("notes", "").strip() else "N/A",
         )
@@ -79,7 +79,7 @@ def get_sheet(sheet_id):
             "birthday": sheet.birthday.isoformat() if sheet.birthday else "",
             "likes": sheet.likes,
             "dislikes": sheet.dislikes,
-            "allergies": sheet.allergies,
+            "description": sheet.description,
             "notes": sheet.notes,
         }
     ]
@@ -107,7 +107,7 @@ def update_sheet(sheet_id):
         if key == "name" and not value.strip():
             setattr(sheet, key, "Untitled Sheet")
         elif (
-            key in ["nickname", "pronouns", "likes", "dislikes", "allergies", "notes"]
+            key in ["nickname", "pronouns", "likes", "dislikes", "description", "notes"]
             and not value.strip()
         ):
             setattr(sheet, key, "N/A")
@@ -127,7 +127,7 @@ def update_sheet(sheet_id):
             "birthday": sheet.birthday.isoformat() if sheet.birthday else "",
             "likes": sheet.likes,
             "dislikes": sheet.dislikes,
-            "allergies": sheet.allergies,
+            "description": sheet.description,
             "notes": sheet.notes,
         },
     }, 200
@@ -223,7 +223,7 @@ def search_sheet(group_id):
             "pronouns",
             "likes",
             "dislikes",
-            "allergies",
+            "description",
             "notes",
         ]
         filters = [getattr(Sheet, field).ilike(f"%{query}%") for field in search_fields]
