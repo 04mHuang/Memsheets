@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 
 import axiosInstance from "@/app/axiosInstance";
 import Card from "@/app/components/Card";
-import SearchBar from "@/app/components/SearchBar";
 import { GSInterface } from "@/app/types/index";
 
 const Groups = () => {
@@ -37,10 +36,7 @@ const Groups = () => {
 
   return (
     <main className="page-container">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="page-title mb-0">{pageTitle}</h1>
-        <SearchBar<GSInterface> setItems={setGroups} originalItems={originalGroups} />
-      </div>
+      <h1 className="page-title">{pageTitle}</h1>
       <section className="card-grid">
         <button
           onClick={() => { router.push("/groups/create") }}

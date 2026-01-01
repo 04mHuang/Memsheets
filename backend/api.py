@@ -23,6 +23,7 @@ from routes.group_routes import group_bp
 from routes.sheet_routes import sheet_bp
 from routes.event_routes import event_bp
 from routes.gCal_routes import gCal_bp
+from routes.search_routes import search_bp
 
 
 def create_app():
@@ -56,6 +57,7 @@ def create_app():
     app.register_blueprint(sheet_bp)
     app.register_blueprint(event_bp)
     app.register_blueprint(gCal_bp)
+    app.register_blueprint(search_bp)
 
     # Implicit refresh of token close to expiring
     @app.after_request
