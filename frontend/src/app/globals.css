@@ -69,7 +69,7 @@ body {
     @apply text-xl font-bold;
   }
   .create-button {
-    @apply w-full border-3 border-dotted text-2xl text-accent flex justify-around items-center hover:bg-gray-50 hover:text-dark-support hover:cursor-pointer;
+    @apply w-full py-7 px-5 border-3 border-dotted text-2xl text-accent flex justify-around items-center hover:bg-gray-50 hover:text-dark-support hover:cursor-pointer;
   }
   .create-button:hover .create-icon {
     @apply -translate-y-1;
