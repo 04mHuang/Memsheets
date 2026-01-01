@@ -69,7 +69,7 @@ const Home = () => {
         `}</style>
         <FullCalendar
           plugins={[dayGridPlugin, rrulePlugin]}
-          contentHeight="auto"
+          height="100%"
           timeZone="local"
           dayMaxEvents={3} // Show max 3 events, then "+more" link
           events={calendar.map((c: CalendarEvent) => ({
