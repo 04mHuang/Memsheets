@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { FaBook } from "react-icons/fa";
-import { IoIosDocument } from "react-icons/io";
+import { FaSheetPlastic } from "react-icons/fa6";
 import { FaBookmark } from "react-icons/fa";
 
 interface SearchResults {
@@ -69,7 +69,7 @@ const SearchPage = () => {
                 className="search-result-item hover-animation"
               >
                 <div className="search-result-content">
-                  <IoIosDocument color={sheet.color} size={25} />
+                  <FaSheetPlastic color={sheet.color} size={25} />
                   <span className="search-result-name">{sheet.name}</span>
                   <span className="search-result-meta">in {sheet.group_names.join(", ")}</span>
                 </div>

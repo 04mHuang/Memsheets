@@ -40,7 +40,7 @@ const Groups = () => {
       <section className="card-grid">
         <button
           onClick={() => { router.push("/groups/create") }}
-          className="create-button card"
+          className="create-button card hover-animation"
         >
           <p>Create group</p>
           <FiFilePlus className="create-icon hover-animation" />

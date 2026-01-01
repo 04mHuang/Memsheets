@@ -57,7 +57,10 @@ body {
     @apply text-4xl mb-4;
   }
   .card {
-    @apply container max-w-screen-xl py-7 px-5 border-2 border-light-foreground rounded-md hover:cursor-pointer hover:border-support hover:shadow-md;
+    @apply flex items-center max-w-screen border-2 border-foreground bg-amber-50 rounded-md hover:cursor-pointer hover:border-support ;
+  }
+  .card-icon {
+    @apply w-16 h-full py-7 px-5 flex items-center justify-center rounded-tl rounded-bl mr-4;
   }
   .card-grid {
     @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6;
@@ -66,14 +69,14 @@ body {
     @apply text-xl font-bold;
   }
   .create-button {
-    @apply w-full border-3 border-dotted text-2xl text-accent flex justify-around items-center hover:bg-orange-100;
+    @apply w-full py-7 px-5 border-3 border-dotted text-2xl text-accent flex justify-around items-center hover:bg-gray-50 hover:text-dark-support hover:cursor-pointer;
   }
   .create-button:hover .create-icon {
     @apply -translate-y-1;
   }
   /* Applies to navbar */
   .nav-link {
-    @apply hover:text-dark-support hover:underline hover:cursor-pointer;
+    @apply px-4 py-1 hover:bg-amber-50 rounded-full hover:text-accent hover:no-underline hover:cursor-pointer;
   }
   .create-icon {
     @apply h-10 w-10 hover:-translate-y-2;
@@ -154,7 +157,7 @@ body {
     @apply space-y-2;
   }
   .search-result-item {
-    @apply block p-3 border-2 bg-nav/50 rounded-lg hover:bg-nav hover:border-support;
+    @apply block p-3 border-2 bg-nav/50 rounded-lg hover:bg-amber-50 hover:border-support;
   }
   .search-result-content {
     @apply flex items-center gap-3;

@@ -86,7 +86,7 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
 
 
   return (
-    <section className="basis-1/4 h-[calc(100vh-10rem)] shrink-0">
+    <section className="basis-1/4 h-[calc(100vh-10rem)] shrink-0 text-foreground">
       <EventsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} sheet_id={sheet_id} setEvents={setEvents} refetchEvents={fetchEvents} />
       {isSheetPage && (
         <div className="flex mb-2">

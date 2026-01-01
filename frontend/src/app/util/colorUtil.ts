@@ -8,7 +8,7 @@ export const isDarkColor = (bgColor: string): boolean => {
   const b = hex & 255;
   
   // Threshold for defining whether the color is dark or not
-  return (0.299 * r + 0.587 * g + 0.114 * b) < 128;
+  return (0.299 * r + 0.587 * g + 0.114 * b) < 150;
 }
 
 // Modify hex color brightness

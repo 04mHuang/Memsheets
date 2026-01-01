@@ -69,7 +69,7 @@ const GroupSheets = () => {
       <section className="card-grid">
         <button
           onClick={() => { router.push(`/groups/${group_id}/sheets/add`); }}
-          className="create-button card"
+          className="create-button card hover-animation"
         >
           <p>Create Sheet</p>
           <FiFilePlus className="create-icon hover-animation" />
