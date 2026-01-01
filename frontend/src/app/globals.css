@@ -157,7 +157,7 @@ body {
     @apply space-y-2;
   }
   .search-result-item {
-    @apply block p-3 border-2 bg-nav/50 rounded-lg hover:bg-nav hover:border-support;
+    @apply block p-3 border-2 bg-nav/50 rounded-lg hover:bg-amber-50 hover:border-support;
   }
   .search-result-content {
     @apply flex items-center gap-3;
