@@ -4,7 +4,10 @@ import { useEffect, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import rrulePlugin from "@fullcalendar/rrule";
+import { isDarkColor } from "@/app/util/colorUtil";
 import axiosInstance from "@/app/axiosInstance";
+import { Event } from "@/app/types/index";
+import EventsSection from "@/app/components/EventsSection";
 
 interface CalendarEvent {
   summary: string;
@@ -17,10 +20,12 @@ interface CalendarEvent {
     date?: string;
   };
   recurrence?: string[];
+  color: string;
 }
 
 const Home = () => {
   const [calendar, setCalendar] = useState<CalendarEvent[]>([]);
+  
   useEffect(() => {
     const auth = localStorage.getItem("auth_method");
     (async () => {
@@ -40,31 +45,28 @@ const Home = () => {
       }
     })();    
   }, []);
-
+  
   return (
-    <div className="container max-w-screen-xl px-4">
-      <main className="flex flex-col justify-items-center">
+    <main className="max-w-full flex px-10 my-10 justify-center gap-6">
+      <section className="flex-4 bg-amber-50 p-4">
         <FullCalendar
           plugins={[dayGridPlugin, rrulePlugin]}
+          contentHeight="auto"
+          dayMaxEvents={3} // Show max 3 events, then "+more" link
           events={calendar.map((c: CalendarEvent) => ({
             title: c.summary,
             start: c.start.dateTime || c.start.date,
             end: c.end?.dateTime || c.end?.date,
             allDay: true, // Force all-day display
             rrule: c.recurrence?.[0], // Pass RRULE string
+            backgroundColor: c.color, // Use sheet color
+            borderColor: isDarkColor(c.color) ? 'var(--background)' : 'var(--foreground)',
+            textColor: isDarkColor(c.color) ? 'var(--background)' : 'var(--foreground)',
           }))}
-          eventClick={(info: any) => {
-            const event = info.event;
-            alert(`
-              Title: ${event.title}
-              Start: ${event.start}
-              End: ${event.end}
-              Description: ${event.extendedProps.description ?? "—"}
-            `);
-          }}
         />
-      </main>
-    </div>
+      </section>
+      <EventsSection />
+    </main>
   );
 }
 export default Home;

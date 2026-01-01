@@ -30,4 +30,8 @@ export interface Event {
     timeZone?: string;
   };
   recurrence?: string[];
+  sheet_id?: string;
+  group_id?: string;
+  sheet_name?: string;
+  color?: string;
 }

@@ -19,7 +19,21 @@ def get_all_events():
     sheet_ids = [sheet.id for sheet in sheets]
 
     events = Event.query.filter(Event.sheet_id.in_(sheet_ids)).all()
-    events_data = [{"id": e.id, "sheet_id": e.sheet_id, "summary": e.summary, "description": e.description, "start": e.start, "end": e.end, "recurrence": e.recurrence} for e in events]
+    events_data = []
+    for e in events:
+        sheet = Sheet.query.get(e.sheet_id)
+        events_data.append({
+            "id": e.id, 
+            "sheet_id": e.sheet_id, 
+            "summary": e.summary, 
+            "description": e.description, 
+            "start": e.start, 
+            "end": e.end, 
+            "recurrence": e.recurrence,
+            "color": sheet.color if sheet else "#999999",
+            "sheet_name": sheet.name if sheet else "Unknown Sheet",
+            "group_id": sheet.groups[0].id if sheet and sheet.groups else None
+        })
     return events_data, 200
 
 # Fetch list of all events for a sheet
