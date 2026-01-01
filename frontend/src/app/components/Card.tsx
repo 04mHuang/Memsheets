@@ -1,5 +1,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { isDarkColor } from "@/app/util/colorUtil";
+import { FaBook } from "react-icons/fa";
+import { FaSheetPlastic } from "react-icons/fa6";
 import { GSInterface } from "@/app/types/index";
 
 const Card = ({ item, type }: { item: GSInterface; type: string }) => {
@@ -7,7 +9,7 @@ const Card = ({ item, type }: { item: GSInterface; type: string }) => {
   const router = useRouter();
   const id = item.id;
   const bgColor = item.color;
-  
+
 
   const handleClick = () => {
     if (type === "groups") {
@@ -22,10 +24,19 @@ const Card = ({ item, type }: { item: GSInterface; type: string }) => {
   return (
     <div
       onClick={handleClick}
-      className={`card hover-animation ${isDarkColor(bgColor) ? 'text-background' : 'text-foreground'}`}
-      style={{ backgroundColor: bgColor }}
+      className="card hover-animation"
     >
-      <h1 className="card-name">{item.name}</h1>
+      <div
+        className="card-icon"
+        style={{ backgroundColor: bgColor }}
+      >
+        {type === "groups" ? (
+          <FaBook color={isDarkColor(bgColor) ? '#F5EDE3' : '#3A2D1E'} size={30} />
+        ) : (
+          <FaSheetPlastic color={isDarkColor(bgColor) ? '#F5EDE3' : '#3A2D1E'} size={30} />
+        )}
+      </div>
+      <h2 className="card-name">{item.name}</h2>
     </div>
   );
 }
