@@ -89,12 +89,12 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
     <section className="basis-1/4 h-[calc(100vh-10rem)] shrink-0">
       <EventsModal isOpen={modalOpen} onClose={() => setModalOpen(false)} sheet_id={sheet_id} setEvents={setEvents} refetchEvents={fetchEvents} />
       {isSheetPage && (
-        <div className="flex">
+        <div className="flex mb-2">
           <button
             onClick={() => setModalOpen(true)}
             className="ml-auto bg-support h-10 w-10 rounded-4xl p-2 text-foreground hover:cursor-pointer hover:bg-dark-support hover:text-background"
           >
-            <FaPlus className="w-full h-full " />
+            <FaPlus className="w-full h-full" />
           </button>
         </div>
       )}
