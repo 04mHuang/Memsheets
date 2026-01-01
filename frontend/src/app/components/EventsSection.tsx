@@ -114,7 +114,12 @@ const EventsSection = ({ sheet_id }: EventsSectionProps) => {
                 )}
                 <h3 className="event-title">{event?.summary}</h3>
                 <i className="event-date">
-                  {event?.start?.dateTime ? new Date(event.start.dateTime).toLocaleDateString() : event?.start?.date ? new Date(event.start.date).toLocaleDateString() : 'No date'}
+                  {event?.start?.dateTime 
+                    ? new Date(event.start.dateTime).toLocaleDateString() 
+                    : event?.start?.date 
+                      ? event.start.date 
+                      : 'No date'
+                  }
                   {event?.recurrence && <span> ({parseRecurrence(event.recurrence)})</span>}
                 </i>
                 <p className="event-description">

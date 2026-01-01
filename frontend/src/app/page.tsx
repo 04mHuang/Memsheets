@@ -52,11 +52,11 @@ const Home = () => {
         <FullCalendar
           plugins={[dayGridPlugin, rrulePlugin]}
           contentHeight="auto"
+          timeZone="local"
           dayMaxEvents={3} // Show max 3 events, then "+more" link
           events={calendar.map((c: CalendarEvent) => ({
             title: c.summary,
-            start: c.start.dateTime || c.start.date,
-            end: c.end?.dateTime || c.end?.date,
+            start: c.start.date || c.start.dateTime?.split('T')[0],
             allDay: true, // Force all-day display
             rrule: c.recurrence?.[0], // Pass RRULE string
             backgroundColor: c.color, // Use sheet color
