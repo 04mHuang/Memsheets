@@ -73,7 +73,7 @@ body {
   }
   /* Applies to navbar */
   .nav-link {
-    @apply hover:text-dark-support hover:underline hover:cursor-pointer;
+    @apply px-4 py-1 hover:bg-amber-50 rounded-full hover:text-accent hover:no-underline hover:cursor-pointer;
   }
   .create-icon {
     @apply h-10 w-10 hover:-translate-y-2;

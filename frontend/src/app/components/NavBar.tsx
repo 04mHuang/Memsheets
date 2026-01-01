@@ -39,11 +39,14 @@ const NavBar = () => {
 
   return (
     <nav
-      className="z-10 flex items-center justify-between py-2 px-8 border-b bg-nav border-light-foreground"
+      className="z-10 flex items-center justify-between py-2 px-8 border-b-2 bg-nav border-light-foreground"
     >
-      <div className="flex items-center gap-10">
+      <div className="flex items-center gap-5">
         <Link href="/" aria-label="Home">
           <Image src="/memsheets-icon.svg" alt="Memsheets logo" width={50} height={50} className="hover:brightness-110 hover-animation" />
+        </Link>
+        <Link href="/" className="nav-link hover-animation">
+          Calendar
         </Link>
         <Link href="/groups" className="nav-link hover-animation">
           Groups
@@ -57,7 +60,7 @@ const NavBar = () => {
           placeholder="Search groups, sheets, events..."
           className="border py-1 px-3 rounded-tl-full rounded-bl-full text-dark-support bg-background border-light-foreground focus:outline-none focus:ring-1 focus:ring-foreground flex-1"
         />
-        <button type="submit" className="py-2 px-4 text-foreground bg-light-foreground border border-foreground rounded-tr-full rounded-br-full hover:text-nav hover:bg-foreground hover:cursor-pointer hover-animation">
+        <button type="submit" className="py-2 px-4 bg-light-foreground border border-foreground rounded-tr-full rounded-br-full text-nav hover:bg-accent hover:cursor-pointer hover-animation">
           <FaSearch />
         </button>
       </form>
